@@ -1,5 +1,5 @@
 import { Vehicle } from "@/lib/types";
-import { formatCurrency, getStatusBadgeClass } from "@/lib/utils";
+import { formatCurrency, getStatusBadgeClass, getVehicleImage } from "@/lib/utils";
 import Link from "next/link";
 
 interface VehicleCardProps {
@@ -15,13 +15,15 @@ const CATEGORY_ICONS: Record<string, string> = {
 };
 
 export function VehicleCard({ vehicle }: VehicleCardProps) {
+  const displayImage = getVehicleImage(vehicle.make, vehicle.model, vehicle.year || 2023, vehicle.thumbnail_url);
+
   return (
     <Link href={`/fleet/${vehicle.id}`} style={{ textDecoration: "none" }}>
       <article className="vehicle-card animate-fade-in">
-        {vehicle.thumbnail_url ? (
+        {displayImage ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={vehicle.thumbnail_url}
+            src={displayImage}
             alt={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
             className="vehicle-card-image"
           />

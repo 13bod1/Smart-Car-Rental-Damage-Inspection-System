@@ -38,14 +38,27 @@ export function getSeverityColor(severity: string | null): string {
 
 export function getStatusBadgeClass(status: string): string {
   switch (status) {
-    case "available":  return "badge-success";
-    case "active":     return "badge-info";
-    case "completed":  return "badge-success";
-    case "pending":    return "badge-warning";
-    case "cancelled":  return "badge-error";
-    case "disputed":   return "badge-error";
-    case "rented":     return "badge-info";
-    case "maintenance":return "badge-warning";
-    default:           return "badge-neutral";
+    case "available":   return "success";
+    case "active":      return "info";
+    case "completed":   return "success";
+    case "pending":     return "warning";
+    case "cancelled":   return "error";
+    case "disputed":    return "error";
+    case "rented":      return "info";
+    case "maintenance": return "warning";
+    default:            return "neutral";
   }
+}
+
+export function getVehicleImage(make: string, model: string, year: number | string, originalUrl?: string | null): string {
+  if (!originalUrl || originalUrl.includes("via.placeholder.com") || originalUrl.includes("unsplash.com")) {
+    const cleanMake = make.toLowerCase().trim();
+    // Imagin API expects modelFamily to usually be the first word of the model (e.g., "Corolla" from "Corolla LE")
+    const cleanModel = model.toLowerCase().trim().split(' ')[0];
+    
+    // Using hrjavascript-mastery public demo key (often used for these kinds of projects).
+    // angle=23 provides a beautiful 3/4 front view.
+    return `https://cdn.imagin.studio/getImage?customer=hrjavascript-mastery&make=${cleanMake}&modelFamily=${cleanModel}&modelYear=${year}&zoomType=fullscreen&angle=23`;
+  }
+  return originalUrl;
 }

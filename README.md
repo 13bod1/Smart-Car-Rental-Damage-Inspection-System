@@ -15,8 +15,13 @@
 
 ## ✨ Key Features
 
+- 🌐 **Full English & Arabic Bilingual Support (EN / ع)**: Instant live toggle across the entire application with complete RTL (Right-to-Left) mirroring, custom typography (Cairo font), and localized UI text.
+- 🎨 **Eye-Friendly Light Design System**: Clean, elegant, light aesthetic designed for optimal visual comfort, crisp readability, and modern card components.
+- ⭐ **Fleet Owner 5-Star Verified Reviews**: Interactive testimonial showcase featuring authentic reviews and ratings from fleet managers across Egypt (Cairo, Giza, Alexandria, Hurghada).
+- 💬 **WhatsApp Fleet Support**: Direct 1-tap WhatsApp communication with pre-filled bilingual inquiry messages tailored for Egyptian car rental operators.
+- 🛡️ **Enterprise Security & Bot Protection**: Google reCAPTCHA challenge integration with server-side token verification (`/api/verify-captcha`), client-side attempt locking, and Zod input sanitization.
 - 📸 **AI Snap & Identify (`/snap`)**: Point your camera at any vehicle to instantly detect make, model, year, and estimated Egyptian rental/market value powered by Gemini Vision AI.
-- 🛡️ **AI Damage Assessment (`/damage`)**: Upload photos to detect scratches, dents, and cracks. Estimates repair costs in EGP and recommends deposit adjustments with zero disputes.
+- 🔍 **AI Damage Assessment (`/damage`)**: Upload photos to detect scratches, dents, and cracks. Estimates repair costs in EGP and recommends deposit adjustments with zero disputes.
 - 🏁 **Smart Car Comparator (`/compare`)**: Side-by-side comparison of up to 3 cars from a database of hundreds of Egyptian and international models.
 - 🗺️ **Roadtrip Planner (`/roadtrip`)**: Plan optimal travel routes across Egypt (Cairo, Giza, Aswan, Alexandria, Hurghada, Sharm El Sheikh) with fuel calculations and vehicle recommendations.
 - 🚗 **Real Fleet & Direct Bookings (`/fleet`)**: Browse live available vehicles, check specs, calculate daily rates & refundable deposits, and book instantly.

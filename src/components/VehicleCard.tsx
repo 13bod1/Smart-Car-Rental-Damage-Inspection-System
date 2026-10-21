@@ -1,6 +1,10 @@
+"use client";
+
 import { Vehicle } from "@/lib/types";
 import { formatCurrency, getStatusBadgeClass, getVehicleImage } from "@/lib/utils";
 import Link from "next/link";
+import { useLanguage } from "@/lib/LanguageContext";
+import { t } from "@/lib/translations";
 
 interface VehicleCardProps {
   vehicle: Vehicle;
@@ -14,8 +18,20 @@ const CATEGORY_ICONS: Record<string, string> = {
   van:      "🚌",
 };
 
+const STATUS_LABELS_AR: Record<string, string> = {
+  available:   "متاح",
+  rented:      "مستأجر",
+  maintenance: "صيانة",
+};
+
 export function VehicleCard({ vehicle }: VehicleCardProps) {
+  const { lang } = useLanguage();
+  const T = t[lang];
   const displayImage = getVehicleImage(vehicle.make, vehicle.model, vehicle.year || 2023, vehicle.thumbnail_url);
+
+  const statusLabel = lang === "ar"
+    ? (STATUS_LABELS_AR[vehicle.status] || vehicle.status)
+    : vehicle.status;
 
   return (
     <Link href={`/fleet/${vehicle.id}`} style={{ textDecoration: "none" }}>
@@ -39,7 +55,7 @@ export function VehicleCard({ vehicle }: VehicleCardProps) {
               {vehicle.year} {vehicle.make} {vehicle.model}
             </h3>
             <span className={`badge badge-${getStatusBadgeClass(vehicle.status)}`}>
-              {vehicle.status}
+              {statusLabel}
             </span>
           </div>
 
@@ -65,10 +81,10 @@ export function VehicleCard({ vehicle }: VehicleCardProps) {
           <div className="flex justify-between items-center mt-2">
             <div className="vehicle-card-rate">
               {formatCurrency(vehicle.daily_rate)}
-              <span> / day</span>
+              <span> {T.perDay}</span>
             </div>
             <div className="text-xs text-muted">
-              Deposit: {formatCurrency(vehicle.security_deposit)}
+              {T.deposit}: {formatCurrency(vehicle.security_deposit)}
             </div>
           </div>
         </div>

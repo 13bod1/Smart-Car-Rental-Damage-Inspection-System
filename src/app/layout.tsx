@@ -3,6 +3,8 @@ import "./globals.css";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { AIChatWidget } from "@/components/AIChatWidget";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { LanguageProvider } from "@/lib/LanguageContext";
+import { WhatsAppSupport } from "@/components/WhatsAppSupport";
 
 export const metadata: Metadata = {
   title: {
@@ -152,6 +154,10 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet"
+        />
         {/* Step 2: Canonical HTTPS URL */}
         <link rel="canonical" href="https://web-omega-weld-89.vercel.app" />
         <meta name="google-site-verification" content="i-nXWh1VLkN_9Q0zTQd6rmvXA5S_zgRsLkzOn0Jq5Yc" />
@@ -164,12 +170,16 @@ export default function RootLayout({
       </head>
       <body>
         {/* Step 14: Wrap entire app in error boundary — no raw errors shown to users */}
-        <ErrorBoundary>
-          {children}
-          {/* Global AI Chat Advisor — available on every page */}
-          <AIChatWidget />
-          <SpeedInsights />
-        </ErrorBoundary>
+        <LanguageProvider>
+          <ErrorBoundary>
+            {children}
+            {/* Global AI Chat Advisor — available on every page */}
+            <AIChatWidget />
+            {/* Instant WhatsApp Support Widget */}
+            <WhatsAppSupport />
+            <SpeedInsights />
+          </ErrorBoundary>
+        </LanguageProvider>
       </body>
     </html>
   );

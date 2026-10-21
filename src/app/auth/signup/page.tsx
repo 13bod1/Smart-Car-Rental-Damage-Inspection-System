@@ -8,6 +8,8 @@ import { ReCaptcha } from "@/components/ReCaptcha";
 import { SignupSchema, PASSWORD_RULES } from "@/lib/security";
 
 
+import { useLanguage } from "@/lib/LanguageContext";
+
 // Step 7: Visual password strength indicator
 function getPasswordStrength(password: string): { score: number; label: string; color: string } {
   let score = 0;
@@ -30,6 +32,7 @@ function getPasswordStrength(password: string): { score: number; label: string; 
 
 export default function SignupPage() {
   const router = useRouter();
+  const { lang, dir, trans } = useLanguage();
   const [fullName, setFullName]     = useState("");
   const [email, setEmail]           = useState("");
   const [password, setPassword]     = useState("");
@@ -50,7 +53,7 @@ export default function SignupPage() {
 
     // Step 9: CAPTCHA required
     if (!captchaToken) {
-      setError("Please complete the security challenge.");
+      setError(lang === "ar" ? "يرجى إكمال التحدي الأمني." : "Please complete the security challenge.");
       return;
     }
 
@@ -66,6 +69,24 @@ export default function SignupPage() {
     }
 
     setLoading(true);
+
+    // Verify reCAPTCHA token with Google Siteverify API via server route
+    try {
+      const captchaRes = await fetch("/api/verify-captcha", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: captchaToken }),
+      });
+      const captchaData = await captchaRes.json();
+      if (!captchaData.success) {
+        setLoading(false);
+        setError(captchaData.error || (lang === "ar" ? "فشل التحقق الأمني. يرجى المحاولة لاحقاً." : "Security verification failed. Please try again."));
+        return;
+      }
+    } catch {
+      // Continue if network error on verification check
+    }
+
     const supabase = createClient();
 
     try {
@@ -89,7 +110,7 @@ export default function SignupPage() {
         setTimeout(() => router.push("/dashboard"), 2500);
       }
     } catch {
-      setError("An unexpected error occurred. Please try again.");
+      setError(lang === "ar" ? "حدث خطأ غير متوقع. يرجى المحاولة لاحقاً." : "An unexpected error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -97,18 +118,18 @@ export default function SignupPage() {
 
   if (success) {
     return (
-      <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "var(--bg-base)" }}>
+      <div dir={dir} style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "var(--bg-base)", fontFamily: lang === "ar" ? "Cairo, sans-serif" : "inherit" }}>
         <div className="card text-center" style={{ maxWidth: "400px" }}>
           <span style={{ fontSize: "4rem" }}>{needsEmailVerification ? "📧" : "✅"}</span>
-          <h2 className="mt-4">{needsEmailVerification ? "Check Your Email" : "Account Created!"}</h2>
+          <h2 className="mt-4">{needsEmailVerification ? trans.checkEmail : trans.accountCreated}</h2>
           <p className="text-secondary mt-2">
             {needsEmailVerification 
-              ? "We've sent a verification link to your email address. Please click the link to activate your account."
-              : "Redirecting to your dashboard…"}
+              ? trans.verificationEmailSent
+              : trans.redirecting}
           </p>
           {needsEmailVerification && (
             <Link href="/auth/login" className="btn btn-primary w-full mt-6">
-              Go to Login
+              {trans.goToLogin}
             </Link>
           )}
         </div>
@@ -117,37 +138,38 @@ export default function SignupPage() {
   }
 
   return (
-    <div style={{
+    <div dir={dir} style={{
       minHeight: "100vh", display: "flex", alignItems: "center",
       justifyContent: "center", background: "var(--bg-base)", padding: "1.5rem",
+      fontFamily: lang === "ar" ? "Cairo, sans-serif" : "inherit",
     }}>
       <div style={{ width: "100%", maxWidth: "460px" }}>
         <div className="text-center mb-6">
           <Link href="/" className="logo" style={{ fontSize: "1.5rem" }}>AutoRent AI</Link>
-          <h2 className="mt-4">Create your account</h2>
-          <p className="text-secondary text-sm mt-1">Start renting or listing vehicles today</p>
+          <h2 className="mt-4">{trans.createAccountTitle}</h2>
+          <p className="text-secondary text-sm mt-1">{trans.createAccountSubtitle}</p>
         </div>
 
         <div className="card">
           <form onSubmit={handleSubmit} className="flex flex-col gap-4" noValidate>
             {/* Role Toggle */}
             <div>
-              <label className="label">I am a…</label>
+              <label className="label">{trans.iAmA}</label>
               <div className="flex gap-3">
                 {(["renter", "owner"] as const).map((r) => (
                   <button key={r} type="button" id={`role-${r}`}
                     className={`btn w-full ${role === r ? "btn-primary" : "btn-secondary"}`}
                     onClick={() => setRole(r)}>
-                    {r === "renter" ? "🙋 Renter" : "🏢 Fleet Owner"}
+                    {r === "renter" ? trans.renterRole : trans.ownerRole}
                   </button>
                 ))}
               </div>
             </div>
 
             <div className="form-group">
-              <label className="label" htmlFor="signup-name">Full Name</label>
+              <label className="label" htmlFor="signup-name">{trans.fullName}</label>
               <input id="signup-name" type="text" className="input"
-                placeholder="Ahmed Hassan"
+                placeholder={lang === "ar" ? "أحمد حسن" : "Ahmed Hassan"}
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 autoComplete="name" maxLength={100} required />
@@ -155,7 +177,7 @@ export default function SignupPage() {
             </div>
 
             <div className="form-group">
-              <label className="label" htmlFor="signup-email">Email</label>
+              <label className="label" htmlFor="signup-email">{trans.email}</label>
               <input id="signup-email" type="email" className="input"
                 placeholder="you@example.com"
                 value={email}
@@ -166,9 +188,9 @@ export default function SignupPage() {
 
             {/* Step 7: Password with strength meter */}
             <div className="form-group">
-              <label className="label" htmlFor="signup-password">Password</label>
+              <label className="label" htmlFor="signup-password">{trans.password}</label>
               <input id="signup-password" type="password" className="input"
-                placeholder="Min. 10 chars, uppercase, number, symbol"
+                placeholder={trans.passwordRequirements}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 autoComplete="new-password" maxLength={128} required />
@@ -192,11 +214,11 @@ export default function SignupPage() {
               {/* Requirements checklist */}
               <ul style={{ marginTop: "0.5rem", listStyle: "none", padding: 0, display: "flex", flexDirection: "column", gap: "2px" }}>
                 {[
-                  { test: password.length >= 10,       label: "At least 10 characters" },
-                  { test: /[A-Z]/.test(password),      label: "One uppercase letter" },
-                  { test: /[a-z]/.test(password),      label: "One lowercase letter" },
-                  { test: /[0-9]/.test(password),      label: "One number" },
-                  { test: /[^A-Za-z0-9]/.test(password), label: "One special character" },
+                  { test: password.length >= 10,       label: trans.charMin },
+                  { test: /[A-Z]/.test(password),      label: trans.oneUpper },
+                  { test: /[a-z]/.test(password),      label: trans.oneLower },
+                  { test: /[0-9]/.test(password),      label: trans.oneNumber },
+                  { test: /[^A-Za-z0-9]/.test(password), label: trans.oneSpecial },
                 ].map((r) => (
                   <li key={r.label} style={{ fontSize: "0.75rem", color: r.test ? "var(--success)" : "var(--text-muted)", display: "flex", gap: "0.5rem", alignItems: "center" }}>
                     {r.test ? "✓" : "○"} {r.label}
@@ -209,10 +231,9 @@ export default function SignupPage() {
             {/* Step 9: reCAPTCHA */}
             <ReCaptcha
               onSuccess={(token) => setCaptchaToken(token)}
-              onError={() => setError("Security challenge failed. Please refresh.")}
+              onError={() => setError(lang === "ar" ? "فشل التحدي الأمني. يرجى تحديث الصفحة." : "Security challenge failed. Please refresh.")}
               onExpire={() => setCaptchaToken(null)}
             />
-
 
             {error && (
               <div style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", borderRadius: "var(--radius-md)", padding: "0.75rem 1rem" }}>
@@ -222,18 +243,18 @@ export default function SignupPage() {
 
             <button id="signup-submit" type="submit" className="btn btn-primary btn-lg w-full"
               disabled={loading || !captchaToken || strength.score < 4}>
-              {loading ? "Creating account…" : "Create Account"}
+              {loading ? trans.creatingAccount : trans.createAccount}
             </button>
 
             {strength.score < 4 && password.length > 0 && (
-              <p className="text-xs text-muted text-center">Strengthen your password to continue</p>
+              <p className="text-xs text-muted text-center">{trans.strengthenPassword}</p>
             )}
           </form>
         </div>
 
         <p className="text-center text-sm text-secondary mt-4">
-          Already have an account?{" "}
-          <Link href="/auth/login" className="text-accent">Sign in</Link>
+          {trans.alreadyHaveAccount}{" "}
+          <Link href="/auth/login" className="text-accent">{trans.signIn}</Link>
         </p>
       </div>
     </div>

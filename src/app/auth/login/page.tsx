@@ -8,11 +8,14 @@ import { ReCaptcha } from "@/components/ReCaptcha";
 import { LoginSchema } from "@/lib/security";
 
 
+import { useLanguage } from "@/lib/LanguageContext";
+
 // Step 6: Track login attempts client-side too (belt-and-suspenders)
 const MAX_CLIENT_ATTEMPTS = 5;
 
 export default function LoginPage() {
   const router = useRouter();
+  const { lang, dir, trans } = useLanguage();
   const [email, setEmail]           = useState("");
   const [password, setPassword]     = useState("");
   const [loading, setLoading]       = useState(false);
@@ -29,13 +32,13 @@ export default function LoginPage() {
 
     // Step 6: Client-side attempt tracking
     if (blocked) {
-      setError("Too many failed attempts. Please wait before trying again.");
+      setError(lang === "ar" ? "محاولات كثيرة خاطئة. يرجى الانتظار قبل المحاولة مجدداً." : "Too many failed attempts. Please wait before trying again.");
       return;
     }
 
     // Step 9: CAPTCHA check
     if (!captchaToken) {
-      setError("Please complete the security challenge.");
+      setError(lang === "ar" ? "يرجى إكمال التحدي الأمني." : "Please complete the security challenge.");
       return;
     }
 
@@ -51,6 +54,24 @@ export default function LoginPage() {
     }
 
     setLoading(true);
+
+    // Verify reCAPTCHA token with Google Siteverify API via server route
+    try {
+      const captchaRes = await fetch("/api/verify-captcha", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: captchaToken }),
+      });
+      const captchaData = await captchaRes.json();
+      if (!captchaData.success) {
+        setLoading(false);
+        setError(captchaData.error || (lang === "ar" ? "فشل التحقق الأمني. يرجى المحاولة مرة أخرى." : "Security verification failed. Please try again."));
+        return;
+      }
+    } catch {
+      // Continue if network error on verification check
+    }
+
     const supabase = createClient();
 
     try {
@@ -70,38 +91,39 @@ export default function LoginPage() {
         }
 
         // Step 14: Show exact error for debugging
-        setError(err.message || "Invalid email or password. Please try again.");
+        setError(err.message || (lang === "ar" ? "البريد الإلكتروني أو كلمة المرور غير صحيحة." : "Invalid email or password. Please try again."));
       } else {
         router.push("/dashboard");
         router.refresh();
       }
     } catch (e: any) {
-      setError(e.message || "An unexpected error occurred. Please try again.");
+      setError(e.message || (lang === "ar" ? "حدث خطأ غير متوقع. يرجى المحاولة لاحقاً." : "An unexpected error occurred. Please try again."));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div style={{
+    <div dir={dir} style={{
       minHeight: "100vh",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
       background: "var(--bg-base)",
       padding: "1.5rem",
+      fontFamily: lang === "ar" ? "Cairo, sans-serif" : "inherit",
     }}>
       <div style={{ width: "100%", maxWidth: "420px" }}>
         <div className="text-center mb-6">
           <Link href="/" className="logo" style={{ fontSize: "1.5rem" }}>AutoRent AI</Link>
-          <h2 className="mt-4">Welcome back</h2>
-          <p className="text-secondary text-sm mt-1">Sign in to your account</p>
+          <h2 className="mt-4">{trans.welcomeBack}</h2>
+          <p className="text-secondary text-sm mt-1">{trans.signInSubtitle}</p>
         </div>
 
         <div className="card">
           <form onSubmit={handleSubmit} className="flex flex-col gap-4" noValidate>
             <div className="form-group">
-              <label className="label" htmlFor="login-email">Email</label>
+              <label className="label" htmlFor="login-email">{trans.email}</label>
               <input
                 id="login-email"
                 type="email"
@@ -119,7 +141,7 @@ export default function LoginPage() {
             </div>
 
             <div className="form-group">
-              <label className="label" htmlFor="login-password">Password</label>
+              <label className="label" htmlFor="login-password">{trans.password}</label>
               <input
                 id="login-password"
                 type="password"
@@ -139,10 +161,9 @@ export default function LoginPage() {
             {/* Step 9: reCAPTCHA */}
             <ReCaptcha
               onSuccess={(token) => setCaptchaToken(token)}
-              onError={() => setError("Security challenge failed. Please refresh.")}
+              onError={() => setError(lang === "ar" ? "فشل التحدي الأمني. يرجى تحديث الصفحة." : "Security challenge failed. Please refresh.")}
               onExpire={() => setCaptchaToken(null)}
             />
-
 
             {error && (
               <div style={{
@@ -163,7 +184,7 @@ export default function LoginPage() {
                 padding: "0.75rem 1rem",
               }}>
                 <p className="text-warning text-sm">
-                  🔒 Account temporarily locked. Please wait 15 minutes.
+                  {lang === "ar" ? "🔒 تم قفل الحساب مؤقتاً. يرجى الانتظار 15 دقيقة." : "🔒 Account temporarily locked. Please wait 15 minutes."}
                 </p>
               </div>
             )}
@@ -174,14 +195,14 @@ export default function LoginPage() {
               className="btn btn-primary btn-lg w-full"
               disabled={loading || blocked || !captchaToken}
             >
-              {loading ? "Signing in…" : "Sign In"}
+              {loading ? trans.signingIn : trans.signIn}
             </button>
           </form>
         </div>
 
         <p className="text-center text-sm text-secondary mt-4">
-          Don&apos;t have an account?{" "}
-          <Link href="/auth/signup" className="text-accent">Sign up</Link>
+          {trans.dontHaveAccount}{" "}
+          <Link href="/auth/signup" className="text-accent">{trans.getStarted}</Link>
         </p>
       </div>
     </div>

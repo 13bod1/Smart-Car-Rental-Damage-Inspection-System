@@ -5,21 +5,26 @@ import { Navbar } from "@/components/Navbar";
 import { VehicleCard } from "@/components/VehicleCard";
 import { createClient } from "@/lib/supabase/client";
 import { Vehicle, VehicleCategory } from "@/lib/types";
-
-const CATEGORIES: { value: VehicleCategory | "all"; label: string }[] = [
-  { value: "all",      label: "All" },
-  { value: "economy",  label: "🚗 Economy" },
-  { value: "standard", label: "🚙 Standard" },
-  { value: "luxury",   label: "🏎️ Luxury" },
-  { value: "suv",      label: "🚐 SUV" },
-  { value: "van",      label: "🚌 Van" },
-];
+import { useLanguage } from "@/lib/LanguageContext";
+import { t } from "@/lib/translations";
 
 export default function FleetPage() {
-  const [vehicles, setVehicles]         = useState<Vehicle[]>([]);
-  const [loading, setLoading]           = useState(true);
-  const [category, setCategory]         = useState<VehicleCategory | "all">("all");
-  const [search, setSearch]             = useState("");
+  const { lang, dir } = useLanguage();
+  const T = t[lang];
+
+  const CATEGORIES: { value: VehicleCategory | "all"; label: string }[] = [
+    { value: "all",      label: T.all },
+    { value: "economy",  label: T.economy },
+    { value: "standard", label: T.standard },
+    { value: "luxury",   label: T.luxury },
+    { value: "suv",      label: T.suv },
+    { value: "van",      label: T.van },
+  ];
+
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [loading, setLoading]   = useState(true);
+  const [category, setCategory] = useState<VehicleCategory | "all">("all");
+  const [search, setSearch]     = useState("");
 
   useEffect(() => {
     const supabase = createClient();
@@ -42,14 +47,14 @@ export default function FleetPage() {
   }, [category, search]);
 
   return (
-    <div className="page-wrapper">
+    <div className="page-wrapper" dir={dir}>
       <Navbar />
 
       <div className="container" style={{ padding: "3rem 1.5rem" }}>
         <div className="mb-6">
-          <h1>Browse Our Fleet</h1>
+          <h1>{T.browseOurFleet}</h1>
           <p className="text-secondary mt-1">
-            {vehicles.length} available vehicles ready to rent
+            {vehicles.length} {T.availableVehicles}
           </p>
         </div>
 
@@ -59,7 +64,7 @@ export default function FleetPage() {
             id="search-vehicles"
             type="text"
             className="input"
-            placeholder="Search by make (Toyota, BMW…)"
+            placeholder={T.searchPlaceholder}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             style={{ maxWidth: "300px" }}
@@ -86,8 +91,8 @@ export default function FleetPage() {
         ) : vehicles.length === 0 ? (
           <div className="card text-center" style={{ padding: "4rem" }}>
             <p style={{ fontSize: "3rem", marginBottom: "1rem" }}>🚗</p>
-            <h3>No vehicles found</h3>
-            <p className="text-secondary mt-2">Try adjusting your filters.</p>
+            <h3>{T.noVehiclesFound}</h3>
+            <p className="text-secondary mt-2">{T.tryAdjustingFilters}</p>
           </div>
         ) : (
           <div className="vehicle-grid">

@@ -5,21 +5,26 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Profile } from "@/lib/types";
-
-const navItems = [
-  { href: "/",           label: "Home",        icon: "🏠" },
-  { href: "/fleet",      label: "Browse Fleet", icon: "🚗" },
-  { href: "/snap",       label: "Snap & ID",    icon: "📸" },
-  { href: "/damage",     label: "Damage Scan",  icon: "🛡️" },
-  { href: "/compare",    label: "Compare",      icon: "🏁" },
-  { href: "/roadtrip",   label: "Roadtrip",     icon: "🌴" },
-  { href: "/services",   label: "Map",          icon: "🗺️" },
-  { href: "/dashboard",  label: "Dashboard",    icon: "📊" },
-];
+import { useLanguage } from "@/lib/LanguageContext";
+import { t } from "@/lib/translations";
 
 export function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
+  const { lang, setLang, dir } = useLanguage();
+  const T = t[lang];
+
+  const navItems = [
+    { href: "/",          label: T.home,        icon: "🏠" },
+    { href: "/fleet",     label: T.browseFleet,  icon: "🚗" },
+    { href: "/snap",      label: T.snapId,       icon: "📸" },
+    { href: "/damage",    label: T.damageScan,   icon: "🛡️" },
+    { href: "/compare",   label: T.compare,      icon: "🏁" },
+    { href: "/roadtrip",  label: T.roadtrip,     icon: "🌴" },
+    { href: "/services",  label: T.map,          icon: "🗺️" },
+    { href: "/dashboard", label: T.dashboard,    icon: "📊" },
+  ];
+
   const [profile, setProfile] = useState<Profile | null>(null);
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -45,9 +50,7 @@ export function Navbar() {
           .select("*")
           .eq("id", sessionUser.id)
           .maybeSingle();
-        if (!error && data) {
-          p = data;
-        }
+        if (!error && data) p = data;
       } catch {
         // Fallback to user metadata
       }
@@ -73,21 +76,17 @@ export function Navbar() {
       setLoading(false);
     };
 
-    // Check current session
     supabase.auth.getSession().then(({ data: { session } }) => {
       resolveProfile(session?.user);
     });
 
-    // Real-time auth changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       resolveProfile(session?.user);
     });
 
-    return () => {
-      subscription.unsubscribe();
-    };
+    return () => { subscription.unsubscribe(); };
   }, []);
 
   const handleSignOut = async () => {
@@ -103,7 +102,7 @@ export function Navbar() {
   const isOwner = profile?.role === "owner";
 
   return (
-    <nav className="navbar">
+    <nav className="navbar" dir={dir}>
       <div className="navbar-inner">
         <Link href="/" className="logo">AutoRent AI</Link>
 
@@ -119,8 +118,26 @@ export function Navbar() {
           ))}
         </div>
 
-        {/* User profile / Auth buttons in top right */}
-        <div className="flex gap-4 items-center nav-actions" style={{ position: "relative" }}>
+        {/* Language switcher + auth */}
+        <div className="flex gap-3 items-center nav-actions" style={{ position: "relative" }}>
+          {/* Language Toggle */}
+          <div className="lang-switcher">
+            <button
+              className={`lang-btn ${lang === "en" ? "active" : ""}`}
+              onClick={() => setLang("en")}
+              aria-label="English"
+            >
+              EN
+            </button>
+            <button
+              className={`lang-btn ${lang === "ar" ? "active" : ""}`}
+              onClick={() => setLang("ar")}
+              aria-label="العربية"
+            >
+              ع
+            </button>
+          </div>
+
           {!loading && profile ? (
             <div className="relative">
               <button
@@ -128,11 +145,11 @@ export function Navbar() {
                 className="flex items-center gap-3 profile-pill-btn"
                 style={{
                   background: isOwner
-                    ? "linear-gradient(135deg, rgba(59,130,246,0.12), rgba(37,99,235,0.06))"
-                    : "linear-gradient(135deg, rgba(16,185,129,0.12), rgba(5,150,105,0.06))",
+                    ? "rgba(37,99,235,0.08)"
+                    : "rgba(5,150,105,0.08)",
                   border: isOwner
-                    ? "1px solid rgba(59,130,246,0.35)"
-                    : "1px solid rgba(16,185,129,0.35)",
+                    ? "1px solid rgba(37,99,235,0.25)"
+                    : "1px solid rgba(5,150,105,0.25)",
                   borderRadius: "9999px",
                   padding: "4px 12px 4px 6px",
                   cursor: "pointer",
@@ -140,133 +157,97 @@ export function Navbar() {
                   transition: "all 0.2s ease",
                 }}
               >
-                {/* Avatar with role status ring */}
+                {/* Avatar */}
                 <div
                   style={{
-                    width: 34,
-                    height: 34,
+                    width: 34, height: 34,
                     borderRadius: "50%",
                     background: isOwner
                       ? "linear-gradient(135deg, #2563eb, #3b82f6)"
                       : "linear-gradient(135deg, #059669, #10b981)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontWeight: 700,
-                    color: "#ffffff",
-                    fontSize: "0.95rem",
-                    boxShadow: isOwner
-                      ? "0 0 10px rgba(59,130,246,0.4)"
-                      : "0 0 10px rgba(16,185,129,0.4)",
-                    overflow: "hidden",
-                    flexShrink: 0,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    fontWeight: 700, color: "#ffffff", fontSize: "0.95rem",
+                    overflow: "hidden", flexShrink: 0,
                   }}
                 >
                   {profile.avatar_url ? (
-                    <img
-                      src={profile.avatar_url}
-                      alt="Avatar"
-                      style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                    />
+                    <img src={profile.avatar_url} alt="Avatar"
+                      style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                   ) : (
                     (profile.full_name || "U")[0].toUpperCase()
                   )}
                 </div>
 
-                {/* Profile Name & Role Badge */}
+                {/* Name & Role */}
                 <div className="flex flex-col items-start text-left" style={{ minWidth: 0 }}>
-                  <span
-                    style={{
-                      fontSize: "0.85rem",
-                      fontWeight: 700,
-                      lineHeight: 1.2,
-                      maxWidth: 120,
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
+                  <span style={{
+                    fontSize: "0.85rem", fontWeight: 700, lineHeight: 1.2,
+                    maxWidth: 120, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+                  }}>
                     {profile.full_name || "Account"}
                   </span>
-                  <span
-                    style={{
-                      fontSize: "0.7rem",
-                      fontWeight: 600,
-                      color: isOwner ? "var(--accent-light, #60a5fa)" : "var(--success, #34d399)",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 3,
-                    }}
-                  >
-                    {isOwner ? "🏢 Fleet Owner" : "🙋 Renter"}
+                  <span style={{
+                    fontSize: "0.7rem", fontWeight: 600,
+                    color: isOwner ? "#2563eb" : "#059669",
+                    display: "flex", alignItems: "center", gap: 3,
+                  }}>
+                    {isOwner ? `🏢 ${T.fleetOwner}` : `🙋 ${T.renter}`}
                   </span>
                 </div>
 
-                {/* Dropdown Chevron */}
-                <span style={{ fontSize: "0.7rem", opacity: 0.7, marginLeft: 2 }}>▼</span>
+                <span style={{ fontSize: "0.7rem", opacity: 0.6, marginLeft: 2 }}>▼</span>
               </button>
 
-              {/* Profile Dropdown Menu */}
+              {/* Dropdown */}
               {dropdownOpen && (
                 <div
                   className="animate-fade-in"
                   style={{
                     position: "absolute",
                     top: "calc(100% + 8px)",
-                    right: 0,
+                    right: dir === "rtl" ? "unset" : 0,
+                    left: dir === "rtl" ? 0 : "unset",
                     width: 220,
-                    background: "var(--surface, #131722)",
-                    border: "1px solid var(--border, rgba(255,255,255,0.12))",
-                    borderRadius: "var(--radius-md, 12px)",
+                    background: "var(--bg-surface)",
+                    border: "1px solid var(--border)",
+                    borderRadius: "var(--radius-md)",
                     padding: "0.75rem",
-                    boxShadow: "0 12px 30px rgba(0,0,0,0.5)",
+                    boxShadow: "var(--shadow-hover)",
                     zIndex: 1000,
                   }}
                 >
-                  <div style={{ paddingBottom: "0.5rem", borderBottom: "1px solid var(--border, rgba(255,255,255,0.08))" }}>
-                    <div style={{ fontWeight: 700, fontSize: "0.9rem" }}>{profile.full_name}</div>
-                    <div style={{ fontSize: "0.75rem", color: "var(--text-secondary, #94a3b8)", overflow: "hidden", textOverflow: "ellipsis" }}>
+                  <div style={{ paddingBottom: "0.5rem", borderBottom: "1px solid var(--border)" }}>
+                    <div style={{ fontWeight: 700, fontSize: "0.9rem", color: "var(--text-primary)" }}>
+                      {profile.full_name}
+                    </div>
+                    <div style={{ fontSize: "0.75rem", color: "var(--text-secondary)", overflow: "hidden", textOverflow: "ellipsis" }}>
                       {userEmail || "Signed in"}
                     </div>
-                    <span
-                      style={{
-                        display: "inline-block",
-                        marginTop: 4,
-                        fontSize: "0.68rem",
-                        fontWeight: 700,
-                        padding: "2px 6px",
-                        borderRadius: 4,
-                        background: isOwner ? "rgba(59,130,246,0.2)" : "rgba(16,185,129,0.2)",
-                        color: isOwner ? "#93c5fd" : "#6ee7b7",
-                      }}
-                    >
-                      {isOwner ? "🏢 Fleet Owner Account" : "🙋 Renter Account"}
+                    <span style={{
+                      display: "inline-block", marginTop: 4, fontSize: "0.68rem", fontWeight: 700,
+                      padding: "2px 6px", borderRadius: 4,
+                      background: isOwner ? "rgba(37,99,235,0.1)" : "rgba(5,150,105,0.1)",
+                      color: isOwner ? "#2563eb" : "#059669",
+                    }}>
+                      {isOwner ? `🏢 ${T.fleetOwner}` : `🙋 ${T.renter}`}
                     </span>
                   </div>
 
                   <div className="flex flex-col gap-1 mt-2">
-                    <Link
-                      href="/dashboard"
-                      onClick={() => setDropdownOpen(false)}
+                    <Link href="/dashboard" onClick={() => setDropdownOpen(false)}
                       className="btn btn-ghost btn-sm"
-                      style={{ justifyContent: "flex-start", width: "100%", fontSize: "0.85rem" }}
-                    >
-                      📊 {isOwner ? "Owner Dashboard" : "My Dashboard"}
+                      style={{ justifyContent: "flex-start", width: "100%", fontSize: "0.85rem" }}>
+                      📊 {isOwner ? T.ownerDashboard : T.myDashboard}
                     </Link>
-                    <Link
-                      href="/fleet"
-                      onClick={() => setDropdownOpen(false)}
+                    <Link href="/fleet" onClick={() => setDropdownOpen(false)}
                       className="btn btn-ghost btn-sm"
-                      style={{ justifyContent: "flex-start", width: "100%", fontSize: "0.85rem" }}
-                    >
-                      🚗 {isOwner ? "Manage Fleet" : "Browse Vehicles"}
+                      style={{ justifyContent: "flex-start", width: "100%", fontSize: "0.85rem" }}>
+                      🚗 {isOwner ? T.manageFleet : T.browseVehicles}
                     </Link>
-                    <button
-                      onClick={handleSignOut}
+                    <button onClick={handleSignOut}
                       className="btn btn-ghost btn-sm text-danger"
-                      style={{ justifyContent: "flex-start", width: "100%", fontSize: "0.85rem", marginTop: 4 }}
-                    >
-                      🚪 Sign Out
+                      style={{ justifyContent: "flex-start", width: "100%", fontSize: "0.85rem", marginTop: 4 }}>
+                      🚪 {T.signOut}
                     </button>
                   </div>
                 </div>
@@ -274,8 +255,8 @@ export function Navbar() {
             </div>
           ) : !loading && (
             <>
-              <Link href="/auth/login"  className="btn btn-ghost btn-sm">Sign In</Link>
-              <Link href="/auth/signup" className="btn btn-primary btn-sm">Get Started</Link>
+              <Link href="/auth/login" className="btn btn-ghost btn-sm">{T.signIn}</Link>
+              <Link href="/auth/signup" className="btn btn-primary btn-sm">{T.getStarted}</Link>
             </>
           )}
         </div>
@@ -290,7 +271,7 @@ export function Navbar() {
             className={`tab-item ${pathname === item.href ? "active" : ""}`}
           >
             <span className="tab-icon">{item.icon}</span>
-            <span className="tab-label">{item.label.replace("Browse ", "").replace("Snap & ID", "Snap").replace("Damage Scan", "Damage")}</span>
+            <span className="tab-label">{item.label}</span>
           </Link>
         ))}
       </div>

@@ -3,6 +3,7 @@
 import { useCallback, useState, useRef } from "react";
 import { Navbar } from "@/components/Navbar";
 import { formatCurrency } from "@/lib/utils";
+import { useLanguage } from "@/lib/LanguageContext";
 
 interface DamageZone {
   zone: string;
@@ -25,6 +26,7 @@ interface DamageResult {
 }
 
 export default function DamageScannerPage() {
+  const { lang, dir, trans } = useLanguage();
   const [dragging, setDragging] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -67,12 +69,12 @@ export default function DamageScannerPage() {
 
       if (!resp.ok) {
         const errData = await resp.json();
-        throw new Error(errData.error || "AI damage scan failed");
+        throw new Error(errData.error || (lang === "ar" ? "فشل فحص الأضرار" : "AI damage scan failed"));
       }
       setResult(await resp.json());
     } catch (e: unknown) {
       console.error(e);
-      setError(e instanceof Error ? e.message : "Something went wrong");
+      setError(e instanceof Error ? e.message : (lang === "ar" ? "حدث خطأ ما" : "Something went wrong"));
     } finally {
       setLoading(false);
     }
@@ -96,27 +98,42 @@ export default function DamageScannerPage() {
     }
   };
 
+  const severityText = (s: string) => {
+    if (lang !== "ar") return s;
+    switch (s.toLowerCase()) {
+      case "none": return "بدون أضرار";
+      case "minor": return "بسيط";
+      case "moderate": return "متوسط";
+      case "severe": return "شديد / بليغ";
+      default: return s;
+    }
+  };
+
   const depositLabel = (d: string) => {
     switch (d) {
-      case "full_refund": return { text: "Full Refund", color: "var(--success)", icon: "✅" };
-      case "partial_deduction": return { text: "Partial Deduction", color: "var(--warning)", icon: "⚠️" };
-      case "full_confiscation": return { text: "Full Confiscation", color: "var(--danger)", icon: "🚫" };
-      default: return { text: d, color: "var(--text-muted)", icon: "❓" };
+      case "full_refund":
+        return { text: trans.fullRefund, color: "var(--success)", icon: "✅" };
+      case "partial_deduction":
+        return { text: trans.partialDeduction, color: "var(--warning)", icon: "⚠️" };
+      case "full_confiscation":
+        return { text: trans.fullConfiscation, color: "var(--danger)", icon: "🚫" };
+      default:
+        return { text: d, color: "var(--text-muted)", icon: "❓" };
     }
   };
 
   return (
-    <div className="page-wrapper">
+    <div className="page-wrapper" dir={dir} style={{ fontFamily: lang === "ar" ? "Cairo, sans-serif" : "inherit" }}>
       <Navbar />
 
       <div className="container" style={{ padding: "3rem 1.5rem", maxWidth: "750px" }}>
         <div className="mb-6 text-center">
           <div className="hero-eyebrow" style={{ display: "inline-flex" }}>
-            <span>🛡️</span> AI Damage Assessment
+            <span>🛡️</span> {trans.damageHeader}
           </div>
-          <h1>🔍 Damage Scanner</h1>
+          <h1>{trans.damagePageTitle}</h1>
           <p className="text-secondary mt-2">
-            Upload a photo of any vehicle and our AI will detect damage, estimate repair costs, and recommend deposit actions.
+            {trans.damagePageDesc}
           </p>
         </div>
 
@@ -135,8 +152,8 @@ export default function DamageScannerPage() {
           ) : (
             <div className="flex flex-col items-center gap-3">
               <span style={{ fontSize: "4rem" }}>🔍</span>
-              <p className="font-semibold">Drop a car photo to scan for damage</p>
-              <p className="text-sm text-muted">Front, rear, left, or right angles work best</p>
+              <p className="font-semibold">{trans.damageDropzone}</p>
+              <p className="text-sm text-muted">{trans.damageDropzoneSub}</p>
             </div>
           )}
         </div>
@@ -153,22 +170,22 @@ export default function DamageScannerPage() {
 
         {file && !loading && !result && (
           <button id="scan-damage-btn" className="btn btn-primary w-full mt-4 btn-lg" onClick={scanDamage}>
-            🛡️ Scan for Damage
+            {trans.scanForDamage}
           </button>
         )}
 
         {loading && (
           <div className="card flex flex-col items-center gap-4 mt-4" style={{ padding: "3rem" }}>
             <div className="spinner animate-pulse-glow" />
-            <p className="text-secondary">AI is analyzing the vehicle for damage…</p>
-            <p className="text-xs text-muted">Checking for scratches, dents, cracks, and more</p>
+            <p className="text-secondary">{trans.damageAnalyzing}</p>
+            <p className="text-xs text-muted">{trans.damageAnalyzingSub}</p>
           </div>
         )}
 
         {error && (
           <div className="card mt-4" style={{ borderColor: "rgba(239,68,68,0.3)", background: "rgba(239,68,68,0.05)" }}>
             <p className="text-danger">⚠️ {error}</p>
-            <button className="btn btn-secondary btn-sm mt-2" onClick={reset}>Try Again</button>
+            <button className="btn btn-secondary btn-sm mt-2" onClick={reset}>{trans.tryAgain}</button>
           </div>
         )}
 
@@ -186,11 +203,13 @@ export default function DamageScannerPage() {
                 </span>
                 <div>
                   <h2 style={{ color: severityColor(result.severity) }}>
-                    {result.damage_detected ? `${result.severity.charAt(0).toUpperCase() + result.severity.slice(1)} Damage Detected` : "No Damage Detected!"}
+                    {result.damage_detected
+                      ? `${trans.damageDetectedTitle} (${severityText(result.severity)})`
+                      : trans.noDamageDetected}
                   </h2>
                   <p className="text-sm text-secondary">{result.overall_condition}</p>
                   <span className="badge badge-info mt-1">
-                    {((result.confidence || 0) * 100).toFixed(0)}% confidence
+                    {((result.confidence || 0) * 100).toFixed(0)}% {trans.confidence}
                   </span>
                 </div>
               </div>
@@ -201,7 +220,7 @@ export default function DamageScannerPage() {
             {/* Damage Zones */}
             {result.damage_zones && result.damage_zones.length > 0 && (
               <div className="card">
-                <h3 className="mb-4">Damage Zones</h3>
+                <h3 className="mb-4">{lang === "ar" ? "مناطق الأضرار المرصودة" : "Damage Zones"}</h3>
                 <div className="flex flex-col gap-3">
                   {result.damage_zones.map((zone, i) => (
                     <div key={i} style={{
@@ -220,12 +239,12 @@ export default function DamageScannerPage() {
                           color: severityColor(zone.severity),
                           border: `1px solid ${severityColor(zone.severity)}40`,
                         }}>
-                          {zone.severity}
+                          {severityText(zone.severity)}
                         </span>
                       </div>
                       <p className="text-sm text-secondary mt-1">{zone.description}</p>
                       <p className="text-sm mt-1" style={{ color: "var(--danger)" }}>
-                        Estimated repair: <strong>{formatCurrency(zone.estimated_repair_cost_egp)}</strong>
+                        {trans.estimatedRepair}: <strong>{formatCurrency(zone.estimated_repair_cost_egp)}</strong>
                       </p>
                     </div>
                   ))}
@@ -236,13 +255,13 @@ export default function DamageScannerPage() {
             {/* Cost & Deposit */}
             <div className="grid-2">
               <div className="stat-card">
-                <div className="stat-label">Total Repair Cost</div>
+                <div className="stat-label">{trans.estimatedRepair}</div>
                 <div className="stat-value" style={{ color: result.total_repair_cost_egp > 0 ? "var(--danger)" : "var(--success)" }}>
                   {formatCurrency(result.total_repair_cost_egp || 0)}
                 </div>
               </div>
               <div className="stat-card">
-                <div className="stat-label">Deposit Action</div>
+                <div className="stat-label">{trans.depositAction}</div>
                 <div className="stat-value" style={{ fontSize: "1.2rem", color: depositLabel(result.deposit_recommendation).color }}>
                   {depositLabel(result.deposit_recommendation).icon} {depositLabel(result.deposit_recommendation).text}
                 </div>
@@ -252,7 +271,7 @@ export default function DamageScannerPage() {
             {/* Tips */}
             {result.tips && result.tips.length > 0 && (
               <div className="card" style={{ borderColor: "rgba(59,130,246,0.2)" }}>
-                <h3 className="mb-3">💡 Pro Tips</h3>
+                <h3 className="mb-3">{trans.repairRecommendations}</h3>
                 <ul style={{ listStyle: "none", padding: 0, display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                   {result.tips.map((tip, i) => (
                     <li key={i} className="text-sm text-secondary flex gap-2">
@@ -264,7 +283,7 @@ export default function DamageScannerPage() {
             )}
 
             <button className="btn btn-secondary w-full" onClick={reset}>
-              🔍 Scan Another Vehicle
+              {trans.tryAgain}
             </button>
           </div>
         )}

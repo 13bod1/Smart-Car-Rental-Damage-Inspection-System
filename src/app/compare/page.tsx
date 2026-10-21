@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { Navbar } from "@/components/Navbar";
+import { useLanguage } from "@/lib/LanguageContext";
 import {
   CAR_DATABASE,
   CAR_GROUPS,
@@ -29,7 +30,45 @@ interface CompareResult {
   summary: string;
 }
 
+const BATTLE_TITLES_AR: Record<string, { title: string; desc: string }> = {
+  "egypt-legends": {
+    title: "أساطير شوارع مصر",
+    desc: "ملوك الأسفلت المصري الخالدين: بيجو 504 ضد مرسيدس الخنزيرة ضد فيات 128",
+  },
+  "daily-commuter": {
+    title: "الأكثر مبيعاً في مصر",
+    desc: "مقارنة جنباً إلى جنب لأفضل السيارات الاقتصادية اليومية في شوارع مصر",
+  },
+  "suv-titans": {
+    title: "عمالقة الدفع الرباعي والصحراء",
+    desc: "ملوك الطرق الوعرة المصممون لكثبان الصحراء وطرق سيناء السريعة",
+  },
+  "ev-future": {
+    title: "مواجهة السيارات الكهربائية",
+    desc: "أحدث ابتكارات الطاقة الكهربائية: تسلا ضد بي واي دي ضد بورشه",
+  },
+  "german-luxury": {
+    title: "قمة الفخامة الألمانية",
+    desc: "أعلى درجات الرفاهية والراحة والهيبة التنفيذية على الإطلاق",
+  },
+  "jdm-legends": {
+    title: "العصر الذهبي للسيارات اليابانية",
+    desc: "أيقونات يابانية أسطورية غيرت ثقافة وهندسة السيارات الرياضية",
+  },
+};
+
+const CAR_GROUP_NAMES_AR: Record<string, string> = {
+  "🇪🇬 Egyptian Street Icons & Classics": "🇪🇬 أيقونات وكلاسيكيات مصرية",
+  "🚗 Everyday Commuters & Sedans": "🚗 سيارات سيدان واقتصادية",
+  "🚙 SUVs & Crossovers": "🚙 دفع رباعي وكروس أوفر",
+  "👑 Luxury & Executive Saloons": "👑 سيارات فارهة وتنفيذية",
+  "⚡ Electric & Hybrid (EV)": "⚡ سيارات كهربائية وهجينة",
+  "🏎️ Sports, Supercars & Icons": "🏎️ سيارات رياضية وخارقة",
+  "🛻 Pickups, Vans & People Movers": "🛻 بيك أب وحافلات عائلية",
+};
+
 export default function ComparePage() {
+  const { lang, dir, trans } = useLanguage();
   const [selectedCars, setSelectedCars] = useState<string[]>([
     "Toyota Camry 2.5 Grande (2024)",
     "Peugeot 504 Break Station Wagon (1979)",
@@ -101,7 +140,7 @@ export default function ComparePage() {
   const compare = async () => {
     const cars = selectedCars.map((c) => c.trim()).filter(Boolean);
     if (cars.length < 2) {
-      setError("Please select or type at least 2 cars to compare.");
+      setError(lang === "ar" ? "يرجى اختيار أو كتابة سيارتين على الأقل للمقارنة." : "Please select or type at least 2 cars to compare.");
       return;
     }
     setLoading(true);
@@ -116,7 +155,7 @@ export default function ComparePage() {
       const data = await resp.json();
       setResult(data);
     } catch {
-      setError("AI comparison failed. Please try again.");
+      setError(lang === "ar" ? "فشلت المقارنة بالذكاء الاصطناعي. يرجى المحاولة لاحقاً." : "AI comparison failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -170,37 +209,41 @@ export default function ComparePage() {
   );
 
   return (
-    <div className="page-wrapper">
+    <div className="page-wrapper" dir={dir} style={{ fontFamily: lang === "ar" ? "Cairo, sans-serif" : "inherit" }}>
       <Navbar />
 
       <div className="container" style={{ padding: "3rem 1.5rem", maxWidth: "1150px" }}>
         {/* Header */}
         <div className="mb-6 text-center">
           <div className="hero-eyebrow" style={{ display: "inline-flex" }}>
-            <span>⚡</span> Over {CAR_DATABASE.length}+ Cars Available
+            <span>⚡</span> {lang === "ar" ? `أكثر من ${CAR_DATABASE.length}+ سيارة متاحة` : `Over ${CAR_DATABASE.length}+ Cars Available`}
           </div>
-          <h1>🏁 AI Car Comparator</h1>
+          <h1>🏁 {trans.compareHeader}</h1>
           <p className="text-secondary mt-2" style={{ maxWidth: "680px", margin: "0.5rem auto 0" }}>
-            Compare vintage Egyptian icons, modern daily runners, high-performance supercars, desert 4x4s, and next-gen EVs side-by-side. AI evaluates rental rates, market value, comfort, and reliability in Egypt.
+            {trans.compareSubtitle}
           </p>
         </div>
 
         {/* Popular Battle Presets */}
-        <div className="card mb-6" style={{ background: "rgba(17, 24, 39, 0.7)" }}>
+        <div className="card mb-6" style={{ background: "var(--bg-elevated)" }}>
           <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
             <div>
-              <h3 style={{ fontSize: "1.1rem" }}>🔥 Popular Matchup Presets</h3>
+              <h3 style={{ fontSize: "1.1rem" }}>
+                {lang === "ar" ? "🔥 مواجهات جاهزة ومميزة" : "🔥 Popular Matchup Presets"}
+              </h3>
               <p className="text-xs text-muted">
-                1-click instant battles curated by car enthusiasts and Cairo drivers
+                {lang === "ar"
+                  ? "مواجهات بنقرة واحدة تم انتقاؤها بواسطة خبراء وعشاق سيارات وسائقي القاهرة"
+                  : "1-click instant battles curated by car enthusiasts and Cairo drivers"}
               </p>
             </div>
             <button
               type="button"
               className="btn btn-secondary text-xs"
               onClick={surpriseMe}
-              title="Pick 2 or 3 random cars from across all eras"
+              title={lang === "ar" ? "اختر سيارتين أو 3 سيارات عشوائية من مختلف العصور" : "Pick 2 or 3 random cars from across all eras"}
             >
-              🎲 Surprise Matchup
+              {lang === "ar" ? "🎲 مواجهة عشوائية" : "🎲 Surprise Matchup"}
             </button>
           </div>
 
@@ -211,41 +254,46 @@ export default function ComparePage() {
               gap: "0.75rem",
             }}
           >
-            {POPULAR_BATTLES.map((b) => (
-              <button
-                key={b.id}
-                type="button"
-                className="card card-glass text-left"
-                onClick={() => loadPreset(b)}
-                style={{
-                  padding: "0.85rem",
-                  cursor: "pointer",
-                  border: "1px solid var(--border)",
-                  borderRadius: "var(--radius-md)",
-                  transition: "var(--transition)",
-                  textAlign: "left",
-                  background: "rgba(255, 255, 255, 0.02)",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = "var(--accent-light)";
-                  e.currentTarget.style.transform = "translateY(-2px)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = "var(--border)";
-                  e.currentTarget.style.transform = "translateY(0)";
-                }}
-              >
-                <div className="flex items-center gap-2 mb-1">
-                  <span style={{ fontSize: "1.2rem" }}>{b.emoji}</span>
-                  <span className="font-bold text-sm" style={{ color: "var(--text-primary)" }}>
-                    {b.title}
-                  </span>
-                </div>
-                <p className="text-xs text-muted" style={{ lineHeight: "1.3" }}>
-                  {b.description}
-                </p>
-              </button>
-            ))}
+            {POPULAR_BATTLES.map((b) => {
+              const arInfo = BATTLE_TITLES_AR[b.id];
+              const title = lang === "ar" && arInfo ? arInfo.title : b.title;
+              const desc = lang === "ar" && arInfo ? arInfo.desc : b.description;
+              return (
+                <button
+                  key={b.id}
+                  type="button"
+                  className="card card-glass"
+                  onClick={() => loadPreset(b)}
+                  style={{
+                    padding: "0.85rem",
+                    cursor: "pointer",
+                    border: "1px solid var(--border)",
+                    borderRadius: "var(--radius-md)",
+                    transition: "var(--transition)",
+                    textAlign: dir === "rtl" ? "right" : "left",
+                    background: "var(--bg-surface)",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = "var(--accent-light)";
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = "var(--border)";
+                    e.currentTarget.style.transform = "translateY(0)";
+                  }}
+                >
+                  <div className="flex items-center gap-2 mb-1">
+                    <span style={{ fontSize: "1.2rem" }}>{b.emoji}</span>
+                    <span className="font-bold text-sm" style={{ color: "var(--text-primary)" }}>
+                      {title}
+                    </span>
+                  </div>
+                  <p className="text-xs text-muted" style={{ lineHeight: "1.3" }}>
+                    {desc}
+                  </p>
+                </button>
+              );
+            })}
           </div>
         </div>
 
@@ -253,9 +301,11 @@ export default function ComparePage() {
         <div className="card mb-6">
           <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
             <div>
-              <h3>Choose Up to 4 Cars to Compare</h3>
+              <h3>{lang === "ar" ? "اختر حتى 4 سيارات للمقارنة" : "Choose Up to 4 Cars to Compare"}</h3>
               <p className="text-xs text-muted">
-                Select from our database of {CAR_DATABASE.length} models or type custom car names
+                {lang === "ar"
+                  ? `اختر من قاعدة بياناتنا التي تضم ${CAR_DATABASE.length} طرازاً أو اكتب أسماء مخصصة`
+                  : `Select from our database of ${CAR_DATABASE.length} models or type custom car names`}
               </p>
             </div>
             <div className="flex items-center gap-2 flex-wrap">
@@ -265,7 +315,7 @@ export default function ComparePage() {
                   className="btn btn-secondary text-xs"
                   onClick={addCarSlot}
                 >
-                  ➕ Add Another Car
+                  {lang === "ar" ? "➕ إضافة سيارة أخرى" : "➕ Add Another Car"}
                 </button>
               )}
               <button
@@ -273,7 +323,9 @@ export default function ComparePage() {
                 className="btn btn-secondary text-xs"
                 onClick={() => setCustomInputMode(!customInputMode)}
               >
-                {customInputMode ? "📋 Switch to Preset Catalog" : "✏️ Type Custom Car Names"}
+                {customInputMode
+                  ? (lang === "ar" ? "📋 التبديل إلى الكتالوج الجاهز" : "📋 Switch to Preset Catalog")
+                  : (lang === "ar" ? "✏️ كتابة أسماء سيارات مخصصة" : "✏️ Type Custom Car Names")}
               </button>
             </div>
           </div>
@@ -284,7 +336,7 @@ export default function ComparePage() {
               style={{
                 marginBottom: "1.25rem",
                 padding: "0.85rem",
-                background: "var(--bg-glass)",
+                background: "var(--bg-elevated)",
                 borderRadius: "var(--radius-md)",
                 border: "1px solid var(--border)",
               }}
@@ -293,7 +345,11 @@ export default function ComparePage() {
                 <input
                   type="text"
                   className="input text-sm"
-                  placeholder="🔍 Type make or model to filter (e.g. Corolla, 504, 911, Tesla, Patrol, BMW)..."
+                  placeholder={
+                    lang === "ar"
+                      ? "🔍 اكتب الماركة أو الطراز للتصفية (مثل Corolla, 504, 911, Tesla, Patrol, BMW)..."
+                      : "🔍 Type make or model to filter (e.g. Corolla, 504, 911, Tesla, Patrol, BMW)..."
+                  }
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   style={{ flex: 1, minWidth: "220px", padding: "0.5rem 0.75rem" }}
@@ -304,11 +360,13 @@ export default function ComparePage() {
                     className="btn btn-secondary text-xs"
                     onClick={() => setSearchQuery("")}
                   >
-                    Clear Filter
+                    {lang === "ar" ? "مسح التصفية" : "Clear Filter"}
                   </button>
                 )}
                 <span className="text-xs text-muted" style={{ whiteSpace: "nowrap" }}>
-                  Showing {filteredCars.length} of {CAR_DATABASE.length} cars
+                  {lang === "ar"
+                    ? `عرض ${filteredCars.length} من أصل ${CAR_DATABASE.length} سيارة`
+                    : `Showing ${filteredCars.length} of ${CAR_DATABASE.length} cars`}
                 </span>
               </div>
 
@@ -328,11 +386,12 @@ export default function ComparePage() {
                   style={{ padding: "0.3rem 0.65rem", fontSize: "0.75rem" }}
                   onClick={() => setActiveCategoryFilter("All")}
                 >
-                  All ({CAR_DATABASE.length})
+                  {lang === "ar" ? `الكل (${CAR_DATABASE.length})` : `All (${CAR_DATABASE.length})`}
                 </button>
                 {CAR_GROUPS.map((grp) => {
                   const count = CAR_DATABASE.filter((c) => c.group === grp).length;
                   const isActive = activeCategoryFilter === grp;
+                  const label = lang === "ar" && CAR_GROUP_NAMES_AR[grp] ? CAR_GROUP_NAMES_AR[grp] : `${grp.split(" ")[0]} ${grp.replace(/^[^\s]+\s*/, "")}`;
                   return (
                     <button
                       key={grp}
@@ -345,7 +404,7 @@ export default function ComparePage() {
                       }}
                       onClick={() => setActiveCategoryFilter(grp)}
                     >
-                      {grp.split(" ")[0]} {grp.replace(/^[^\s]+\s*/, "")} ({count})
+                      {label} ({count})
                     </button>
                   );
                 })}
@@ -371,7 +430,7 @@ export default function ComparePage() {
                 className="form-group"
                 key={idx}
                 style={{
-                  background: "rgba(255, 255, 255, 0.02)",
+                  background: "var(--bg-elevated)",
                   padding: "0.85rem",
                   borderRadius: "var(--radius-md)",
                   border: "1px solid var(--border)",
@@ -379,7 +438,7 @@ export default function ComparePage() {
               >
                 <div className="flex items-center justify-between mb-1">
                   <label className="label" style={{ margin: 0 }}>
-                    Car {idx + 1}
+                    {lang === "ar" ? `السيارة ${idx + 1}` : `Car ${idx + 1}`}
                   </label>
                   {selectedCars.length > 2 && (
                     <button
@@ -387,9 +446,9 @@ export default function ComparePage() {
                       className="text-xs text-danger"
                       style={{ background: "none", border: "none", cursor: "pointer" }}
                       onClick={() => removeCarSlot(idx)}
-                      title="Remove this slot"
+                      title={lang === "ar" ? "حذف هذا الخيار" : "Remove this slot"}
                     >
-                      ✕ Remove
+                      {lang === "ar" ? "✕ حذف" : "✕ Remove"}
                     </button>
                   )}
                 </div>
@@ -408,12 +467,12 @@ export default function ComparePage() {
                     value={car}
                     onChange={(e) => updateCar(idx, e.target.value)}
                   >
-                    <option value="">Select a car…</option>
+                    <option value="">{lang === "ar" ? "اختر سيارة…" : "Select a car…"}</option>
                     {car && !filteredCars.some((c) => c.name === car) && (
-                      <option value={car}>{car} (Currently Selected)</option>
+                      <option value={car}>{car} {lang === "ar" ? "(المحددة حالياً)" : "(Currently Selected)"}</option>
                     )}
                     {Object.entries(groupedFilteredCars).map(([groupName, items]) => (
-                      <optgroup key={groupName} label={groupName}>
+                      <optgroup key={groupName} label={lang === "ar" && CAR_GROUP_NAMES_AR[groupName] ? CAR_GROUP_NAMES_AR[groupName] : groupName}>
                         {items.map((c) => (
                           <option key={c.name} value={c.name}>
                             {c.name} — {c.category}
@@ -433,7 +492,9 @@ export default function ComparePage() {
             disabled={loading || selectedCars.filter(Boolean).length < 2}
             style={{ fontSize: "1.05rem", padding: "0.85rem" }}
           >
-            {loading ? "Analyzing Egyptian Market Specs…" : `🏁 Compare ${selectedCars.filter(Boolean).length} Cars`}
+            {loading
+              ? (lang === "ar" ? "جارٍ تحليل مواصفات السوق المصري بالذكاء الاصطناعي…" : "Analyzing Egyptian Market Specs…")
+              : (lang === "ar" ? `🏁 مقارنة ${selectedCars.filter(Boolean).length} سيارات الآن` : `🏁 Compare ${selectedCars.filter(Boolean).length} Cars`)}
           </button>
         </div>
 
@@ -452,7 +513,9 @@ export default function ComparePage() {
           <div className="card flex flex-col items-center gap-4" style={{ padding: "3rem" }}>
             <div className="spinner animate-pulse-glow" />
             <p className="text-secondary">
-              Evaluating rental economics, road compliance, Cairo fuel costs, and Egyptian resale values…
+              {lang === "ar"
+                ? "تقييم اقتصاديات الإيجار، ملاءمة الطرق، استهلاك وقود القاهرة، والقيم السوقية في مصر…"
+                : "Evaluating rental economics, road compliance, Cairo fuel costs, and Egyptian resale values…"}
             </p>
           </div>
         )}
@@ -486,7 +549,7 @@ export default function ComparePage() {
                 >
                   <div>
                     <span className="badge badge-info text-xs mb-1" style={{ display: "inline-block" }}>
-                      Car {i + 1}
+                      {lang === "ar" ? `سيارة ${i + 1}` : `Car ${i + 1}`}
                     </span>
                     <h3 style={{ fontSize: "1.15rem", lineHeight: "1.3" }}>{car.car}</h3>
                   </div>
@@ -494,13 +557,13 @@ export default function ComparePage() {
                   {/* Financial Stats */}
                   <div className="grid-2" style={{ gap: "0.5rem" }}>
                     <div className="stat-card" style={{ padding: "1rem" }}>
-                      <div className="stat-label">Daily Rental</div>
+                      <div className="stat-label">{trans.dailyRentalRate}</div>
                       <div className="stat-value text-accent" style={{ fontSize: "1.15rem" }}>
                         {car.estimated_daily_rate_egp?.toLocaleString()} EGP
                       </div>
                     </div>
                     <div className="stat-card" style={{ padding: "1rem" }}>
-                      <div className="stat-label">Market Value</div>
+                      <div className="stat-label">{trans.marketValuation}</div>
                       <div
                         className="stat-value"
                         style={{ fontSize: "1.15rem", color: "var(--success)" }}
@@ -518,9 +581,9 @@ export default function ComparePage() {
                       borderRadius: "var(--radius-sm)",
                     }}
                   >
-                    <RatingBar value={car.comfort_rating} label="Comfort" />
-                    <RatingBar value={car.value_rating} label="Value" />
-                    <RatingBar value={car.reliability_rating} label="Reliability" />
+                    <RatingBar value={car.comfort_rating} label={trans.comfortRating} />
+                    <RatingBar value={car.value_rating} label={trans.valueRating} />
+                    <RatingBar value={car.reliability_rating} label={trans.reliabilityRating} />
                   </div>
 
                   {/* Key Highlights */}
@@ -533,11 +596,11 @@ export default function ComparePage() {
                         padding: "0.5rem 0.75rem",
                         borderRadius: "var(--radius-sm)",
                         background: "rgba(59, 130, 246, 0.08)",
-                        borderLeft: "3px solid var(--accent)",
+                        borderInlineStart: "3px solid var(--accent)",
                       }}
                     >
                       <p className="text-xs text-muted" style={{ margin: 0 }}>
-                        BEST FOR
+                        {trans.bestFor}
                       </p>
                       <p className="text-sm font-semibold" style={{ color: "var(--accent-light)", margin: 0 }}>
                         {car.best_for}
@@ -547,7 +610,7 @@ export default function ComparePage() {
 
                   {/* Pros & Cons */}
                   <div>
-                    <p className="text-xs text-muted mb-1 font-bold">PROS</p>
+                    <p className="text-xs text-muted mb-1 font-bold">{trans.pros}</p>
                     {car.pros.map((p, j) => (
                       <p
                         key={j}
@@ -559,7 +622,7 @@ export default function ComparePage() {
                     ))}
                   </div>
                   <div>
-                    <p className="text-xs text-muted mb-1 font-bold">CONS</p>
+                    <p className="text-xs text-muted mb-1 font-bold">{trans.cons}</p>
                     {car.cons.map((c, j) => (
                       <p
                         key={j}
@@ -579,13 +642,13 @@ export default function ComparePage() {
               className="card"
               style={{
                 background:
-                  "linear-gradient(135deg, rgba(59,130,246,0.1), rgba(139,92,246,0.1))",
-                borderColor: "rgba(59,130,246,0.35)",
+                  "linear-gradient(135deg, rgba(37,99,235,0.08), rgba(59,130,246,0.04))",
+                borderColor: "rgba(37,99,235,0.25)",
               }}
             >
               <div className="flex items-center gap-2 mb-2">
-                <span style={{ fontSize: "1.4rem" }}>🤖</span>
-                <h3 style={{ color: "var(--accent-light)", margin: 0 }}>AI Comparator Verdict</h3>
+                <span style={{ fontSize: "1.4rem" }}>🎯</span>
+                <h3 style={{ color: "var(--primary)", margin: 0 }}>{trans.aiRecommendation}</h3>
               </div>
               <p className="text-secondary" style={{ fontSize: "0.95rem", lineHeight: "1.6" }}>
                 {result.recommendation}

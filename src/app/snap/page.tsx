@@ -3,6 +3,7 @@
 import { useCallback, useState, useRef } from "react";
 import { Navbar } from "@/components/Navbar";
 import { formatCurrency } from "@/lib/utils";
+import { useLanguage } from "@/lib/LanguageContext";
 
 interface ValuationResult {
   identified: boolean;
@@ -23,6 +24,7 @@ interface ValuationResult {
 }
 
 export default function SnapPage() {
+  const { lang, dir, trans } = useLanguage();
   const [dragging, setDragging]     = useState(false);
   const [preview, setPreview]       = useState<string | null>(null);
   const [file, setFile]             = useState<File | null>(null);
@@ -65,12 +67,12 @@ export default function SnapPage() {
 
       if (!resp.ok) {
         const errData = await resp.json();
-        throw new Error(errData.error || "AI engine error");
+        throw new Error(errData.error || (lang === "ar" ? "خطأ في معالجة الذكاء الاصطناعي" : "AI engine error"));
       }
       const json = await resp.json();
       setResult(json);
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : "Something went wrong");
+      setError(e instanceof Error ? e.message : (lang === "ar" ? "حدث خطأ غير متوقع" : "Something went wrong"));
     } finally {
       setLoading(false);
     }
@@ -85,17 +87,17 @@ export default function SnapPage() {
   };
 
   return (
-    <div className="page-wrapper">
+    <div className="page-wrapper" dir={dir} style={{ fontFamily: lang === "ar" ? "Cairo, sans-serif" : "inherit" }}>
       <Navbar />
 
       <div className="container" style={{ padding: "3rem 1.5rem", maxWidth: "700px" }}>
         <div className="mb-6 text-center">
           <div className="hero-eyebrow" style={{ display: "inline-flex" }}>
-            <span>🤖</span> Powered by Gemini AI
+            <span>🤖</span> {trans.snapHeader}
           </div>
-          <h1>📸 Snap & Identify</h1>
+          <h1>{trans.snapPageTitle}</h1>
           <p className="text-secondary mt-2">
-            Photograph any car and instantly discover its make, model, market value, and rental rate.
+            {trans.snapPageDesc}
           </p>
         </div>
 
@@ -114,8 +116,8 @@ export default function SnapPage() {
           ) : (
             <div className="flex flex-col items-center gap-3">
               <span style={{ fontSize: "4rem" }}>📸</span>
-              <p className="font-semibold">Drop a car photo here</p>
-              <p className="text-sm text-muted">or click to browse • Supports JPG, PNG, WebP</p>
+              <p className="font-semibold">{trans.snapDropzone}</p>
+              <p className="text-sm text-muted">{trans.snapDropzoneSub}</p>
             </div>
           )}
         </div>
@@ -132,22 +134,22 @@ export default function SnapPage() {
 
         {file && !loading && !result && (
           <button id="identify-btn" className="btn btn-primary w-full mt-4 btn-lg" onClick={identify}>
-            🤖 Identify This Car
+            {trans.identifyCarBtn}
           </button>
         )}
 
         {loading && (
           <div className="card flex flex-col items-center gap-4 mt-4" style={{ padding: "3rem" }}>
             <div className="spinner animate-pulse-glow" />
-            <p className="text-secondary">Gemini AI is analyzing the vehicle…</p>
-            <p className="text-xs text-muted">This usually takes 3–5 seconds</p>
+            <p className="text-secondary">{trans.snapAnalyzing}</p>
+            <p className="text-xs text-muted">{trans.snapAnalyzingSub}</p>
           </div>
         )}
 
         {error && (
           <div className="card mt-4" style={{ borderColor: "rgba(239,68,68,0.3)", background: "rgba(239,68,68,0.05)" }}>
             <p className="text-danger">⚠️ {error}</p>
-            <button className="btn btn-secondary btn-sm mt-2" onClick={reset}>Try Again</button>
+            <button className="btn btn-secondary btn-sm mt-2" onClick={reset}>{trans.tryAgain}</button>
           </div>
         )}
 
@@ -163,7 +165,7 @@ export default function SnapPage() {
                     <h2>{result.year} {result.make} {result.model}</h2>
                     <div className="flex gap-2 mt-1 flex-wrap">
                       <span className="badge badge-info">
-                        {((result.confidence || 0) * 100).toFixed(0)}% confident
+                        {((result.confidence || 0) * 100).toFixed(0)}% {trans.confidence}
                       </span>
                       {result.color && <span className="badge badge-neutral">{result.color}</span>}
                       {result.body_type && <span className="badge badge-neutral">{result.body_type}</span>}
@@ -176,23 +178,23 @@ export default function SnapPage() {
                 {/* Pricing */}
                 <div className="grid-2">
                   <div className="stat-card">
-                    <div className="stat-label">Market Value</div>
+                    <div className="stat-label">{trans.marketValuation}</div>
                     <div className="stat-value text-accent">
                       {result.market_value ? formatCurrency(result.market_value) : "—"}
                     </div>
                   </div>
                   <div className="stat-card">
-                    <div className="stat-label">Rental Rate</div>
+                    <div className="stat-label">{trans.dailyRentalRate}</div>
                     <div className="stat-value" style={{ color: "var(--success)" }}>
                       {result.daily_rate ? formatCurrency(result.daily_rate) : "—"}
-                      <span style={{ fontSize: "0.8rem", color: "var(--text-muted)", fontWeight: 400 }}>/day</span>
+                      <span style={{ fontSize: "0.8rem", color: "var(--text-muted)", fontWeight: 400 }}>{trans.perDay}</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Specs */}
                 <div className="divider" />
-                <h3 style={{ marginBottom: "0.75rem" }}>Vehicle Specs</h3>
+                <h3 style={{ marginBottom: "0.75rem" }}>{trans.vehicleSpecs}</h3>
                 <div className="grid-2" style={{ gap: "0.5rem" }}>
                   {result.engine_estimate && (
                     <div className="flex gap-2 items-center">
@@ -231,23 +233,23 @@ export default function SnapPage() {
                       padding: "0.75rem 1rem",
                     }}>
                       <p className="text-sm" style={{ color: "var(--accent-light)" }}>
-                        💡 <strong>Fun Fact:</strong> {result.fun_fact}
+                        💡 <strong>{trans.funFactTitle}:</strong> {result.fun_fact}
                       </p>
                     </div>
                   </>
                 )}
 
                 <button className="btn btn-secondary w-full mt-4" onClick={reset}>
-                  📸 Identify Another Car
+                  {trans.tryAgain}
                 </button>
               </>
             ) : (
               <div className="text-center" style={{ padding: "2rem" }}>
                 <span style={{ fontSize: "3rem" }}>🤷</span>
-                <h3 className="mt-4">Could not identify this vehicle</h3>
-                <p className="text-secondary mt-2">Try a clearer photo showing the front or side of the car.</p>
+                <h3 className="mt-4">{lang === "ar" ? "تعذر التعرف بدقة على هذه السيارة" : "Could not identify this vehicle"}</h3>
+                <p className="text-secondary mt-2">{lang === "ar" ? "يرجى تجربة صورة أوضح تظهر مقدمة أو جانب السيارة." : "Try a clearer photo showing the front or side of the car."}</p>
                 <button className="btn btn-secondary mt-4" onClick={reset}>
-                  Try Another Photo
+                  {trans.tryAgain}
                 </button>
               </div>
             )}

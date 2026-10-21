@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { Lang, t } from "@/lib/translations";
 
 interface LanguageContextType {
@@ -20,8 +20,25 @@ const LanguageContext = createContext<LanguageContextType>({
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Lang>("en");
 
+  // Load persisted language preference on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("autorent_lang") as Lang | null;
+      if (saved === "ar" || saved === "en") {
+        setLangState(saved);
+        document.documentElement.lang = saved;
+        document.documentElement.dir = saved === "ar" ? "rtl" : "ltr";
+      }
+    } catch {
+      // localStorage may fail in private mode
+    }
+  }, []);
+
   const setLang = (newLang: Lang) => {
     setLangState(newLang);
+    try {
+      localStorage.setItem("autorent_lang", newLang);
+    } catch {}
     document.documentElement.lang = newLang;
     document.documentElement.dir = newLang === "ar" ? "rtl" : "ltr";
   };

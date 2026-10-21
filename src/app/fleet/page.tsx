@@ -47,7 +47,7 @@ export default function FleetPage() {
   }, [category, search]);
 
   return (
-    <div className="page-wrapper" dir={dir}>
+    <div className="page-wrapper" dir={dir} style={{ fontFamily: lang === "ar" ? "Cairo, sans-serif" : "inherit" }}>
       <Navbar />
 
       <div className="container" style={{ padding: "3rem 1.5rem" }}>

@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Navbar } from "@/components/Navbar";
+import { useLanguage } from "@/lib/LanguageContext";
 
 interface ItineraryDay {
   day: number;
@@ -301,6 +302,7 @@ function DestinationSearch({ value, onSelect, onClear }: {
 }
 
 export default function RoadtripPlannerPage() {
+  const { lang, dir, trans } = useLanguage();
   const [destination, setDestination] = useState("");
   const [destinationValid, setDestinationValid] = useState(false);
   const [days, setDays] = useState("3");
@@ -320,12 +322,12 @@ export default function RoadtripPlannerPage() {
     const num = parseInt(cleaned) || 0;
 
     if (num > MAX_PASSENGERS) {
-      setPassengerError(`Maximum ${MAX_PASSENGERS} passengers. No car can fit ${num} people! 🚫`);
+      setPassengerError(lang === "ar" ? `الحد الأقصى ${MAX_PASSENGERS} ركاب!` : `Maximum ${MAX_PASSENGERS} passengers.`);
       setPassengers(String(MAX_PASSENGERS));
       return;
     }
     if (cleaned && num < 1) {
-      setPassengerError("At least 1 passenger needed.");
+      setPassengerError(lang === "ar" ? "راكب واحد على الأقل مطلوب." : "At least 1 passenger needed.");
       setPassengers("1");
       return;
     }
@@ -370,7 +372,7 @@ export default function RoadtripPlannerPage() {
       });
 
       if (!resp.ok) {
-        throw new Error("Failed to generate plan.");
+        throw new Error(lang === "ar" ? "فشل إنشاء خطة الرحلة." : "Failed to generate plan.");
       }
 
       const data = await resp.json();
@@ -378,31 +380,31 @@ export default function RoadtripPlannerPage() {
 
       setResult(data);
     } catch (e: any) {
-      setError(e.message || "Something went wrong.");
+      setError(e.message || (lang === "ar" ? "حدث خطأ غير متوقع." : "Something went wrong."));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="page-wrapper">
+    <div className="page-wrapper" dir={dir} style={{ fontFamily: lang === "ar" ? "Cairo, sans-serif" : "inherit" }}>
       <Navbar />
 
       <div className="container" style={{ padding: "3rem 1.5rem", maxWidth: "800px" }}>
         <div className="mb-6 text-center">
           <div className="hero-eyebrow" style={{ display: "inline-flex" }}>
-            <span>🌴</span> AI Travel Assistant
+            <span>🌴</span> {trans.roadtripHeader}
           </div>
-          <h1>AI Roadtrip Planner</h1>
+          <h1>{trans.roadtripHeader}</h1>
           <p className="text-secondary mt-2">
-            Tell us where you want to go, and our AI will build the perfect itinerary and pick the best rental car for the journey.
+            {trans.roadtripSubtitle}
           </p>
         </div>
 
         {/* Form */}
         <div className="card mb-6" style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
           <div className="form-group">
-            <label className="label">Destination (from Aswan)</label>
+            <label className="label">{lang === "ar" ? "الوجهة السياحية في مصر" : "Destination (in Egypt)"}</label>
             <DestinationSearch
               value={destination}
               onSelect={handleDestinationSelect}
@@ -412,7 +414,7 @@ export default function RoadtripPlannerPage() {
 
           <div className="grid-2" style={{ gap: "1rem" }}>
             <div className="form-group">
-              <label className="label">Trip Duration (Days)</label>
+              <label className="label">{trans.tripDuration}</label>
               <input
                 type="number"
                 min="1"
@@ -423,12 +425,12 @@ export default function RoadtripPlannerPage() {
                 placeholder="1 – 14"
               />
               <p style={{ fontSize: "0.72rem", color: "var(--text-muted)", marginTop: "4px" }}>
-                Max 14 days
+                {lang === "ar" ? "الحد الأقصى 14 يوماً" : "Max 14 days"}
               </p>
             </div>
 
             <div className="form-group">
-              <label className="label">Passengers</label>
+              <label className="label">{trans.passengersCount}</label>
               <input
                 type="number"
                 min="1"
@@ -447,7 +449,7 @@ export default function RoadtripPlannerPage() {
                 </p>
               ) : passengerCount >= 1 ? (
                 <p style={{ fontSize: "0.72rem", color: "var(--text-muted)", marginTop: "4px" }}>
-                  {vehicleMatch.emoji} Best fit: {vehicleMatch.label} (up to {vehicleMatch.max} seats)
+                  {vehicleMatch.emoji} {lang === "ar" ? `الأنسب: ${vehicleMatch.label} (حتى ${vehicleMatch.max} مقاعد)` : `Best fit: ${vehicleMatch.label} (up to ${vehicleMatch.max} seats)`}
                 </p>
               ) : null}
             </div>
@@ -458,12 +460,14 @@ export default function RoadtripPlannerPage() {
             onClick={planTrip}
             disabled={loading || !canSubmit}
           >
-            {loading ? "Planning..." : "🗺️ Generate Roadtrip"}
+            {loading ? (lang === "ar" ? "جارٍ التخطيط بالذكاء الاصطناعي…" : "Planning...") : trans.planRoadtripBtn}
           </button>
 
           {!canSubmit && !loading && (
             <p style={{ fontSize: "0.78rem", color: "var(--text-muted)", textAlign: "center" }}>
-              {!destinationValid ? "👆 Search and select a real destination above" : "Fill all fields to continue"}
+              {!destinationValid
+                ? (lang === "ar" ? "👆 يرجى البحث واختيار وجهة من القائمة أعلاه" : "👆 Search and select a real destination above")
+                : (lang === "ar" ? "يرجى ملء جميع الحقول للمتابعة" : "Fill all fields to continue")}
             </p>
           )}
         </div>
@@ -477,7 +481,7 @@ export default function RoadtripPlannerPage() {
         {loading && (
           <div className="card flex flex-col items-center gap-4" style={{ padding: "3rem" }}>
             <div className="spinner animate-pulse-glow" />
-            <p className="text-secondary">AI is calculating routes, fuel costs, and planning stops...</p>
+            <p className="text-secondary">{trans.planningTrip}</p>
           </div>
         )}
 
@@ -485,28 +489,28 @@ export default function RoadtripPlannerPage() {
         {result && (
           <div className="animate-fade-in flex flex-col gap-6">
             
-            <div className="card" style={{ background: "linear-gradient(135deg, rgba(59,130,246,0.1), rgba(139,92,246,0.1))", borderColor: "var(--accent)" }}>
-              <h2 className="mb-2">🚗 Recommended: {result.recommended_car}</h2>
+            <div className="card" style={{ background: "linear-gradient(135deg, rgba(37,99,235,0.08), rgba(59,130,246,0.04))", borderColor: "var(--accent)" }}>
+              <h2 className="mb-2">🚗 {trans.recommendedVehicle}: {result.recommended_car}</h2>
               <p className="text-secondary mb-4">{result.why_this_car}</p>
 
               <div className="grid-2" style={{ gap: "1rem" }}>
                 <div className="stat-card" style={{ background: "var(--bg-surface)" }}>
-                  <div className="stat-label">Total Distance</div>
-                  <div className="stat-value text-accent">{result.total_distance_km} km</div>
+                  <div className="stat-label">{lang === "ar" ? "إجمالي المسافة" : "Total Distance"}</div>
+                  <div className="stat-value text-accent">{result.total_distance_km} {lang === "ar" ? "كم" : "km"}</div>
                 </div>
                 <div className="stat-card" style={{ background: "var(--bg-surface)" }}>
-                  <div className="stat-label">Est. Fuel Cost</div>
+                  <div className="stat-label">{trans.estimatedFuelCost}</div>
                   <div className="stat-value text-danger">{result.estimated_fuel_cost_egp} EGP</div>
                 </div>
               </div>
             </div>
 
             <div className="card">
-              <h3 className="mb-4">📍 Your Itinerary</h3>
+              <h3 className="mb-4">{trans.itineraryTitle}</h3>
               <div className="flex flex-col gap-4">
                 {result.itinerary.map(item => (
-                  <div key={item.day} style={{ borderLeft: "4px solid var(--accent)", paddingLeft: "1rem" }}>
-                    <p className="text-xs text-accent font-bold mb-1">DAY {item.day}</p>
+                  <div key={item.day} style={{ borderInlineStart: "4px solid var(--accent)", paddingInlineStart: "1rem" }}>
+                    <p className="text-xs text-accent font-bold mb-1">{lang === "ar" ? `اليوم ${item.day}` : `DAY ${item.day}`}</p>
                     <h4 className="mb-1">{item.title}</h4>
                     <p className="text-sm text-secondary">{item.description}</p>
                   </div>
@@ -516,12 +520,12 @@ export default function RoadtripPlannerPage() {
 
             <div className="grid-2" style={{ gap: "1rem" }}>
               <div className="card">
-                <h3 className="mb-3">🎵 Playlist Vibe</h3>
+                <h3 className="mb-3">{trans.playlistVibe}</h3>
                 <p className="text-sm">{result.playlist_vibe}</p>
               </div>
               <div className="card">
-                <h3 className="mb-3">💡 Pro Tips</h3>
-                <ul style={{ paddingLeft: "1.2rem", margin: 0, fontSize: "0.875rem" }} className="text-secondary">
+                <h3 className="mb-3">{trans.travelTips}</h3>
+                <ul style={{ paddingInlineStart: "1.2rem", margin: 0, fontSize: "0.875rem" }} className="text-secondary">
                   {result.tips.map((tip, i) => <li key={i} className="mb-1">{tip}</li>)}
                 </ul>
               </div>

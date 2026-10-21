@@ -6,6 +6,7 @@ import { Profile, Rental, AIDamageReport, Vehicle, UserRole } from "@/lib/types"
 import { DamageReportCard } from "@/components/DamageReportCard";
 import { Navbar } from "@/components/Navbar";
 import { formatCurrency, formatDate, getStatusBadgeClass } from "@/lib/utils";
+import { useLanguage } from "@/lib/LanguageContext";
 import Link from "next/link";
 
 type Tab = "requests" | "rentals" | "fleet" | "reports";
@@ -33,6 +34,7 @@ interface ReservationItem {
 }
 
 export default function DashboardPage() {
+  const { lang, dir, trans } = useLanguage();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [activeTab, setActiveTab] = useState<Tab>("requests");
   const [rentals, setRentals] = useState<Rental[]>([]);
@@ -390,16 +392,16 @@ export default function DashboardPage() {
 
   const sidebarItems = isOwner
     ? [
-        { tab: "requests", icon: "⚡", label: "Rental Approvals", badge: stats.pendingRequests },
-        { tab: "rentals",  icon: "🔑", label: "Active Rentals" },
-        { tab: "fleet",    icon: "🚗", label: "My Fleet" },
-        { tab: "reports",  icon: "🤖", label: "Damage Reports" },
+        { tab: "requests", icon: "⚡", label: trans.ownerApprovalsTab, badge: stats.pendingRequests },
+        { tab: "rentals",  icon: "🔑", label: trans.activeRentalsTab },
+        { tab: "fleet",    icon: "🚗", label: trans.myFleetTab },
+        { tab: "reports",  icon: "🤖", label: trans.damageReportsTab },
       ]
     : [
-        { tab: "rentals",  icon: "📋", label: "My Bookings" },
-        { tab: "requests", icon: "📨", label: "My Requests", badge: stats.pendingRequests },
-        { tab: "fleet",    icon: "🚗", label: "Browse Fleet" },
-        { tab: "reports",  icon: "🤖", label: "Damage Reports" },
+        { tab: "rentals",  icon: "📋", label: trans.myBookingsTab },
+        { tab: "requests", icon: "📨", label: lang === "ar" ? "طلباتي" : "My Requests", badge: stats.pendingRequests },
+        { tab: "fleet",    icon: "🚗", label: trans.browseFleet },
+        { tab: "reports",  icon: "🤖", label: trans.damageReportsTab },
       ];
 
   if (authLoading) {
@@ -412,13 +414,13 @@ export default function DashboardPage() {
 
   if (!profile) {
     return (
-      <div className="page-wrapper">
+      <div className="page-wrapper" dir={dir} style={{ fontFamily: lang === "ar" ? "Cairo, sans-serif" : "inherit" }}>
         <Navbar />
         <div className="flex flex-col items-center justify-center" style={{ minHeight: "60vh" }}>
           <span style={{ fontSize: "4rem" }}>🔒</span>
-          <h2 className="mt-4">Please sign in</h2>
-          <p className="text-secondary mt-2">You need an account to access the dashboard.</p>
-          <Link href="/auth/login" className="btn btn-primary mt-6">Sign In</Link>
+          <h2 className="mt-4">{trans.pleaseSignIn}</h2>
+          <p className="text-secondary mt-2">{trans.needAccount}</p>
+          <Link href="/auth/login" className="btn btn-primary mt-6">{trans.signIn}</Link>
         </div>
       </div>
     );
@@ -427,7 +429,7 @@ export default function DashboardPage() {
   const pendingRequests = reservations.filter((r) => r.status === "pending");
 
   return (
-    <div className="page-wrapper">
+    <div className="page-wrapper" dir={dir} style={{ fontFamily: lang === "ar" ? "Cairo, sans-serif" : "inherit" }}>
       <Navbar />
       <div className="dashboard-layout">
         {/* Sidebar */}
@@ -467,13 +469,13 @@ export default function DashboardPage() {
                   display: "inline-block",
                   marginTop: 2,
                 }}>
-                  {isOwner ? "🏢 Fleet Owner" : "🙋 Renter"}
+                  {isOwner ? (lang === "ar" ? "🏢 مالك أسطول" : "🏢 Fleet Owner") : (lang === "ar" ? "🙋 مستأجر" : "🙋 Renter")}
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="sidebar-section-label">Management</div>
+          <div className="sidebar-section-label">{lang === "ar" ? "الإدارة" : "Management"}</div>
           {sidebarItems.map((item) => (
             <button
               key={item.tab}
@@ -485,7 +487,8 @@ export default function DashboardPage() {
               {item.label}
               {"badge" in item && (item as any).badge > 0 && (
                 <span style={{
-                  marginLeft: "auto",
+                  marginLeft: lang === "ar" ? "0" : "auto",
+                  marginRight: lang === "ar" ? "auto" : "0",
                   background: "var(--danger)",
                   color: "#fff",
                   borderRadius: "50%",
@@ -499,15 +502,15 @@ export default function DashboardPage() {
             </button>
           ))}
           <div className="divider" />
-          <div className="sidebar-section-label">Quick Actions</div>
+          <div className="sidebar-section-label">{lang === "ar" ? "إجراءات سريعة" : "Quick Actions"}</div>
           <Link href="/fleet" className="sidebar-item">
-            <span>🚗</span> Browse Fleet
+            <span>🚗</span> {trans.browseFleet}
           </Link>
           <Link href="/snap" className="sidebar-item">
-            <span>📸</span> Snap & Identify
+            <span>📸</span> {trans.snapTitle}
           </Link>
           <Link href="/compare" className="sidebar-item">
-            <span>🏁</span> Car Comparator
+            <span>🏁</span> {trans.compareTitle}
           </Link>
         </aside>
 
@@ -551,22 +554,22 @@ export default function DashboardPage() {
             <div className="stat-card">
               <div className="stat-icon">📋</div>
               <div className="stat-value">{stats.totalRentals}</div>
-              <div className="stat-label">Total Rentals</div>
+              <div className="stat-label">{lang === "ar" ? "إجمالي الحجوزات" : "Total Rentals"}</div>
             </div>
             <div className="stat-card">
               <div className="stat-icon">🔑</div>
               <div className="stat-value text-info">{stats.activeRentals}</div>
-              <div className="stat-label">Active Now</div>
+              <div className="stat-label">{lang === "ar" ? "نشط حالياً" : "Active Now"}</div>
             </div>
             <div className="stat-card">
               <div className="stat-icon">✅</div>
               <div className="stat-value text-success">{stats.completed}</div>
-              <div className="stat-label">Completed</div>
+              <div className="stat-label">{lang === "ar" ? "مكتملة بنجاح" : "Completed"}</div>
             </div>
             <div className="stat-card">
               <div className="stat-icon">💰</div>
               <div className="stat-value text-accent">{formatCurrency(stats.totalRevenue)}</div>
-              <div className="stat-label">Revenue</div>
+              <div className="stat-label">{lang === "ar" ? "إجمالي الإيرادات" : "Revenue"}</div>
             </div>
           </div>
 
@@ -583,10 +586,12 @@ export default function DashboardPage() {
                   <span style={{ fontSize: "1.8rem" }}>⚡</span>
                   <div>
                     <h2 style={{ fontSize: "1.3rem", margin: 0 }}>
-                      Fleet Approvals & Decision Center
+                      {lang === "ar" ? "مركز قرارات وموافقات الأسطول" : "Fleet Approvals & Decision Center"}
                     </h2>
                     <p className="text-secondary text-sm mt-1">
-                      Real rental bookings from customers appear here directly for your approval.
+                      {lang === "ar"
+                        ? "طلبات الحجز المباشرة من العملاء تظهر هنا فوراً لمراجعتها والموافقة عليها."
+                        : "Real rental bookings from customers appear here directly for your approval."}
                     </p>
                   </div>
                 </div>
@@ -597,7 +602,7 @@ export default function DashboardPage() {
                   style={{ border: "1px solid var(--border)", padding: "0.45rem 1rem" }}
                   title="Check for new incoming bookings"
                 >
-                  🔄 Refresh Bookings
+                  {lang === "ar" ? "🔄 تحديث الطلبات" : "🔄 Refresh Bookings"}
                 </button>
               </div>
 
@@ -610,13 +615,15 @@ export default function DashboardPage() {
                   border: "1px dashed var(--border)",
                 }}>
                   <p style={{ fontSize: "2.5rem", margin: 0 }}>🚗</p>
-                  <h4 className="mt-2">No pending requests right now</h4>
+                  <h4 className="mt-2">{lang === "ar" ? "لا توجد طلبات حجز معلقة حالياً" : "No pending requests right now"}</h4>
                   <p className="text-secondary text-sm mt-1 max-w-md mx-auto">
-                    As soon as a renter reserves a vehicle from the fleet, their real booking details (name, phone, dates, price) will appear right here for your decision.
+                    {lang === "ar"
+                      ? "بمجرد قيام أي عميل بحجز سيارة من الأسطول، ستظهر تفاصيل حجزه كاملة هنا لمراجعتها واتخاذ القرار."
+                      : "As soon as a renter reserves a vehicle from the fleet, their real booking details (name, phone, dates, price) will appear right here for your decision."}
                   </p>
                   <div className="mt-4 flex justify-center gap-3">
                     <Link href="/fleet" className="btn btn-ghost btn-sm" style={{ border: "1px solid var(--border)" }}>
-                      View Available Fleet
+                      {lang === "ar" ? "استعراض الأسطول المتاح" : "View Available Fleet"}
                     </Link>
                   </div>
                 </div>
@@ -631,17 +638,19 @@ export default function DashboardPage() {
                       fontSize: "0.78rem",
                       fontWeight: 800,
                     }}>
-                      {pendingRequests.length} ACTION REQUIRED
+                      {pendingRequests.length} {lang === "ar" ? "إجراء مطلوب" : "ACTION REQUIRED"}
                     </span>
                     <span className="text-xs text-secondary">
-                      Review customer credentials and decide to approve or decline.
+                      {lang === "ar"
+                        ? "يرجى مراجعة بيانات العميل والموافقة على الحجز أو رفضه."
+                        : "Review customer credentials and decide to approve or decline."}
                     </span>
                   </div>
 
                   {pendingRequests.map((req) => {
                     const carTitle = req.vehicle
                       ? `${req.vehicle.year} ${req.vehicle.make} ${req.vehicle.model}`
-                      : req.vehicle_name || "Fleet Vehicle";
+                      : req.vehicle_name || (lang === "ar" ? "سيارة من الأسطول" : "Fleet Vehicle");
 
                     return (
                       <div
@@ -650,7 +659,8 @@ export default function DashboardPage() {
                         style={{
                           background: "var(--bg-base)",
                           border: "1px solid rgba(245,158,11,0.35)",
-                          borderLeft: "5px solid var(--warning)",
+                          borderLeft: dir === "rtl" ? "none" : "5px solid var(--warning)",
+                          borderRight: dir === "rtl" ? "5px solid var(--warning)" : "none",
                           padding: "1.25rem",
                         }}
                       >
@@ -666,7 +676,7 @@ export default function DashboardPage() {
                             </div>
 
                             <p className="text-sm text-secondary mt-2">
-                              📅 Rental Period: <strong>{formatDate(req.start_date)}</strong> → <strong>{formatDate(req.end_date)}</strong>
+                              {lang === "ar" ? "📅 فترة الإيجار:" : "📅 Rental Period:"} <strong>{formatDate(req.start_date)}</strong> → <strong>{formatDate(req.end_date)}</strong>
                             </p>
 
                             {/* Real Renter Information */}
@@ -678,17 +688,17 @@ export default function DashboardPage() {
                               borderRadius: "var(--radius-sm)",
                             }}>
                               <div className="font-semibold text-sm" style={{ color: "var(--accent-light)" }}>
-                                👤 Customer: {req.renter_name || "Direct Customer"}
+                                {lang === "ar" ? "👤 العميل:" : "👤 Customer:"} {req.renter_name || (lang === "ar" ? "عميل مباشر" : "Direct Customer")}
                               </div>
                               <div className="text-xs text-secondary mt-1 flex flex-wrap gap-4">
-                                {req.renter_phone && <span>📞 Phone: {req.renter_phone}</span>}
-                                {req.renter_email && <span>✉️ Email: {req.renter_email}</span>}
-                                {req.billing_city && <span>📍 City: {req.billing_city}</span>}
+                                {req.renter_phone && <span>{lang === "ar" ? "📞 الهاتف:" : "📞 Phone:"} {req.renter_phone}</span>}
+                                {req.renter_email && <span>{lang === "ar" ? "✉️ البريد:" : "✉️ Email:"} {req.renter_email}</span>}
+                                {req.billing_city && <span>{lang === "ar" ? "📍 المدينة:" : "📍 City:"} {req.billing_city}</span>}
                               </div>
                             </div>
                           </div>
 
-                          <div className="text-right">
+                          <div className={lang === "ar" ? "text-left" : "text-right"}>
                             <span style={{
                               fontSize: "0.75rem",
                               fontWeight: 700,
@@ -699,7 +709,7 @@ export default function DashboardPage() {
                               display: "inline-block",
                               marginBottom: "0.5rem",
                             }}>
-                              ⏳ Awaiting Your Decision
+                              {lang === "ar" ? "⏳ بانتظار قرارك" : "⏳ Awaiting Your Decision"}
                             </span>
                             <div className="font-bold text-accent" style={{ fontSize: "1.35rem" }}>
                               {formatCurrency(req.total_price_egp)}
@@ -721,7 +731,7 @@ export default function DashboardPage() {
                             onClick={() => handleRespond(req.id, "reject")}
                             disabled={respondingId === req.id}
                           >
-                            ❌ Decline Request
+                            {lang === "ar" ? "❌ رفض الطلب" : "❌ Decline Request"}
                           </button>
                           <button
                             className="btn btn-primary btn-sm"
@@ -735,7 +745,9 @@ export default function DashboardPage() {
                             onClick={() => handleRespond(req.id, "accept")}
                             disabled={respondingId === req.id}
                           >
-                            {respondingId === req.id ? "Processing..." : "✅ APPROVE & ACCEPT RENTAL"}
+                            {respondingId === req.id
+                              ? (lang === "ar" ? "جاري الاعتماد..." : "Processing...")
+                              : (lang === "ar" ? "✅ قبول واعتماد الحجز" : "✅ APPROVE & ACCEPT RENTAL")}
                           </button>
                         </div>
                       </div>
@@ -755,19 +767,21 @@ export default function DashboardPage() {
             <>
               {activeTab === "requests" && (
                 <div>
-                  <h3 className="mb-4">📋 All Incoming Rental Requests History</h3>
+                  <h3 className="mb-4">{lang === "ar" ? "📋 سجل جميع طلبات الإيجار الواردة" : "📋 All Incoming Rental Requests History"}</h3>
                   {reservations.length === 0 ? (
                     <div className="card text-center" style={{ padding: "3rem" }}>
                       <p style={{ fontSize: "2.5rem" }}>📭</p>
-                      <h4>No requests recorded yet</h4>
-                      <p className="text-secondary text-sm mt-1">Bookings made by renters will appear here.</p>
+                      <h4>{lang === "ar" ? "لا توجد طلبات مسجلة حتى الآن" : "No requests recorded yet"}</h4>
+                      <p className="text-secondary text-sm mt-1">
+                        {lang === "ar" ? "ستظهر طلبات الحجز المكتملة هنا فور تسجيلها." : "Bookings made by renters will appear here."}
+                      </p>
                     </div>
                   ) : (
                     <div className="flex flex-col gap-4">
                       {reservations.map((r) => {
                         const title = r.vehicle
                           ? `${r.vehicle.year} ${r.vehicle.make} ${r.vehicle.model}`
-                          : r.vehicle_name || "Rental Vehicle";
+                          : r.vehicle_name || (lang === "ar" ? "سيارة مستأجرة" : "Rental Vehicle");
 
                         return (
                           <div key={r.id} className="card animate-fade-in" style={{ padding: "1.25rem" }}>
@@ -778,12 +792,12 @@ export default function DashboardPage() {
                                   {formatDate(r.start_date)} → {formatDate(r.end_date)}
                                 </p>
                                 {r.renter_name && (
-                                  <p className="text-xs text-secondary mt-1">👤 Renter: {r.renter_name}</p>
+                                  <p className="text-xs text-secondary mt-1">{lang === "ar" ? "👤 العميل:" : "👤 Renter:"} {r.renter_name}</p>
                                 )}
                               </div>
                               <div className="flex items-center gap-3">
                                 <span className={`badge ${getStatusBadgeClass(r.status)}`}>
-                                  {r.status === "accepted" ? "✅ Approved" : r.status === "pending" ? "⏳ Pending" : r.status}
+                                  {r.status === "accepted" ? (lang === "ar" ? "✅ معتمد" : "✅ Approved") : r.status === "pending" ? (lang === "ar" ? "⏳ قيد الانتظار" : "⏳ Pending") : (lang === "ar" ? "❌ ملغي/مرفوض" : r.status)}
                                 </span>
                                 <div className="font-bold text-accent">{formatCurrency(r.total_price_egp)}</div>
                               </div>
@@ -798,17 +812,17 @@ export default function DashboardPage() {
 
               {activeTab === "rentals" && (
                 <div className="animate-fade-in">
-                  <h2 className="mb-4">{isOwner ? "🔑 Managed Fleet Rentals & Contracts" : "Your Rentals"}</h2>
+                  <h2 className="mb-4">{isOwner ? (lang === "ar" ? "🔑 عقود وإيجارات الأسطول النشطة" : "🔑 Managed Fleet Rentals & Contracts") : (lang === "ar" ? "حجوزاتك" : "Your Rentals")}</h2>
                   {rentals.length === 0 ? (
                     <div className="card text-center" style={{ padding: "4rem" }}>
                       <p style={{ fontSize: "3rem" }}>📋</p>
-                      <h3 className="mt-4">No active rentals yet</h3>
+                      <h3 className="mt-4">{lang === "ar" ? "لا توجد إيجارات نشطة حتى الآن" : "No active rentals yet"}</h3>
                       <p className="text-secondary mt-2">
                         {isOwner
-                          ? "When you approve rental requests from customers, active contracts will appear here."
-                          : "Book your first car to get started."}
+                          ? (lang === "ar" ? "عند الموافقة على طلبات الحجز من العملاء، ستظهر العقود النشطة هنا." : "When you approve rental requests from customers, active contracts will appear here.")
+                          : (lang === "ar" ? "احجز سيارتك الأولى لبدء رحلتك الآن." : "Book your first car to get started.")}
                       </p>
-                      {!isOwner && <Link href="/fleet" className="btn btn-primary mt-6">Browse Fleet</Link>}
+                      {!isOwner && <Link href="/fleet" className="btn btn-primary mt-6">{trans.browseFleet}</Link>}
                     </div>
                   ) : (
                     <div className="flex flex-col gap-4">
@@ -821,11 +835,11 @@ export default function DashboardPage() {
                                 <h3 style={{ margin: 0 }}>
                                   {rental.vehicle
                                     ? `${rental.vehicle.year} ${rental.vehicle.make} ${rental.vehicle.model}`
-                                    : "Rental Vehicle"}
+                                    : (lang === "ar" ? "سيارة مستأجرة" : "Rental Vehicle")}
                                 </h3>
                                 <p className="text-sm text-muted mt-1">
                                   📅 {formatDate(rental.start_date)} → {formatDate(rental.end_date)}
-                                  {rental.total_days ? ` · ${rental.total_days} days` : ""}
+                                  {rental.total_days ? (lang === "ar" ? ` · ${rental.total_days} أيام` : ` · ${rental.total_days} days`) : ""}
                                 </p>
                                 {rental.notes && (
                                   <p className="text-xs text-secondary mt-1">{rental.notes}</p>
@@ -833,11 +847,11 @@ export default function DashboardPage() {
                               </div>
                               <div className="flex gap-3 items-center">
                                 <span className={`badge ${getStatusBadgeClass(rental.status)}`}>{rental.status}</span>
-                                <div className="text-right">
+                                <div className={lang === "ar" ? "text-left" : "text-right"}>
                                   <div className="font-bold text-accent" style={{ fontSize: "1.1rem" }}>
                                     {formatCurrency(rental.subtotal || rental.daily_rate * 3)}
                                   </div>
-                                  <div className="text-xs text-muted">Deposit: {formatCurrency(rental.security_deposit)}</div>
+                                  <div className="text-xs text-muted">{lang === "ar" ? "مبلغ التأمين:" : "Deposit:"} {formatCurrency(rental.security_deposit)}</div>
                                 </div>
                               </div>
                             </div>
@@ -855,7 +869,7 @@ export default function DashboardPage() {
                                   onClick={() => handleCompleteRental(rental.id)}
                                   disabled={respondingId === rental.id}
                                 >
-                                  {respondingId === rental.id ? "Updating..." : "🏁 Mark Completed & Return Car"}
+                                  {respondingId === rental.id ? (lang === "ar" ? "جاري التحديث..." : "Updating...") : (lang === "ar" ? "🏁 إنهاء الإيجار واستلام السيارة" : "🏁 Mark Completed & Return Car")}
                                 </button>
                               </div>
                             )}
@@ -869,18 +883,18 @@ export default function DashboardPage() {
 
               {activeTab === "fleet" && (
                 isOwner ? (
-                  <OwnerFleetTab vehicles={myVehicles} />
+                  <OwnerFleetTab vehicles={myVehicles} lang={lang} />
                 ) : (
                   <div className="card text-center" style={{ padding: "4rem" }}>
                     <p style={{ fontSize: "3rem" }}>🚗</p>
-                    <h3 className="mt-4">Browse the Fleet</h3>
-                    <p className="text-secondary mt-2">Find and rent your perfect vehicle.</p>
-                    <Link href="/fleet" className="btn btn-primary mt-6">Browse All Vehicles</Link>
+                    <h3 className="mt-4">{trans.browseFleet}</h3>
+                    <p className="text-secondary mt-2">{lang === "ar" ? "ابحث واستأجر سيارتك المثالية بأفضل الأسعار." : "Find and rent your perfect vehicle."}</p>
+                    <Link href="/fleet" className="btn btn-primary mt-6">{trans.browseFleet}</Link>
                   </div>
                 )
               )}
 
-              {activeTab === "reports" && <ReportsTab reports={reports} />}
+              {activeTab === "reports" && <ReportsTab reports={reports} lang={lang} />}
             </>
           )}
         </main>
@@ -890,20 +904,20 @@ export default function DashboardPage() {
 }
 
 /* ─── Owner Fleet Tab ──────────────────────────────────────────────────── */
-function OwnerFleetTab({ vehicles }: { vehicles: Vehicle[] }) {
+function OwnerFleetTab({ vehicles, lang }: { vehicles: Vehicle[]; lang: "en" | "ar" }) {
   if (vehicles.length === 0) {
     return (
       <div className="card text-center" style={{ padding: "4rem" }}>
         <p style={{ fontSize: "3rem" }}>🚗</p>
-        <h3 className="mt-4">No vehicles in your fleet</h3>
-        <p className="text-secondary mt-2">Your vehicles will appear here when added to the platform.</p>
+        <h3 className="mt-4">{lang === "ar" ? "لا توجد سيارات في أسطولك حالياً" : "No vehicles in your fleet"}</h3>
+        <p className="text-secondary mt-2">{lang === "ar" ? "ستظهر سياراتك هنا بمجرد إضافتها إلى المنصة." : "Your vehicles will appear here when added to the platform."}</p>
       </div>
     );
   }
 
   return (
     <div>
-      <h2 className="mb-4">🚗 Managed Fleet Vehicles ({vehicles.length})</h2>
+      <h2 className="mb-4">{lang === "ar" ? `🚗 سيارات الأسطول المدارة (${vehicles.length})` : `🚗 Managed Fleet Vehicles (${vehicles.length})`}</h2>
       <div className="flex flex-col gap-4">
         {vehicles.slice(0, 25).map((v) => (
           <div key={v.id} className="card animate-fade-in" style={{ padding: "1.25rem" }}>
@@ -911,14 +925,14 @@ function OwnerFleetTab({ vehicles }: { vehicles: Vehicle[] }) {
               <div>
                 <h3 style={{ margin: 0 }}>{v.year} {v.make} {v.model}</h3>
                 <p className="text-sm text-muted mt-1">
-                  Plate: {v.plate_number} · {v.color || "—"} · {v.mileage?.toLocaleString()} km
+                  {lang === "ar" ? "اللوحة:" : "Plate:"} {v.plate_number} · {v.color || "—"} · {v.mileage?.toLocaleString()} {lang === "ar" ? "كم" : "km"}
                 </p>
               </div>
               <div className="flex gap-3 items-center">
                 <span className={`badge ${getStatusBadgeClass(v.status)}`}>{v.status}</span>
-                <div className="text-right">
-                  <div className="font-bold text-primary">{formatCurrency(v.daily_rate)}/day</div>
-                  <div className="text-xs text-muted">Deposit: {formatCurrency(v.security_deposit)}</div>
+                <div className={lang === "ar" ? "text-left" : "text-right"}>
+                  <div className="font-bold text-primary">{formatCurrency(v.daily_rate)}{lang === "ar" ? "/يوم" : "/day"}</div>
+                  <div className="text-xs text-muted">{lang === "ar" ? "مبلغ التأمين:" : "Deposit:"} {formatCurrency(v.security_deposit)}</div>
                 </div>
               </div>
             </div>
@@ -930,20 +944,20 @@ function OwnerFleetTab({ vehicles }: { vehicles: Vehicle[] }) {
 }
 
 /* ─── Reports Tab ──────────────────────────────────────────────────────── */
-function ReportsTab({ reports }: { reports: AIDamageReport[] }) {
+function ReportsTab({ reports, lang }: { reports: AIDamageReport[]; lang: "en" | "ar" }) {
   if (reports.length === 0) {
     return (
       <div className="card text-center" style={{ padding: "4rem" }}>
         <p style={{ fontSize: "3rem" }}>🤖</p>
-        <h3 className="mt-4">No AI Reports Yet</h3>
-        <p className="text-secondary mt-2">Reports appear here when a rental ends and damage inspection photos are analyzed.</p>
+        <h3 className="mt-4">{lang === "ar" ? "لا توجد تقارير ذكاء اصطناعي بعد" : "No AI Reports Yet"}</h3>
+        <p className="text-secondary mt-2">{lang === "ar" ? "تظهر التقارير هنا عند انتهاء الإيجار وتحليل صور فحص السيارة بالذكاء الاصطناعي." : "Reports appear here when a rental ends and damage inspection photos are analyzed."}</p>
       </div>
     );
   }
 
   return (
     <div>
-      <h2 className="mb-4">AI Damage Reports</h2>
+      <h2 className="mb-4">{lang === "ar" ? "تقارير فحص الأضرار بالذكاء الاصطناعي" : "AI Damage Reports"}</h2>
       <div className="flex flex-col gap-4">
         {reports.map((r) => <DamageReportCard key={r.id} report={r} />)}
       </div>

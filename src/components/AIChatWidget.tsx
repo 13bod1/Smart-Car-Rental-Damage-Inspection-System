@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { useLanguage } from "@/lib/LanguageContext";
 
 interface ChatMessage {
   role: "user" | "model";
@@ -8,13 +9,19 @@ interface ChatMessage {
 }
 
 export function AIChatWidget() {
+  const { lang, dir, trans } = useLanguage();
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    { role: "model", text: "Hey! 👋 I'm your AutoRent AI Advisor. Ask me anything about cars, rental prices, or which vehicle is right for your trip!" },
-  ]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Initialize greeting based on current language
+  useEffect(() => {
+    setMessages([
+      { role: "model", text: trans.chatGreeting },
+    ]);
+  }, [lang, trans.chatGreeting]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -44,7 +51,7 @@ export function AIChatWidget() {
     } catch {
       setMessages((prev) => [
         ...prev,
-        { role: "model", text: "Sorry, I'm having trouble right now. Please try again! 🔧" },
+        { role: "model", text: trans.chatError },
       ]);
     } finally {
       setLoading(false);
@@ -60,7 +67,8 @@ export function AIChatWidget() {
         style={{
           position: "fixed",
           bottom: "calc(1.5rem + env(safe-area-inset-bottom))",
-          right: "1.5rem",
+          right: lang === "ar" ? "auto" : "1.5rem",
+          left: lang === "ar" ? "1.5rem" : "auto",
           width: "60px",
           height: "60px",
           borderRadius: "50%",
@@ -90,39 +98,42 @@ export function AIChatWidget() {
       {/* Chat Window */}
       {open && (
         <div
+          dir={dir}
           className="animate-fade-in"
           style={{
             position: "fixed",
             bottom: "calc(5.5rem + env(safe-area-inset-bottom))",
-            right: "1.5rem",
+            right: lang === "ar" ? "auto" : "1.5rem",
+            left: lang === "ar" ? "1.5rem" : "auto",
             width: "min(380px, calc(100vw - 2rem))",
             height: "min(500px, calc(100vh - 10rem))",
             background: "var(--bg-surface)",
             border: "1px solid var(--border)",
             borderRadius: "var(--radius-xl)",
-            boxShadow: "0 16px 64px rgba(0,0,0,0.5)",
+            boxShadow: "0 16px 64px rgba(0,0,0,0.15)",
             display: "flex",
             flexDirection: "column",
             overflow: "hidden",
             zIndex: 998,
+            fontFamily: lang === "ar" ? "Cairo, sans-serif" : "inherit",
           }}
         >
           {/* Header */}
           <div style={{
             padding: "1rem 1.25rem",
             borderBottom: "1px solid var(--border)",
-            background: "rgba(59,130,246,0.05)",
+            background: "rgba(37,99,235,0.06)",
             display: "flex",
             alignItems: "center",
             gap: "0.75rem",
           }}>
             <span style={{ fontSize: "1.5rem" }}>🤖</span>
             <div>
-              <p className="font-bold" style={{ fontSize: "0.9rem" }}>AI Car Advisor</p>
-              <p className="text-xs text-muted">Powered by Gemini AI</p>
+              <p className="font-bold" style={{ fontSize: "0.9rem" }}>{trans.chatAdvisorTitle}</p>
+              <p className="text-xs text-muted">{trans.chatAdvisorSubtitle}</p>
             </div>
             <div style={{
-              marginLeft: "auto",
+              marginInlineStart: "auto",
               width: "8px",
               height: "8px",
               borderRadius: "50%",
@@ -200,7 +211,7 @@ export function AIChatWidget() {
               id="ai-chat-input"
               className="input"
               style={{ flex: 1, padding: "0.625rem 0.875rem", fontSize: "0.85rem" }}
-              placeholder="Ask about cars, pricing, or trips…"
+              placeholder={trans.chatPlaceholder}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && send()}
@@ -213,7 +224,7 @@ export function AIChatWidget() {
               disabled={loading || !input.trim()}
               style={{ padding: "0.625rem 1rem" }}
             >
-              ➤
+              {lang === "ar" ? "◀" : "➤"}
             </button>
           </div>
         </div>

@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+  # ─── Next.js Web App ─────────────────────────────────────────────────────────
+  web:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./apps/web/.env.local
+    depends_on:
+      - ai-engine
+      - financial-service
+    restart: unless-stopped
+
+  # ─── AI Damage & Valuation Engine ────────────────────────────────────────────
+  ai-engine:
+    build:
+      context: ./services/ai-engine
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    env_file:
+      - ./services/ai-engine/.env
+    restart: unless-stopped
+
+  # ─── Financial & Booking Service ─────────────────────────────────────────────
+  financial-service:
+    build:
+      context: ./services/financial-service
+      dockerfile: Dockerfile
+    ports:
+      - "8002:8002"
+    env_file:
+      - ./services/financial-service/.env
+    restart: unless-stopped

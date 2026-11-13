@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Professional AWS Architecture Diagram - Student Registration Website</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background-color: #f1f5f9;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .toolbar {
+      width: 100%;
+      max-width: 1200px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: white;
+      padding: 12px 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    }
+    .btn {
+      background: #0284c7;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s;
+    }
+    .btn:hover { background: #0369a1; }
+    .diagram-card {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 1200px;
+      overflow-x: auto;
+    }
+    svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="toolbar">
+    <div>
+      <h2 style="margin: 0; font-size: 18px; color: #0f172a;">AWS Architecture Diagram Preview</h2>
+      <p style="margin: 4px 0 0 0; font-size: 12px; color: #64748b;">Exact replica of the AASTMT lab diagram for Student Registration</p>
+    </div>
+    <button class="btn" onclick="downloadPNG()">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Download High-Res PNG
+    </button>
+  </div>
+
+  <div class="diagram-card" id="diagram-wrapper">
+    <!-- Inline SVG rendered for instant viewing and crystal clear resolution -->
+    <iframe src="aws-architecture-diagram.svg" style="width: 100%; height: 680px; border: none;"></iframe>
+  </div>
+
+  <canvas id="exportCanvas" style="display: none;"></canvas>
+
+  <script>
+    async function downloadPNG() {
+      const response = await fetch('aws-architecture-diagram.svg');
+      const svgText = await response.text();
+      
+      const img = new Image();
+      const svgBlob = new Blob([svgText], { type: 'image/svg+xml;charset=utf-8' });
+      const URL = window.URL || window.webkitURL || window;
+      const blobURL = URL.createObjectURL(svgBlob);
+      
+      img.onload = function() {
+        const canvas = document.getElementById('exportCanvas');
+        canvas.width = 2400; // 2x high resolution
+        canvas.height = 1320;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        
+        const pngUrl = canvas.toDataURL('image/png');
+        const downloadLink = document.createElement('a');
+        downloadLink.href = pngUrl;
+        downloadLink.download = 'AWS_Architecture_Diagram_Student_Registration.png';
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+      };
+      img.src = blobURL;
+    }
+  </script>
+</body>
+</html>
+

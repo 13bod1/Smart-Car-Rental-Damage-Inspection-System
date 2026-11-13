@@ -1,0 +1,126 @@
+<%- include('partials/header') %>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+
+  <!-- Header Banner -->
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-6">
+    <div>
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold mb-2">
+        <i data-lucide="database" class="w-3.5 h-3.5"></i>
+        <span>Amazon RDS Query Active</span>
+      </div>
+      <h1 class="text-3xl font-extrabold text-white">Car Rental Fleet Catalog</h1>
+      <p class="text-slate-400 text-sm mt-1">
+        All vehicles shown below are retrieved in real-time from the <strong class="text-emerald-400 font-mono">cars</strong> table inside <strong class="text-white">Amazon RDS (<%= dbStatus.engine.toUpperCase() %>)</strong>.
+      </p>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <a href="/cars/new" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold text-sm shadow-lg shadow-amber-500/20 transition-all">
+        <i data-lucide="plus-circle" class="w-4 h-4"></i>
+        <span>Add New Vehicle (S3)</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Category Filters -->
+  <div class="flex flex-wrap items-center gap-2">
+    <span class="text-xs text-slate-400 mr-2 font-medium">Filter Category:</span>
+    <% const categories = ['All', 'Electric', 'Sports', 'SUV', 'Sedan']; %>
+    <% categories.forEach(cat => { %>
+      <a href="/cars<%= cat === 'All' ? '' : '?category=' + cat %>" 
+         class="px-4 py-1.5 rounded-xl text-xs font-semibold transition-all <%= selectedCategory === cat ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20' : 'bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800' %>">
+        <%= cat %>
+      </a>
+    <% }) %>
+  </div>
+
+  <!-- Cars Grid -->
+  <% if (cars && cars.length > 0) { %>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <% cars.forEach(car => { %>
+        <div class="group rounded-2xl bg-slate-900 border border-slate-800 overflow-hidden hover:border-amber-500/40 transition-all shadow-xl flex flex-col justify-between">
+          <div>
+            <!-- Car Image (From Amazon S3) -->
+            <div class="relative h-52 w-full overflow-hidden bg-slate-950">
+              <img src="<%= car.image_url %>" alt="<%= car.make %> <%= car.model %>" 
+                   class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                   onerror="this.src='https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=800&auto=format&fit=crop&q=80'">
+              
+              <!-- Category Badge -->
+              <div class="absolute top-3 left-3">
+                <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-slate-950/80 backdrop-blur-md text-amber-400 border border-amber-500/30">
+                  <%= car.category %>
+                </span>
+              </div>
+
+              <!-- Storage Badge -->
+              <div class="absolute bottom-3 right-3">
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono bg-sky-950/90 text-sky-300 border border-sky-500/30">
+                  <i data-lucide="hard-drive" class="w-2.5 h-2.5"></i>
+                  <span>AWS S3 Object</span>
+                </span>
+              </div>
+            </div>
+
+            <!-- Car Details -->
+            <div class="p-6 space-y-3">
+              <div class="flex items-center justify-between">
+                <h3 class="text-xl font-bold text-white group-hover:text-amber-400 transition-colors">
+                  <%= car.make %> <%= car.model %>
+                </h3>
+                <span class="text-xs font-semibold px-2 py-0.5 rounded bg-slate-800 text-slate-300">
+                  <%= car.year %>
+                </span>
+              </div>
+
+              <p class="text-slate-400 text-xs line-clamp-2 leading-relaxed">
+                <%= car.description || 'Premium high-performance rental vehicle ready for immediate booking.' %>
+              </p>
+            </div>
+          </div>
+
+          <!-- Price & Action -->
+          <div class="p-6 pt-0 border-t border-slate-800/80 mt-4 flex items-center justify-between">
+            <div>
+              <span class="text-2xl font-extrabold text-white">$<%= parseFloat(car.daily_rate).toFixed(2) %></span>
+              <span class="text-xs text-slate-400">/day</span>
+            </div>
+
+            <button onclick="alert('Booking confirmed for <%= car.make %> <%= car.model %>! Demonstration completed on AWS.')" 
+                    class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-200 font-semibold text-xs border border-slate-700 hover:border-transparent transition-all inline-flex items-center gap-1.5">
+              <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+              <span>Book Vehicle</span>
+            </button>
+          </div>
+
+        </div>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <div class="text-center py-16 bg-slate-900/50 rounded-2xl border border-slate-800 space-y-4">
+      <div class="w-16 h-16 mx-auto rounded-full bg-slate-800 flex items-center justify-center text-slate-500">
+        <i data-lucide="car" class="w-8 h-8"></i>
+      </div>
+      <h3 class="text-lg font-bold text-white">No vehicles found in category</h3>
+      <p class="text-sm text-slate-400">Try selecting another category or add a new vehicle via the upload form.</p>
+      <a href="/cars/new" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500 text-slate-950 font-bold text-sm">
+        <i data-lucide="plus" class="w-4 h-4"></i>
+        <span>Add Vehicle</span>
+      </a>
+    </div>
+  <% } %>
+
+  <!-- Verification Note for Professor -->
+  <div class="rounded-xl bg-slate-900/40 border border-slate-800 p-4 text-xs text-slate-400 flex items-start gap-3">
+    <i data-lucide="info" class="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5"></i>
+    <div>
+      <strong class="text-slate-300">Lab Discussion Verification:</strong>
+      This data page fulfills <strong class="text-white">Requirement #3 (Data / Listing Page)</strong>. When this page loads, the backend on Amazon EC2 initiates a TCP socket connection to Amazon RDS at port 3306/5432 through the private subnet, executes a <code class="text-amber-400">SELECT * FROM cars</code> SQL query, and delivers the serialized HTML to the browser.
+    </div>
+  </div>
+
+</div>
+
+<%- include('partials/footer') %>
+

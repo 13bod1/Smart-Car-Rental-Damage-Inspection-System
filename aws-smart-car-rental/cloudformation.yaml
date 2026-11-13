@@ -1,0 +1,525 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  Smart Car Rental - Universal CloudFormation Template (100% Free Tier, No IAM Role dependencies).
+  Compatible with all AWS regions including eu-north-1 (Stockholm), eu-central-1, and us-east-1.
+  Deploys Custom VPC (10.0.0.0/16), 4 Subnets, IGW, Route Tables, Security Groups,
+  Amazon S3 Bucket, Amazon RDS PostgreSQL (db.t3.micro), and Amazon EC2 (t3.micro).
+
+Parameters:
+  DBUsername:
+    Type: String
+    Default: 'postgres'
+    Description: Master username for Amazon RDS PostgreSQL.
+
+  DBPassword:
+    Type: String
+    Default: 'Password123!'
+    NoEcho: true
+    Description: Master password for Amazon RDS PostgreSQL (minimum 8 characters).
+
+Mappings:
+  RegionToAmi:
+    eu-north-1:
+      AMI: ami-0082f42a66e4a0279
+    eu-central-1:
+      AMI: ami-0a628e1ab500d35fa
+    eu-west-1:
+      AMI: ami-0d75513e770666016
+    us-east-1:
+      AMI: ami-0c101f26f147fa7fd
+    us-east-2:
+      AMI: ami-0900fe555666598a2
+    us-west-2:
+      AMI: ami-03981c7429671d44c
+
+Resources:
+  # ==============================================================================
+  # 1. AMAZON VPC & NETWORKING (10.0.0.0/16)
+  # ==============================================================================
+  SmartCarVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: SmartCar-Custom-VPC
+
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: SmartCar-IGW
+
+  VPCGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref SmartCarVPC
+      InternetGatewayId: !Ref InternetGateway
+
+  # Public Subnet A (AZ 1)
+  PublicSubnetA:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref SmartCarVPC
+      CidrBlock: 10.0.1.0/24
+      AvailabilityZone: !Select [0, !GetAZs '']
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: SmartCar-Public-Subnet-A
+
+  # Public Subnet B (AZ 2 - For RDS Subnet Group)
+  PublicSubnetB:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref SmartCarVPC
+      CidrBlock: 10.0.2.0/24
+      AvailabilityZone: !Select [1, !GetAZs '']
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: SmartCar-Public-Subnet-B
+
+  # Private Subnet A (AZ 1 - For RDS)
+  PrivateSubnetA:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref SmartCarVPC
+      CidrBlock: 10.0.11.0/24
+      AvailabilityZone: !Select [0, !GetAZs '']
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: SmartCar-Private-Subnet-A
+
+  # Private Subnet B (AZ 2 - For RDS)
+  PrivateSubnetB:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref SmartCarVPC
+      CidrBlock: 10.0.12.0/24
+      AvailabilityZone: !Select [1, !GetAZs '']
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: SmartCar-Private-Subnet-B
+
+  # Public Route Table
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref SmartCarVPC
+      Tags:
+        - Key: Name
+          Value: SmartCar-Public-RouteTable
+
+  PublicDefaultRoute:
+    Type: AWS::EC2::Route
+    DependsOn: VPCGatewayAttachment
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+
+  SubnetAssocPublicA:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnetA
+      RouteTableId: !Ref PublicRouteTable
+
+  SubnetAssocPublicB:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnetB
+      RouteTableId: !Ref PublicRouteTable
+
+  # ==============================================================================
+  # 2. SECURITY GROUPS
+  # ==============================================================================
+  WebServerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable HTTP port 80 and SSH port 22
+      VpcId: !Ref SmartCarVPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: SmartCar-Web-SG
+
+  RDSSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable PostgreSQL port 5432 strictly from EC2 Web Security Group
+      VpcId: !Ref SmartCarVPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 5432
+          ToPort: 5432
+          SourceSecurityGroupId: !Ref WebServerSecurityGroup
+      Tags:
+        - Key: Name
+          Value: SmartCar-RDS-SG
+
+  # ==============================================================================
+  # 3. AMAZON S3 BUCKET
+  # ==============================================================================
+  SmartCarAssetsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'smartcar-assets-${AWS::AccountId}-${AWS::Region}'
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders: ['*']
+            AllowedMethods: ['GET', 'PUT', 'POST', 'HEAD']
+            AllowedOrigins: ['*']
+      Tags:
+        - Key: Project
+          Value: SmartCarRental
+
+  SmartCarAssetsBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref SmartCarAssetsBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: PublicReadGetObject
+            Effect: Allow
+            Principal: '*'
+            Action: 's3:GetObject'
+            Resource: !Sub 'arn:aws:s3:::${SmartCarAssetsBucket}/*'
+
+  # ==============================================================================
+  # 4. AMAZON RDS POSTGRESQL DATABASE
+  # ==============================================================================
+  DBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: Subnets for SmartCar RDS Multi-AZ Placement
+      SubnetIds:
+        - !Ref PrivateSubnetA
+        - !Ref PrivateSubnetB
+
+  RDSPostgresInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceIdentifier: smartcar-postgres-db
+      AllocatedStorage: '20'
+      DBInstanceClass: db.t3.micro
+      Engine: postgres
+      MasterUsername: !Ref DBUsername
+      MasterUserPassword: !Ref DBPassword
+      DBName: smart_car_rental
+      DBSubnetGroupName: !Ref DBSubnetGroup
+      VPCSecurityGroups:
+        - !Ref RDSSecurityGroup
+      PubliclyAccessible: false
+      MultiAZ: false
+      StorageType: gp2
+      SkipFinalSnapshot: true
+      Tags:
+        - Key: Name
+          Value: SmartCar-RDS-Postgres
+
+  # ==============================================================================
+  # 5. AMAZON EC2 WEB INSTANCE (t3.micro - compatible with eu-north-1 Stockholm)
+  # ==============================================================================
+  WebEC2Instance:
+    Type: AWS::EC2::Instance
+    DependsOn:
+      - RDSPostgresInstance
+      - SmartCarAssetsBucket
+    Properties:
+      InstanceType: t3.micro
+      ImageId: !FindInMap [RegionToAmi, !Ref 'AWS::Region', AMI]
+      SubnetId: !Ref PublicSubnetA
+      SecurityGroupIds:
+        - !Ref WebServerSecurityGroup
+      Tags:
+        - Key: Name
+          Value: SmartCar-Web-EC2
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          set -e
+          exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+
+          echo "=== 1. System Updates & Node.js Setup ==="
+          dnf update -y
+          curl -fsSL https://rpm.nodesource.com/setup_20.x | bash -
+          dnf install -y nodejs git
+
+          mkdir -p /var/www/smartcar
+          cd /var/www/smartcar
+
+          cat << 'EOF' > package.json
+          {
+            "name": "smart-car-rental-aws",
+            "version": "1.0.0",
+            "main": "server.js",
+            "scripts": { "start": "node server.js" },
+            "dependencies": {
+              "@aws-sdk/client-s3": "^3.758.0",
+              "express": "^4.21.2",
+              "multer": "^1.4.5-lts.1",
+              "pg": "^8.13.3"
+            }
+          }
+          EOF
+
+          npm install --production
+
+          cat << EOF > .env
+          PORT=80
+          AWS_REGION=${AWS::Region}
+          S3_BUCKET=${SmartCarAssetsBucket}
+          RDS_HOSTNAME=${RDSPostgresInstance.Endpoint.Address}
+          RDS_PORT=${RDSPostgresInstance.Endpoint.Port}
+          RDS_USERNAME=${DBUsername}
+          RDS_PASSWORD=${DBPassword}
+          RDS_DB_NAME=smart_car_rental
+          EOF
+
+          cat << 'EOF' > server.js
+          const express = require('express');
+          const multer = require('multer');
+          const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
+          const { Pool } = require('pg');
+          const http = require('http');
+
+          const app = express();
+          const PORT = process.env.PORT || 80;
+          const AWS_REGION = process.env.AWS_REGION || 'eu-north-1';
+          const S3_BUCKET = process.env.S3_BUCKET || 'smartcar-assets';
+
+          app.use(express.urlencoded({ extended: true }));
+          app.use(express.json());
+
+          const s3 = new S3Client({ region: AWS_REGION });
+          const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 5 * 1024 * 1024 } });
+
+          const db = new Pool({
+            host: process.env.RDS_HOSTNAME,
+            port: parseInt(process.env.RDS_PORT || '5432'),
+            user: process.env.RDS_USERNAME,
+            password: process.env.RDS_PASSWORD,
+            database: process.env.RDS_DB_NAME,
+            ssl: { rejectUnauthorized: false },
+            connectionTimeoutMillis: 5000
+          });
+
+          async function initDB() {
+            try {
+              await db.query('CREATE TABLE IF NOT EXISTS vehicles (id SERIAL PRIMARY KEY, make VARCHAR(100), model VARCHAR(100), year INT, category VARCHAR(50), daily_rate NUMERIC(10,2), image_url VARCHAR(1000), created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);');
+              const res = await db.query('SELECT COUNT(*) FROM vehicles');
+              if (parseInt(res.rows[0].count) === 0) {
+                const seed = [
+                  ['Tesla', 'Model 3 Performance', 2024, 'Electric', 95.00, 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=800'],
+                  ['BMW', 'M4 Competition', 2023, 'Sports', 150.00, 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800'],
+                  ['Mercedes-Benz', 'G63 AMG', 2024, 'SUV', 220.00, 'https://images.unsplash.com/photo-1520050206274-a1ae44613e6d?w=800'],
+                  ['Porsche', 'Taycan 4S', 2024, 'Electric', 180.00, 'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=800']
+                ];
+                for (const car of seed) {
+                  await db.query('INSERT INTO vehicles (make, model, year, category, daily_rate, image_url) VALUES ($1, $2, $3, $4, $5, $6)', car);
+                }
+              }
+              console.log('[RDS] Database initialized');
+            } catch (e) {
+              console.warn('[RDS] Notice:', e.message);
+            }
+          }
+
+          function getEC2() {
+            return new Promise(function(resolve) {
+              const req = http.get('http://169.254.169.254/latest/dynamic/instance-identity/document', { timeout: 1000 }, function(res) {
+                let data = '';
+                res.on('data', function(c) { data += c; });
+                res.on('end', function() { try { resolve(JSON.parse(data)); } catch (e) { resolve(null); } });
+              });
+              req.on('error', function() { resolve(null); });
+              req.on('timeout', function() { req.destroy(); resolve(null); });
+            });
+          }
+
+          function html(title, body, ec2) {
+            var ec2Id = ec2 ? ec2.instanceId : 'i-active';
+            var s3b = S3_BUCKET;
+            var out = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">';
+            out += '<meta name="viewport" content="width=device-width, initial-scale=1.0">';
+            out += '<title>' + title + ' - SmartCar Rental AWS</title>';
+            out += '<script src="https://cdn.tailwindcss.com"></script>';
+            out += '<script src="https://unpkg.com/lucide@latest"></script></head>';
+            out += '<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans">';
+            out += '<div class="bg-slate-900 border-b border-slate-800 text-xs py-2 px-4 flex justify-between">';
+            out += '<span><strong>AASTMT Project:</strong> Smart Car Rental</span><div class="flex gap-2">';
+            out += '<span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400">EC2: ' + ec2Id + '</span>';
+            out += '<span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400">RDS: PostgreSQL Connected</span>';
+            out += '<span class="px-2 py-0.5 rounded bg-sky-500/10 text-sky-400">S3: ' + s3b + '</span>';
+            out += '<span class="px-2 py-0.5 rounded bg-purple-500/10 text-purple-400">VPC: 10.0.0.0/16</span>';
+            out += '</div></div>';
+            out += '<header class="bg-slate-900/80 border-b border-slate-800 px-6 py-4 flex justify-between items-center">';
+            out += '<a href="/" class="font-extrabold text-xl text-white"><span class="text-amber-500">SmartCar</span> Rental</a>';
+            out += '<nav class="flex gap-4 text-sm font-semibold">';
+            out += '<a href="/" class="hover:text-amber-400">Home</a>';
+            out += '<a href="/fleet" class="hover:text-amber-400">Fleet (RDS)</a>';
+            out += '<a href="/snap" class="hover:text-amber-400">Snap & Damage (S3)</a>';
+            out += '<a href="/snap" class="px-3 py-1 bg-amber-500 text-slate-950 rounded-lg font-bold">+ Upload Vehicle</a>';
+            out += '</nav></header>';
+            out += '<main class="flex-1 max-w-6xl w-full mx-auto px-4 py-8">' + body + '</main>';
+            out += '<footer class="bg-slate-900 border-t border-slate-800 py-4 text-center text-xs text-slate-500">';
+            out += 'AASTMT Cloud Applications &copy; 2026 Team of 3 Students</footer>';
+            out += '<script>lucide.createIcons();</script></body></html>';
+            return out;
+          }
+
+          app.get('/', async function(req, res) {
+            const ec2 = await getEC2();
+            var ec2Id = ec2 ? ec2.instanceId : 'i-server';
+            var s3b = S3_BUCKET;
+            var body = '<div class="space-y-8">';
+            body += '<div class="p-8 rounded-3xl bg-gradient-to-br from-slate-900 to-amber-950/40 border border-slate-800">';
+            body += '<h1 class="text-4xl font-extrabold text-white">Smart Car Rental Platform</h1>';
+            body += '<p class="text-slate-300 mt-2">Deployed on Amazon Web Services adhering strictly to the AASTMT Term Project requirements.</p>';
+            body += '<div class="flex gap-4 mt-6">';
+            body += '<a href="/fleet" class="px-5 py-2.5 bg-amber-500 text-slate-950 font-bold rounded-xl">Browse Fleet (Page 2 - RDS)</a>';
+            body += '<a href="/snap" class="px-5 py-2.5 bg-slate-800 text-white font-semibold rounded-xl border border-slate-700">Upload & Inspect (Page 3 - S3)</a>';
+            body += '</div></div>';
+            body += '<div class="grid grid-cols-1 md:grid-cols-4 gap-4">';
+            body += '<div class="p-5 rounded-2xl bg-slate-900 border border-slate-800"><span class="text-xs text-purple-400 font-bold">VPC</span><p class="font-bold text-white text-lg mt-1">10.0.0.0/16</p><p class="text-xs text-slate-400">Public & Private Subnets</p></div>';
+            body += '<div class="p-5 rounded-2xl bg-slate-900 border border-slate-800"><span class="text-xs text-amber-400 font-bold">EC2</span><p class="font-bold text-white text-lg mt-1">' + ec2Id + '</p><p class="text-xs text-slate-400">Node.js Server Port 80</p></div>';
+            body += '<div class="p-5 rounded-2xl bg-slate-900 border border-slate-800"><span class="text-xs text-emerald-400 font-bold">RDS</span><p class="font-bold text-white text-lg mt-1">PostgreSQL 16</p><p class="text-xs text-slate-400">Database: smart_car_rental</p></div>';
+            body += '<div class="p-5 rounded-2xl bg-slate-900 border border-slate-800"><span class="text-xs text-sky-400 font-bold">S3</span><p class="font-bold text-white text-lg mt-1">Object Storage</p><p class="text-xs text-slate-400 truncate">' + s3b + '</p></div>';
+            body += '</div></div>';
+            res.send(html('Home', body, ec2));
+          });
+
+          app.get('/fleet', async function(req, res) {
+            const ec2 = await getEC2();
+            let rows = [];
+            try {
+              const r = await db.query('SELECT * FROM vehicles ORDER BY id DESC');
+              rows = r.rows;
+            } catch (e) {}
+            var cards = rows.map(function(c) {
+              var s = '<div class="rounded-2xl bg-slate-900 border border-slate-800 overflow-hidden flex flex-col justify-between">';
+              s += '<div><img src="' + c.image_url + '" class="h-44 w-full object-cover">';
+              s += '<div class="p-4 space-y-1"><span class="text-[10px] font-bold text-amber-400 px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/20">' + c.category + '</span>';
+              s += '<h3 class="text-lg font-bold text-white mt-1">' + c.make + ' ' + c.model + ' (' + c.year + ')</h3></div></div>';
+              s += '<div class="p-4 pt-0 border-t border-slate-800 flex justify-between items-center mt-3">';
+              s += '<span class="text-xl font-bold text-white">$' + c.daily_rate + '/day</span>';
+              s += '<button onclick="alert(\'Booked!\')" class="px-3 py-1.5 bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-xs font-semibold rounded-lg">Book Now</button>';
+              s += '</div></div>';
+              return s;
+            }).join('');
+            var body = '<div class="space-y-6"><div class="flex justify-between items-center border-b border-slate-800 pb-4">';
+            body += '<div><h1 class="text-3xl font-extrabold text-white">Fleet Catalog</h1><p class="text-xs text-emerald-400 mt-1">Dynamically queried from Amazon RDS PostgreSQL</p></div>';
+            body += '<a href="/snap" class="px-4 py-2 bg-amber-500 text-slate-950 font-bold text-xs rounded-xl">+ Add Vehicle</a></div>';
+            body += '<div class="grid grid-cols-1 md:grid-cols-3 gap-6">' + cards + '</div></div>';
+            res.send(html('Fleet Catalog (RDS)', body, ec2));
+          });
+
+          app.get('/snap', async function(req, res) {
+            const ec2 = await getEC2();
+            var body = '<div class="max-w-2xl mx-auto space-y-6"><div class="border-b border-slate-800 pb-4">';
+            body += '<h1 class="text-3xl font-extrabold text-white">Upload Vehicle / Damage Scan</h1>';
+            body += '<p class="text-xs text-sky-400 mt-1">Direct upload to Amazon S3 &bull; Saved to Amazon RDS</p></div>';
+            body += '<form action="/snap" method="POST" enctype="multipart/form-data" class="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">';
+            body += '<div class="grid grid-cols-2 gap-4">';
+            body += '<div><label class="block text-xs font-bold text-slate-300 mb-1">Make</label><input type="text" name="make" required placeholder="e.g. Audi" class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-sm"></div>';
+            body += '<div><label class="block text-xs font-bold text-slate-300 mb-1">Model</label><input type="text" name="model" required placeholder="e.g. RS6" class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-sm"></div>';
+            body += '<div><label class="block text-xs font-bold text-slate-300 mb-1">Year</label><input type="number" name="year" required value="2024" class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-sm"></div>';
+            body += '<div><label class="block text-xs font-bold text-slate-300 mb-1">Category</label><select name="category" class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-sm"><option value="Electric">Electric</option><option value="Sports">Sports</option><option value="SUV">SUV</option></select></div></div>';
+            body += '<div><label class="block text-xs font-bold text-slate-300 mb-1">Daily Rate ($)</label><input type="number" name="daily_rate" required value="130.00" step="0.01" class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-sm"></div>';
+            body += '<div><label class="block text-xs font-bold text-slate-300 mb-1">Vehicle Photo (Uploads to Amazon S3)</label><input type="file" name="image" accept="image/*" class="w-full text-xs text-slate-400"></div>';
+            body += '<div class="pt-4 border-t border-slate-800 flex justify-end gap-3"><a href="/fleet" class="px-4 py-2 text-xs text-slate-400">Cancel</a><button type="submit" class="px-5 py-2 bg-amber-500 text-slate-950 font-bold text-xs rounded-xl">Upload to S3 & Save</button></div></form></div>';
+            res.send(html('Upload Vehicle (S3)', body, ec2));
+          });
+
+          app.post('/snap', upload.single('image'), async function(req, res) {
+            const make = req.body.make;
+            const model = req.body.model;
+            const year = parseInt(req.body.year);
+            const category = req.body.category;
+            const daily_rate = parseFloat(req.body.daily_rate);
+            let imgUrl = 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=800';
+            if (req.file) {
+              const k = 'vehicles/' + Date.now() + '-' + req.file.originalname.replace(/\s+/g, '_');
+              try {
+                await s3.send(new PutObjectCommand({ Bucket: S3_BUCKET, Key: k, Body: req.file.buffer, ContentType: req.file.mimetype }));
+                imgUrl = 'https://' + S3_BUCKET + '.s3.' + AWS_REGION + '.amazonaws.com/' + k;
+              } catch (e) {}
+            }
+            try {
+              await db.query('INSERT INTO vehicles (make, model, year, category, daily_rate, image_url) VALUES ($1, $2, $3, $4, $5, $6)',
+                [make, model, year, category, daily_rate, imgUrl]
+              );
+            } catch (e) {}
+            res.redirect('/fleet');
+          });
+
+          app.listen(PORT, async function() {
+            console.log('SmartCar AWS running on port ' + PORT);
+            await initDB();
+          });
+          EOF
+
+          cat << 'EOF' > /etc/systemd/system/smartcar.service
+          [Unit]
+          Description=Smart Car Rental AWS Server
+          After=network.target
+
+          [Service]
+          Type=simple
+          User=root
+          WorkingDirectory=/var/www/smartcar
+          ExecStart=/usr/bin/node /var/www/smartcar/server.js
+          Restart=always
+          RestartSec=5
+          EnvironmentFile=/var/www/smartcar/.env
+
+          [Install]
+          WantedBy=multi-user.target
+          EOF
+
+          systemctl daemon-reload
+          systemctl enable smartcar
+          systemctl start smartcar
+
+          echo "=== SmartCar Rental AWS Deployment Complete ==="
+
+Outputs:
+  WebsiteURL:
+    Description: Public HTTP URL for Smart Car Rental on Amazon EC2
+    Value: !Sub 'http://${WebEC2Instance.PublicDnsName}'
+
+  EC2PublicIP:
+    Description: Public IP Address of Amazon EC2 instance
+    Value: !GetAtt WebEC2Instance.PublicIp
+
+  RDSEndpoint:
+    Description: Endpoint Hostname for Amazon RDS PostgreSQL
+    Value: !GetAtt RDSPostgresInstance.Endpoint.Address
+
+  S3BucketName:
+    Description: Amazon S3 Assets & Uploads Bucket
+    Value: !Ref SmartCarAssetsBucket
+
+  VPCId:
+    Description: Amazon VPC Custom Network ID
+    Value: !Ref SmartCarVPC

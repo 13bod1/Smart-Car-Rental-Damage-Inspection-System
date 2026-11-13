@@ -1,0 +1,406 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  AASTMT Software Engineering for Cloud Applications - Student Registration Website.
+  Matches lab architecture diagram: Custom VPC (website-vpc 10.0.0.0/16), Public Subnet (EC2 Apache/PHP Backend),
+  Private Database Subnet (Amazon RDS MySQL STUDENT_REGISTRATION), and Amazon S3 Static Website Hosting.
+
+Parameters:
+  EnvironmentType:
+    Type: String
+    Default: 'StandardAWS'
+    AllowedValues:
+      - 'StandardAWS'
+      - 'AcademyLab'
+
+  LatestAmiId:
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: '/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64'
+
+  DBUsername:
+    Type: String
+    Default: 'admin'
+
+  DBPassword:
+    Type: String
+    Default: 'Password123!'
+    NoEcho: true
+
+Conditions:
+  IsAcademyLab: !Equals [!Ref EnvironmentType, 'AcademyLab']
+  IsStandardAWS: !Equals [!Ref EnvironmentType, 'StandardAWS']
+
+Resources:
+  # ==============================================================================
+  # 1. NETWORKING (website-vpc - 10.0.0.0/16)
+  # ==============================================================================
+  WebsiteVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: website-vpc
+
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: website-igw
+
+  VPCGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref WebsiteVPC
+      InternetGatewayId: !Ref InternetGateway
+
+  PublicSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref WebsiteVPC
+      CidrBlock: 10.0.1.0/24
+      AvailabilityZone: !Select [0, !GetAZs '']
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: Public subnet
+
+  PrivateSubnetA:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref WebsiteVPC
+      CidrBlock: 10.0.11.0/24
+      AvailabilityZone: !Select [0, !GetAZs '']
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: Private database subnet A
+
+  PrivateSubnetB:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref WebsiteVPC
+      CidrBlock: 10.0.12.0/24
+      AvailabilityZone: !Select [1, !GetAZs '']
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: Private database subnet B
+
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref WebsiteVPC
+      Tags:
+        - Key: Name
+          Value: website-public-rt
+
+  PublicDefaultRoute:
+    Type: AWS::EC2::Route
+    DependsOn: VPCGatewayAttachment
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+
+  SubnetRouteTableAssocPublic:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet
+      RouteTableId: !Ref PublicRouteTable
+
+  # ==============================================================================
+  # 2. SECURITY GROUPS
+  # ==============================================================================
+  EC2SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: HTTP port 80 inbound; SSH port 22 restricted
+      VpcId: !Ref WebsiteVPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: EC2 Security Group
+
+  RDSSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: MySQL port 3306 inbound only from the EC2 Security Group
+      VpcId: !Ref WebsiteVPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          SourceSecurityGroupId: !Ref EC2SecurityGroup
+      Tags:
+        - Key: Name
+          Value: RDS Security Group
+
+  # ==============================================================================
+  # 3. AMAZON S3 - FRONTEND STATIC WEBSITE HOSTING
+  # ==============================================================================
+  S3WebsiteBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'student-reg-frontend-${AWS::AccountId}-${AWS::Region}'
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: index.html
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+      Tags:
+        - Key: Name
+          Value: Amazon S3 - Frontend
+
+  S3WebsiteBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref S3WebsiteBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: PublicReadGetObject
+            Effect: Allow
+            Principal: '*'
+            Action: 's3:GetObject'
+            Resource: !Sub 'arn:aws:s3:::${S3WebsiteBucket}/*'
+
+  # ==============================================================================
+  # 4. IAM ROLE (For EC2 S3 Access)
+  # ==============================================================================
+  EC2Role:
+    Type: AWS::IAM::Role
+    Condition: IsStandardAWS
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+
+  EC2Profile:
+    Type: AWS::IAM::InstanceProfile
+    Condition: IsStandardAWS
+    Properties:
+      Roles:
+        - !Ref EC2Role
+
+  # ==============================================================================
+  # 5. AMAZON RDS FOR MYSQL DATABASE
+  # ==============================================================================
+  DBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: Private Subnets for RDS MySQL
+      SubnetIds:
+        - !Ref PrivateSubnetA
+        - !Ref PrivateSubnetB
+
+  RDSMySQLInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceIdentifier: student-registration-db
+      AllocatedStorage: '20'
+      DBInstanceClass: db.t3.micro
+      Engine: mysql
+      EngineVersion: '8.0'
+      MasterUsername: !Ref DBUsername
+      MasterUserPassword: !Ref DBPassword
+      DBName: STUDENT_REGISTRATION
+      DBSubnetGroupName: !Ref DBSubnetGroup
+      VPCSecurityGroups:
+        - !Ref RDSSecurityGroup
+      PubliclyAccessible: false
+      MultiAZ: false
+      StorageType: gp2
+      SkipFinalSnapshot: true
+      Tags:
+        - Key: Name
+          Value: Amazon RDS for MySQL - Database
+
+  # ==============================================================================
+  # 6. AMAZON EC2 - BACKEND (Apache HTTP Server + PHP)
+  # ==============================================================================
+  EC2BackendInstance:
+    Type: AWS::EC2::Instance
+    DependsOn:
+      - RDSMySQLInstance
+      - S3WebsiteBucket
+    Properties:
+      InstanceType: t2.micro
+      ImageId: !Ref LatestAmiId
+      SubnetId: !Ref PublicSubnet
+      SecurityGroupIds:
+        - !Ref EC2SecurityGroup
+      IamInstanceProfile: !If [IsAcademyLab, 'LabInstanceProfile', !Ref EC2Profile]
+      Tags:
+        - Key: Name
+          Value: Amazon EC2 - Backend
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          set -e
+          exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+
+          echo "=== 1. Installing Apache HTTP Server and PHP ==="
+          dnf update -y
+          dnf install -y httpd php php-mysqlnd php-json git
+
+          # Start and enable Apache HTTP Server
+          systemctl start httpd
+          systemctl enable httpd
+
+          echo "=== 2. Setting up Database Config Outside Web Root (/var/www/config.php) ==="
+          cat << 'EOF' > /var/www/config.php
+          <?php
+          define('DB_HOST', '${RDSMySQLInstance.Endpoint.Address}');
+          define('DB_USER', '${DBUsername}');
+          define('DB_PASS', '${DBPassword}');
+          define('DB_NAME', 'STUDENT_REGISTRATION');
+          define('DB_PORT', ${RDSMySQLInstance.Endpoint.Port});
+
+          function getDBConnection() {
+              $mysqli = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT);
+              if ($mysqli->connect_errno) {
+                  throw new Exception("RDS MySQL Connection Failed: " . $mysqli->connect_error);
+              }
+              return $mysqli;
+          }
+          ?>
+          EOF
+
+          echo "=== 3. Setting up Backend API Endpoints in Web Root (/var/www/html/api/) ==="
+          mkdir -p /var/www/html/api
+
+          # API: register.php
+          cat << 'EOF' > /var/www/html/api/register.php
+          <?php
+          header('Content-Type: application/json');
+          header('Access-Control-Allow-Origin: *');
+          header('Access-Control-Allow-Methods: POST, OPTIONS');
+          header('Access-Control-Allow-Headers: Content-Type');
+
+          if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+              http_response_code(200);
+              exit();
+          }
+
+          require_once '/var/www/config.php';
+
+          try {
+              $mysqli = getDBConnection();
+              
+              // Ensure table exists
+              $mysqli->query("CREATE TABLE IF NOT EXISTS students (
+                  id INT AUTO_INCREMENT PRIMARY KEY,
+                  full_name VARCHAR(100) NOT NULL,
+                  email VARCHAR(100) NOT NULL,
+                  student_id VARCHAR(50) NOT NULL,
+                  department VARCHAR(50) DEFAULT 'Engineering',
+                  photo_url VARCHAR(500),
+                  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+              )");
+
+              $fullName = $_POST['full_name'] ?? '';
+              $email = $_POST['email'] ?? '';
+              $studentId = $_POST['student_id'] ?? '';
+              $department = $_POST['department'] ?? 'General Engineering';
+              $photoUrl = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200';
+
+              if (empty($fullName) || empty($email) || empty($studentId)) {
+                  http_response_code(400);
+                  echo json_encode(['error' => 'Full Name, Email, and Student ID are required.']);
+                  exit();
+              }
+
+              $stmt = $mysqli->prepare("INSERT INTO students (full_name, email, student_id, department, photo_url) VALUES (?, ?, ?, ?, ?)");
+              $stmt->bind_param("sssss", $fullName, $email, $studentId, $department, $photoUrl);
+              $stmt->execute();
+
+              echo json_encode(['status' => 'success', 'message' => 'Student record inserted in Amazon RDS!', 'id' => $stmt->insert_id]);
+          } catch (Exception $e) {
+              http_response_code(500);
+              echo json_encode(['error' => $e->getMessage()]);
+          }
+          ?>
+          EOF
+
+          # API: students.php
+          cat << 'EOF' > /var/www/html/api/students.php
+          <?php
+          header('Content-Type: application/json');
+          header('Access-Control-Allow-Origin: *');
+
+          require_once '/var/www/config.php';
+
+          try {
+              $mysqli = getDBConnection();
+              $res = $mysqli->query("SELECT * FROM students ORDER BY id DESC");
+              $students = [];
+              if ($res) {
+                  while ($row = $res->fetch_assoc()) {
+                      $students[] = $row;
+                  }
+              }
+              echo json_encode($students);
+          } catch (Exception $e) {
+              http_response_code(500);
+              echo json_encode(['error' => $e->getMessage()]);
+          }
+          ?>
+          EOF
+
+          # Health check
+          cat << 'EOF' > /var/www/html/health.php
+          <?php
+          header('Content-Type: application/json');
+          require_once '/var/www/config.php';
+          $dbOk = false;
+          try {
+              $m = getDBConnection();
+              $dbOk = true;
+          } catch (Exception $e) {}
+          echo json_encode(['status' => 'ok', 'service' => 'Amazon EC2 Apache/PHP', 'rds_connected' => $dbOk]);
+          ?>
+          EOF
+
+          chown -R apache:apache /var/www/html
+          chmod -R 755 /var/www/html
+          systemctl restart httpd
+
+          echo "=== Backend Setup Finished Successfully! ==="
+
+Outputs:
+  S3FrontendWebsiteURL:
+    Description: URL of the Amazon S3 Static Website Hosting (Frontend)
+    Value: !GetAtt S3WebsiteBucket.WebsiteURL
+
+  EC2BackendPublicURL:
+    Description: URL of the Amazon EC2 Apache/PHP Backend API (Port 80)
+    Value: !Sub 'http://${EC2BackendInstance.PublicDnsName}'
+
+  RDSEndpoint:
+    Description: Amazon RDS MySQL Database Connection Endpoint
+    Value: !GetAtt RDSMySQLInstance.Endpoint.Address
+
+  VPCId:
+    Description: ID of the website-vpc Custom Virtual Private Cloud
+    Value: !Ref WebsiteVPC
+

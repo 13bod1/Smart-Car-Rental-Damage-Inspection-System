@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
+
+  <!-- AWS Live Status Strip -->
+  <div class="bg-slate-900 border-b border-slate-800 text-xs py-2 px-4">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+        <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span class="font-semibold text-slate-300">AASTMT Cloud Project:</span>
+        <span class="text-slate-400">Software Engineering for Cloud Applications</span>
+      </div>
+
+      <div class="flex items-center gap-3 flex-wrap">
+        <!-- EC2 Badge -->
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-amber-500/10 text-amber-400 border border-amber-500/20">
+          <i data-lucide="server" class="w-3.5 h-3.5"></i>
+          <span>EC2: <%= (typeof ec2Info !== 'undefined' && ec2Info) ? ec2Info.instanceId : 'Local Dev' %></span>
+        </span>
+
+        <!-- RDS Badge -->
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md <%= (typeof dbStatus !== 'undefined' && dbStatus.connected) ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-rose-500/10 text-rose-400 border-rose-500/20' %> border">
+          <i data-lucide="database" class="w-3.5 h-3.5"></i>
+          <span>RDS: <%= (typeof dbStatus !== 'undefined' && dbStatus.connected) ? 'Connected (' + dbStatus.engine.toUpperCase() + ')' : 'Connecting...' %></span>
+        </span>
+
+        <!-- S3 Badge -->
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md <%= (typeof s3Info !== 'undefined' && s3Info.connected) ? 'bg-sky-500/10 text-sky-400 border-sky-500/20' : 'bg-blue-500/10 text-blue-400 border-blue-500/20' %> border">
+          <i data-lucide="hard-drive" class="w-3.5 h-3.5"></i>
+          <span>S3: <%= (typeof s3Info !== 'undefined' && s3Info.bucket) ? s3Info.bucket : 'Configured' %></span>
+        </span>
+
+        <!-- VPC Badge -->
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-purple-500/10 text-purple-400 border border-purple-500/20">
+          <i data-lucide="network" class="w-3.5 h-3.5"></i>
+          <span>VPC: <%= (typeof ec2Info !== 'undefined' && ec2Info) ? ec2Info.availabilityZone : 'us-east-1a' %></span>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Navigation -->
+  <header class="bg-slate-900/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="/" class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center shadow-lg shadow-amber-500/20">
+            <i data-lucide="car" class="w-5 h-5 text-slate-950 font-bold"></i>
+          </div>
+          <div>
+            <span class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">SmartCar</span>
+            <span class="text-xs ml-1 px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 border border-amber-500/30">AWS Cloud</span>
+          </div>
+        </a>
+
+        <nav class="flex items-center gap-1 sm:gap-2">
+          <a href="/" class="px-3 py-2 rounded-lg text-sm font-medium hover:text-white hover:bg-slate-800 transition-colors">
+            Home
+          </a>
+          <a href="/cars" class="px-3 py-2 rounded-lg text-sm font-medium hover:text-white hover:bg-slate-800 transition-colors">
+            Fleet (RDS)
+          </a>
+          <a href="/cars/new" class="px-3 py-2 rounded-lg text-sm font-medium hover:text-white hover:bg-slate-800 transition-colors">
+            Upload Vehicle (S3)
+          </a>
+          <a href="/architecture" class="px-3 py-2 rounded-lg text-sm font-medium hover:text-white hover:bg-slate-800 transition-colors">
+            Architecture
+          </a>
+          <a href="/cars/new" class="ml-2 inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold text-sm shadow-md shadow-amber-500/20 transition-all">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            <span>Add Car</span>
+          </a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="flex-1">
+

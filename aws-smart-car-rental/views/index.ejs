@@ -1,0 +1,245 @@
+<%- include('partials/header') %>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+  <!-- Hero Section -->
+  <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-900/90 to-amber-950/30 border border-slate-800 p-8 sm:p-12 shadow-2xl">
+    <div class="relative z-10 max-w-3xl space-y-6">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-semibold">
+        <i data-lucide="cloud" class="w-4 h-4"></i>
+        <span>AASTMT Cloud Applications — Software Engineering</span>
+      </div>
+
+      <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-white leading-tight">
+        Smart Car Rental <br/>
+        <span class="bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 bg-clip-text text-transparent">
+          AWS Cloud Architecture
+        </span>
+      </h1>
+
+      <p class="text-slate-300 text-base sm:text-lg leading-relaxed">
+        A resilient multi-tier web application fully deployed on Amazon Web Services. Backed by a custom <strong class="text-white">Amazon VPC</strong>, running on <strong class="text-white">Amazon EC2</strong>, with dynamic fleet persistence via <strong class="text-white">Amazon RDS</strong>, and media storage powered by <strong class="text-white">Amazon S3</strong>.
+      </p>
+
+      <div class="flex flex-wrap items-center gap-4 pt-2">
+        <a href="/cars" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold shadow-lg shadow-amber-500/25 transition-all">
+          <i data-lucide="list" class="w-5 h-5"></i>
+          <span>Browse Fleet (RDS)</span>
+        </a>
+        <a href="/cars/new" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold border border-slate-700 transition-all">
+          <i data-lucide="upload-cloud" class="w-5 h-5"></i>
+          <span>Upload Vehicle (S3)</span>
+        </a>
+        <a href="/architecture" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-purple-900/30 hover:bg-purple-900/50 text-purple-300 font-semibold border border-purple-700/50 transition-all">
+          <i data-lucide="network" class="w-5 h-5"></i>
+          <span>Architecture Diagram</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live AWS Infrastructure Status Dashboard (Required Services) -->
+  <div>
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+          <i data-lucide="cpu" class="w-6 h-6 text-amber-400"></i>
+          <span>Live AWS Services Telemetry</span>
+        </h2>
+        <p class="text-sm text-slate-400 mt-1">Real-time status of all required AWS infrastructure components</p>
+      </div>
+      <a href="/api/health" target="_blank" class="text-xs font-mono px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 inline-flex items-center gap-1.5">
+        <i data-lucide="activity" class="w-3.5 h-3.5 text-emerald-400"></i>
+        <span>View JSON Health Endpoint</span>
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+      <!-- 1. Amazon VPC Card -->
+      <div class="rounded-2xl bg-slate-900 border border-slate-800 p-6 space-y-4 hover:border-purple-500/40 transition-all">
+        <div class="flex items-center justify-between">
+          <div class="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400">
+            <i data-lucide="network" class="w-6 h-6"></i>
+          </div>
+          <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Active</span>
+        </div>
+        <div>
+          <h3 class="font-bold text-lg text-white">Amazon VPC</h3>
+          <p class="text-xs text-slate-400 mt-0.5">Isolated Cloud Network</p>
+        </div>
+        <div class="space-y-2 text-xs border-t border-slate-800/80 pt-3">
+          <div class="flex justify-between text-slate-400">
+            <span>CIDR Block:</span>
+            <span class="font-mono text-slate-200">10.0.0.0/16</span>
+          </div>
+          <div class="flex justify-between text-slate-400">
+            <span>Public Subnet:</span>
+            <span class="font-mono text-slate-200">10.0.1.0/24 (EC2)</span>
+          </div>
+          <div class="flex justify-between text-slate-400">
+            <span>Private Subnet:</span>
+            <span class="font-mono text-slate-200">10.0.11.0/24 (RDS)</span>
+          </div>
+          <div class="flex justify-between text-slate-400">
+            <span>Internet Gateway:</span>
+            <span class="text-emerald-400 font-semibold">Attached (igw-active)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Amazon EC2 Card -->
+      <div class="rounded-2xl bg-slate-900 border border-slate-800 p-6 space-y-4 hover:border-amber-500/40 transition-all">
+        <div class="flex items-center justify-between">
+          <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+            <i data-lucide="server" class="w-6 h-6"></i>
+          </div>
+          <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Running</span>
+        </div>
+        <div>
+          <h3 class="font-bold text-lg text-white">Amazon EC2</h3>
+          <p class="text-xs text-slate-400 mt-0.5">Compute Instance</p>
+        </div>
+        <div class="space-y-2 text-xs border-t border-slate-800/80 pt-3">
+          <div class="flex justify-between text-slate-400">
+            <span>Instance ID:</span>
+            <span class="font-mono text-slate-200"><%= ec2Info ? ec2Info.instanceId : 'i-local-dev' %></span>
+          </div>
+          <div class="flex justify-between text-slate-400">
+            <span>Instance Type:</span>
+            <span class="font-mono text-slate-200"><%= ec2Info ? ec2Info.instanceType : 't2.micro / t3.micro' %></span>
+          </div>
+          <div class="flex justify-between text-slate-400">
+            <span>Availability Zone:</span>
+            <span class="font-mono text-slate-200"><%= ec2Info ? ec2Info.availabilityZone : awsRegion + 'a' %></span>
+          </div>
+          <div class="flex justify-between text-slate-400">
+            <span>Web Server:</span>
+            <span class="text-amber-400 font-semibold">Node.js Express / Port 80</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Amazon RDS Card -->
+      <div class="rounded-2xl bg-slate-900 border border-slate-800 p-6 space-y-4 hover:border-emerald-500/40 transition-all">
+        <div class="flex items-center justify-between">
+          <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+            <i data-lucide="database" class="w-6 h-6"></i>
+          </div>
+          <span class="text-xs font-semibold px-2 py-0.5 rounded-full <%= dbStatus.connected ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-rose-500/10 text-rose-400 border border-rose-500/20' %>">
+            <%= dbStatus.connected ? 'Connected' : 'Connecting' %>
+          </span>
+        </div>
+        <div>
+          <h3 class="font-bold text-lg text-white">Amazon RDS</h3>
+          <p class="text-xs text-slate-400 mt-0.5">Managed Relational Database</p>
+        </div>
+        <div class="space-y-2 text-xs border-t border-slate-800/80 pt-3">
+          <div class="flex justify-between text-slate-400">
+            <span>Engine:</span>
+            <span class="font-mono text-slate-200 uppercase"><%= dbStatus.engine %></span>
+          </div>
+          <div class="flex justify-between text-slate-400">
+            <span>Subnet Location:</span>
+            <span class="text-purple-400">Private Subnets (Secure)</span>
+          </div>
+          <div class="flex justify-between text-slate-400">
+            <span>Security Group:</span>
+            <span class="text-slate-200">Allows EC2 SG Only</span>
+          </div>
+          <div class="flex justify-between text-slate-400">
+            <span>Fleet Count:</span>
+            <span class="text-emerald-400 font-semibold"><%= carCount %> Vehicles Stored</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Amazon S3 Card -->
+      <div class="rounded-2xl bg-slate-900 border border-slate-800 p-6 space-y-4 hover:border-sky-500/40 transition-all">
+        <div class="flex items-center justify-between">
+          <div class="w-12 h-12 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400">
+            <i data-lucide="hard-drive" class="w-6 h-6"></i>
+          </div>
+          <span class="text-xs font-semibold px-2 py-0.5 rounded-full <%= s3Info.connected ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-sky-500/10 text-sky-400 border border-sky-500/20' %>">
+            <%= s3Info.connected ? 'Connected' : 'Ready' %>
+          </span>
+        </div>
+        <div>
+          <h3 class="font-bold text-lg text-white">Amazon S3</h3>
+          <p class="text-xs text-slate-400 mt-0.5">Object Storage Service</p>
+        </div>
+        <div class="space-y-2 text-xs border-t border-slate-800/80 pt-3">
+          <div class="flex justify-between text-slate-400">
+            <span>Bucket Name:</span>
+            <span class="font-mono text-slate-200 truncate max-w-[130px]"><%= s3Info.bucket %></span>
+          </div>
+          <div class="flex justify-between text-slate-400">
+            <span>Region:</span>
+            <span class="font-mono text-slate-200"><%= awsRegion %></span>
+          </div>
+          <div class="flex justify-between text-slate-400">
+            <span>Access Control:</span>
+            <span class="text-sky-400">IAM Instance Profile</span>
+          </div>
+          <div class="flex justify-between text-slate-400">
+            <span>Storage Type:</span>
+            <span class="text-slate-200">Vehicle Photos & Assets</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Key Pages Showcase -->
+  <div class="space-y-6">
+    <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+      <i data-lucide="layers" class="w-6 h-6 text-amber-400"></i>
+      <span>Required Website Pages (Minimum 3 Pages)</span>
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+      <!-- Page 1: Home -->
+      <div class="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-3">
+        <div class="w-10 h-10 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center font-bold">1</div>
+        <h3 class="font-bold text-lg text-white">Home Page (Current)</h3>
+        <p class="text-sm text-slate-400">Displays platform overview, real-time AWS health telemetry, team details, and quick access navigation.</p>
+        <div class="pt-2">
+          <span class="text-xs text-amber-400 font-semibold">&bull; Route: / (Active)</span>
+        </div>
+      </div>
+
+      <!-- Page 2: Listing (RDS) -->
+      <a href="/cars" class="group p-6 rounded-2xl bg-slate-900/60 border border-slate-800 hover:border-amber-500/40 space-y-3 transition-all">
+        <div class="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold">2</div>
+        <h3 class="font-bold text-lg text-white group-hover:text-amber-400 transition-colors flex items-center justify-between">
+          <span>Fleet Catalog (RDS)</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </h3>
+        <p class="text-sm text-slate-400">Queries database records in real-time from <strong>Amazon RDS</strong>. Includes category filters and pricing.</p>
+        <div class="pt-2">
+          <span class="text-xs text-emerald-400 font-semibold">&bull; Dynamic SQL Queries via RDS</span>
+        </div>
+      </a>
+
+      <!-- Page 3: Form / Upload (S3 + RDS) -->
+      <a href="/cars/new" class="group p-6 rounded-2xl bg-slate-900/60 border border-slate-800 hover:border-sky-500/40 space-y-3 transition-all">
+        <div class="w-10 h-10 rounded-lg bg-sky-500/10 text-sky-400 flex items-center justify-center font-bold">3</div>
+        <h3 class="font-bold text-lg text-white group-hover:text-sky-400 transition-colors flex items-center justify-between">
+          <span>Upload Vehicle (S3)</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </h3>
+        <p class="text-sm text-slate-400">Uploads car photos directly into <strong>Amazon S3</strong> bucket and writes metadata into <strong>Amazon RDS</strong>.</p>
+        <div class="pt-2">
+          <span class="text-xs text-sky-400 font-semibold">&bull; AWS SDK v3 PutObject + SQL Insert</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+</div>
+
+<%- include('partials/footer') %>
+

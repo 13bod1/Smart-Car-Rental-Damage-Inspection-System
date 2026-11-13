@@ -1,0 +1,20 @@
+{
+  "name": "aws-smart-car-rental",
+  "version": "1.0.0",
+  "description": "Smart Car Rental - Deployed on AWS (VPC, EC2, RDS, S3)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.758.0",
+    "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "multer": "^1.4.5-lts.1",
+    "pg": "^8.13.3",
+    "mysql2": "^3.12.0"
+  }
+}
+

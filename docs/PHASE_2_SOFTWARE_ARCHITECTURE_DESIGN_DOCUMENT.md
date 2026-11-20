@@ -510,199 +510,309 @@ flowchart TB
 
 # 5. Sequence Diagrams (Dynamic Behavioral View)
 
-To model the step-by-step runtime interactions for all key system operations, **a separate Sequence Diagram is provided for each of the five main user flows**.
+The Dynamic Behavioral View models the runtime interaction between system components over time. In accordance with formal UML 2.5 Sequence Diagram standards and the course Software Requirements Specification (SRS) guidelines, each sequence diagram adheres to the following structural conventions:
+
+| UML Element | Diagram Representation | Semantic Meaning in Architecture |
+|---|---|---|
+| **Actor (Stick Figure)** | `actor name as 👤 instance: Role` | External human or external entity initiating/participating in interactions outside the system boundary. |
+| **Object / Component** | `participant name as instance: ClassName` | Internal system software component or executing service instance. |
+| **Lifeline** | Vertical dashed line extending downwards | Represents the existence of the participating object over time along the vertical axis. |
+| **Activation Bar** | Solid narrow rectangle on lifeline (`+` / `-`) | Denotes the active execution period during which the component is executing an internal method or waiting on delegated subroutines. |
+| **Synchronous Message** | Solid line with filled arrowhead (`->>`) | Blocking remote call or procedure invocation; caller halts and waits until execution completes. |
+| **Asynchronous Message** | Solid line with open arrowhead (`-)`) | Non-blocking message or event dispatch (e.g. push notification, email dispatch). |
+| **Reply / Return Message** | Dashed line with open arrowhead (`-->>`) | Explicit return of control, data payload, or status token from the callee back to the caller. |
+| **Self-Call (Internal Action)** | Reflexive loop back to the same lifeline | Internal component computation (e.g., token verification, cost calculation, anomaly detection). |
+| **Alternative Fragment (`alt`/`else`)** | Guarded condition box with dashed divider | Mutually exclusive execution paths based on evaluated boolean guard conditions (e.g., `[Valid]`, `[Invalid]`). |
+| **Loop Fragment (`loop`)** | Iteration boundary box | Repeated execution sequence (e.g., processing multi-angle photos). |
 
 ---
 
-## 5.1 User Flow 1: Customer Identity Verification & KYC Flow
+## 5.1 Flow 1: Customer Identity Verification & KYC
 
 ```mermaid
 sequenceDiagram
     autonumber
-    actor Renter as 👤 Renter
-    participant WebUI as 🖥️ Client UI
-    participant Gateway as 🛡️ API Gateway
-    participant UserSvc as ⚙️ User & KYC Service
-    participant Vault as 📁 Secure Object Vault
-    participant GovAPI as 🏛️ National KYC Authority
-    participant DB as 🗄️ Relational Database
+    actor Renter as 👤 renter: Renter
+    participant UI as :ClientApp
+    participant GW as :APIGateway
+    participant KYC as kyc: KYCService
+    participant Vault as vault: DocumentVault
+    participant GovAPI as :NationalKYCAuthority
+    participant DB as db: RelationalDatabase
 
-    Renter->>WebUI: 1. Upload National ID & Driver License Photos
-    WebUI->>Gateway: 2. POST /api/kyc/verify (Multipart Form-Data)
-    Gateway->>Gateway: 3. Verify JWT Session Token & Check Rate Limits
-    Gateway->>UserSvc: 4. Forward Document Upload Payload
+    Renter->>+UI: submitKYCDocuments(nationalIdPhoto, licensePhoto)
+    UI->>+GW: POST /api/kyc/verify(formData: MultipartStream)
+    GW->>GW: verifySessionToken(jwtToken)
+    GW->>+KYC: processVerification(userId, documents)
     
-    UserSvc->>Vault: 5. Store Encrypted License & ID Images (AES-256)
-    Vault-->>UserSvc: 6. Return Secure Object Storage URIs
+    KYC->>+Vault: storeEncryptedDocument(licensePhoto, AES_256)
+    Vault-->>-KYC: return storageURI
     
-    UserSvc->>GovAPI: 7. Validate ID Authenticity (NationalID, LicenseNumber)
-    GovAPI-->>UserSvc: 8. Verification Success Response (Status: Valid)
+    KYC->>+GovAPI: verifyNationalIdentity(nationalId, licenseNo)
+    GovAPI-->>-KYC: return verificationStatus
     
-    UserSvc->>DB: 9. UPDATE profiles SET kyc_verified=TRUE, license_url=URI WHERE id=userId
-    DB-->>UserSvc: 10. Confirmation (Record Updated)
-    
-    UserSvc-->>Gateway: 11. Return KYC Verified Confirmation Payload
-    Gateway-->>WebUI: 12. HTTP 200 OK: Profile Verified Badge
-    WebUI-->>Renter: 13. Display "Account Verified: You are now eligible to rent!"
+    alt [verificationStatus == VALID]
+        KYC->>+DB: updateProfileKYC(userId, status="VERIFIED", storageURI)
+        DB-->>-KYC: return success
+        KYC-->>GW: return VerificationResponse(status=200, "VERIFIED")
+        GW-->>UI: return HTTP 200 OK
+        UI-->>Renter: displayVerificationSuccess("Account Verified — Rental Privileges Granted")
+    else [verificationStatus == INVALID]
+        KYC->>+DB: updateProfileKYC(userId, status="REJECTED", reason="Document Mismatch")
+        DB-->>-KYC: return success
+        KYC-->>-GW: return ErrorResponse(status=400, "INVALID_DOCUMENTS")
+        GW-->>-UI: return HTTP 400 Bad Request
+        UI-->>-Renter: displayRejectionNotice("Verification Failed: Please re-upload valid government ID")
+    end
 ```
+
+**Scenarios satisfied:**
+- **S-1 (Confidentiality & Encryption):** Documents stored in Vault with AES-256 server-side encryption; zero plaintext leakage.
+- **S-2 (Input & Perimeter Defense):** API Gateway validates JWT session token and rejects malformed multipart payloads prior to service forwarding.
 
 ---
 
-## 5.2 User Flow 2: Vehicle Search, Filter & Reservation Booking Flow
+## 5.2 Flow 2: Vehicle Search, Filter & Reservation Booking
 
 ```mermaid
 sequenceDiagram
     autonumber
-    actor Renter as 👤 Renter
-    participant WebUI as 🖥️ Client UI
-    participant Gateway as 🛡️ API Gateway
-    participant CatalogSvc as 🚗 Catalog Service
-    participant BookingSvc as 📅 Booking Service
-    participant FinSvc as 💼 Financial Service
-    participant PayGW as 💳 Payment Gateway
-    participant DB as 🗄️ Relational Database
-    actor Owner as 👤 Vehicle Owner
+    actor Renter as 👤 renter: Renter
+    participant UI as :ClientApp
+    participant GW as :APIGateway
+    participant Cat as catalog: CatalogService
+    participant Book as booking: BookingService
+    participant Fin as finance: FinancialService
+    participant Pay as :PaymentGateway
+    participant DB as db: RelationalDatabase
+    actor Owner as 👤 owner: FleetOwner
 
-    Renter->>WebUI: 1. Input Filters (Category: SUV, Dates: May 1-5, MaxRate: $150)
-    WebUI->>Gateway: 2. GET /api/vehicles/search?category=suv&start=...&end=...
-    Gateway->>CatalogSvc: 3. Query Available Fleet
-    CatalogSvc->>DB: 4. SELECT * FROM vehicles WHERE status='available' AND NOT RESERVED
-    DB-->>CatalogSvc: 5. Available Vehicles Result Set
-    CatalogSvc-->>Gateway-->>WebUI: 6. Render Filtered Fleet Catalog
+    %% ── Phase 1: Search & Filtering ──
+    Renter->>+UI: searchVehicles(category="SUV", startDate, endDate, maxPrice=150)
+    UI->>+GW: GET /api/vehicles/search(queryFilters)
+    GW->>+Cat: queryAvailableFleet(category, startDate, endDate, maxPrice)
+    Cat->>+DB: SELECT * FROM vehicles WHERE status='available' AND dates NOT RESERVED
+    DB-->>-Cat: return matchingVehiclesList
+    Cat-->>-GW: return filteredCatalogResults
+    GW-->>-UI: renderCatalog(matchingVehiclesList)
+    UI-->>-Renter: displayAvailableVehicles()
+
+    %% ── Phase 2: Booking Initiation & Concurrency Check ──
+    Renter->>+UI: selectVehicleAndBook(vehicleId="veh_512", dates, paymentToken)
+    UI->>+GW: POST /api/rentals/book(bookingPayload)
+    GW->>+Book: initiateReservation(renterId, vehicleId, dates)
     
-    Renter->>WebUI: 7. Select Vehicle & Click "Reserve Now"
-    WebUI->>Gateway: 8. POST /api/rentals/book (VehicleId, Dates, PaymentMethod)
-    Gateway->>BookingSvc: 9. Initiate Reservation Workflow
+    Book->>+DB: BEGIN TRANSACTION & lockVehicleDates(vehicleId, dates)
+    DB-->>-Book: return isAvailable (Row-level lock acquired)
     
-    BookingSvc->>DB: 10. BEGIN TRANSACTION: Lock Vehicle Row for Requested Dates
-    BookingSvc->>FinSvc: 11. Compute Total Rental Cost & Mandatory Security Deposit
-    FinSvc-->>BookingSvc: 12. Calculation: Subtotal $600 + Security Deposit $1,000
-    
-    BookingSvc->>PayGW: 13. Pre-Authorize Credit Card Hold ($1,600 Total)
-    PayGW-->>BookingSvc: 14. Authorization Succeeded (Hold Reference Token)
-    
-    BookingSvc->>DB: 15. INSERT INTO rentals (status='pending', deposit_status='held')
-    DB-->>BookingSvc: 16. Rental Record Created (ID: rent_9481)
-    BookingSvc->>DB: 17. COMMIT TRANSACTION
-    
-    BookingSvc-->>Gateway-->>WebUI: 18. Display "Booking Placed - Awaiting Owner Approval"
-    BookingSvc-)Owner: 19. Send Push/SMS Notification: "New Booking Request Received"
+    alt [Vehicle is Available for Selected Dates]
+        Book->>+Fin: calculateTotalAndDeposit(vehicleId, durationDays=4)
+        Fin->>Fin: applyCategoryDepositPolicy(category="SUV")
+        Fin-->>-Book: return PricingSummary(subtotal=$600, depositAmount=$1000, total=$1600)
+        
+        Book->>+Pay: preAuthorizeDepositHold(paymentToken, amount=$1600)
+        Pay-->>-Book: return AuthorizationResult(status, holdRefToken="hold_8821")
+        
+        alt [Payment Authorization SUCCESS]
+            Book->>+DB: insertRentalRecord(renterId, vehicleId, holdRefToken, status="PENDING_APPROVAL")
+            DB->>DB: UPDATE vehicles SET status="RESERVED"
+            DB->>DB: COMMIT TRANSACTION
+            DB-->>-Book: return rentalId="rent_9481"
+            
+            Book-)Owner: notifyNewBookingRequest(rentalId, dates, vehicleId)
+            Book-->>GW: return BookingConfirmation(rentalId, status="PENDING_APPROVAL")
+            GW-->>UI: return HTTP 201 Created
+            UI-->>Renter: displayBookingSuccess("Booking Confirmed — Awaiting Owner Approval")
+        else [Payment Authorization DECLINED]
+            Book->>+DB: ROLLBACK TRANSACTION & releaseVehicleLock(vehicleId)
+            DB-->>-Book: return lockReleased
+            Book-->>GW: return PaymentError(status=402, "CARD_DECLINED_OR_INSUFFICIENT_FUNDS")
+            GW-->>UI: return HTTP 402 Payment Required
+            UI-->>Renter: displayPaymentError("Pre-authorization failed. Please use another card.")
+        end
+    else [Vehicle Already Reserved (Schedule Conflict)]
+        Book->>+DB: ROLLBACK TRANSACTION
+        DB-->>-Book: return transactionAborted
+        Book-->>-GW: return ConflictError(status=409, "DATES_ALREADY_RESERVED")
+        GW-->>-UI: return HTTP 409 Conflict
+        UI-->>-Renter: displayConflictAlert("Selected vehicle was just reserved by another customer.")
+    end
 ```
+
+**Scenarios satisfied:**
+- **P-1 (Search Latency ≤1.5s):** Fast indexed catalog retrieval at Layer 3.
+- **ASR-06 (ACID Consistency):** Database row locking (`SELECT FOR UPDATE`) prevents double-booking race conditions; explicit rollback on payment decline.
 
 ---
 
-## 5.3 User Flow 3: AI Vehicle Damage Inspection & Assessment Flow
+## 5.3 Flow 3: AI Vehicle Damage Inspection & Assessment
 
 ```mermaid
 sequenceDiagram
     autonumber
-    actor Renter as 👤 Renter
-    participant WebUI as 🖥️ Client UI
-    participant Gateway as 🛡️ API Gateway
-    participant InspectSvc as ⚙️ Inspection Orchestrator
-    participant Vault as 📁 Secure Object Vault
-    participant AIEngine as 🧠 Computer Vision Engine
-    participant DB as 🗄️ Relational Database
+    actor Renter as 👤 renter: Renter
+    participant UI as :ClientApp
+    participant GW as :APIGateway
+    participant Inspect as inspect: InspectionService
+    participant Vault as vault: DocumentVault
+    participant AI as aiEngine: ComputerVisionEngine
+    participant DB as db: RelationalDatabase
 
-    Renter->>WebUI: 1. Capture & Submit 6 Multi-Angle Return Vehicle Photos
-    WebUI->>Gateway: 2. POST /api/rentals/rent_9481/inspection (Image Stream)
-    Gateway->>InspectSvc: 3. Forward Inspection Stream
+    Renter->>+UI: submitReturnPhotos(rentalId="rent_9481", photos[6])
+    UI->>+GW: POST /api/rentals/rent_9481/inspection(multipartStream)
+    GW->>GW: checkRateLimit(clientIP, maxBurst=5)
     
-    InspectSvc->>Vault: 4. Ingest and Persist Return Images
-    Vault-->>InspectSvc: 5. Return Permanent Storage URLs
-    
-    InspectSvc->>DB: 6. SELECT baseline_urls FROM vehicles WHERE id=vehicleId
-    DB-->>InspectSvc: 7. Return Baseline Reference Images
-    
-    InspectSvc->>AIEngine: 8. Run Damage Inference (Baseline Images vs Return Images)
-    Note over AIEngine: AIEngine executes Convolutional Feature Extraction,<br/>Object Detection & Bounding Box Anomaly Localization
-    AIEngine->>AIEngine: 9. Detect: Scratch on Front Bumper, Severity: Minor
-    AIEngine->>AIEngine: 10. Compute Repair Estimate: $120.00 (Calibrated for Vehicle Make)
-    AIEngine-->>InspectSvc: 11. Return DamageReport Object (Confidence: 94%, Zone: Front Bumper)
-    
-    InspectSvc->>DB: 12. INSERT INTO ai_damage_reports (rental_id, severity, repair_cost, zones)
-    DB-->>InspectSvc: 13. Confirmation Recorded
-    
-    InspectSvc-->>Gateway-->>WebUI: 14. Real-time Assessment Summary
-    WebUI-->>Renter: 15. Display Interactive Damage Map, Repair Estimate ($120), and Photos
+    alt [Within Permitted Rate Limit]
+        GW->>+Inspect: processInspectionImages(rentalId, photos[6])
+        
+        loop [For Each of 6 Vehicle Angles (Front, Rear, Left, Right, Interior, Roof)]
+            Inspect->>+Vault: storeReturnPhoto(imageFile, angleTag)
+            Vault-->>-Inspect: return storageURL
+        end
+        
+        Inspect->>+DB: fetchBaselinePhotos(vehicleId)
+        DB-->>-Inspect: return baselinePhotoURLs
+        
+        Inspect->>+AI: runComparativeDamageInference(baselineURLs, returnURLs)
+        Note over AI: Dedicated Accelerated AI Inference Node<br/>Convolutional Feature Extraction & Bounding Box Localization
+        AI->>AI: detectSurfaceAnomalies()
+        AI->>AI: classifyDamageSeverity(none / minor / moderate / severe)
+        AI->>AI: computeRepairEstimate(vehicleMake, damagedZones)
+        AI-->>-Inspect: return DamageAssessment(zones=["Front Bumper"], severity="MINOR", cost=120, conf=0.94)
+        
+        alt [Damage Detected (Repair Cost > 0)]
+            Inspect->>+DB: insertDamageReport(rentalId, severity="MINOR", repairCost=120, zones)
+            DB-->>-Inspect: return reportId="dmg_4421"
+            Inspect-->>GW: return DamageReportResponse(reportId, severity="MINOR", cost=120, zones)
+            GW-->>UI: return HTTP 200 OK (Damage Identified)
+            UI-->>Renter: displayDamageAssessment(zones, repairCost="$120.00", annotatedImages)
+        else [No Damage Detected (Clean Return)]
+            Inspect->>+DB: insertDamageReport(rentalId, severity="NONE", repairCost=0, zones=[])
+            DB-->>-Inspect: return reportId="dmg_4422"
+            Inspect-->>-GW: return CleanReturnResponse(reportId, "NO_DAMAGE")
+            GW-->>UI: return HTTP 200 OK (Clean)
+            UI-->>Renter: displayCleanReturnConfirmation("No damage detected — Full deposit eligible for refund")
+        end
+    else [Rate Limit Exceeded]
+        GW-->>-UI: return HTTP 429 Too Many Requests
+        UI-->>-Renter: displayRateLimitWarning("Scan limit reached. Please wait 60 seconds before retrying.")
+    end
 ```
+
+**Scenarios satisfied:**
+- **P-2 (Inspection Latency ≤15s):** Dedicated GPU/SIMD inference node processes 6-angle image stream and delivers localized bounding boxes within latency budget.
+- **S-1 (Confidentiality):** High-resolution inspection photos encrypted at rest in Object Vault.
 
 ---
 
-## 5.4 User Flow 4: Vehicle Owner Listing & Fleet Management Flow
+## 5.4 Flow 4: Vehicle Owner Fleet Enrollment
 
 ```mermaid
 sequenceDiagram
     autonumber
-    actor Owner as 👤 Vehicle Owner
-    participant WebUI as 🖥️ Client UI
-    participant Gateway as 🛡️ API Gateway
-    participant CatalogSvc as 🚗 Fleet Catalog Service
-    participant Vault as 📁 Secure Object Vault
-    participant InsuranceAPI as 🛡️ External Insurance API
-    participant DB as 🗄️ Relational Database
+    actor Owner as 👤 owner: FleetOwner
+    participant UI as :ClientApp
+    participant GW as :APIGateway
+    participant Cat as catalog: CatalogService
+    participant InsAPI as :InsuranceValuationAPI
+    participant Vault as vault: DocumentVault
+    participant DB as db: RelationalDatabase
 
-    Owner->>WebUI: 1. Fill Vehicle Info (Make, Model, Year, VIN, Plate, Daily Rate)
-    Owner->>WebUI: 2. Upload Baseline Exterior & Interior Reference Photos
-    WebUI->>Gateway: 3. POST /api/fleet/enroll (Vehicle Data + Photo Stream)
-    Gateway->>CatalogSvc: 4. Forward Enrollment Mandate
+    Owner->>+UI: submitVehicleEnrollment(specs, baselinePhotos[6])
+    UI->>+GW: POST /api/fleet/enroll(formData: MultipartStream)
+    GW->>GW: verifyRoleAuthorization(role="VehicleOwner")
+    GW->>+Cat: enrollNewVehicle(ownerId, specs, baselinePhotos)
     
-    CatalogSvc->>InsuranceAPI: 5. Verify VIN & Retrieve Insured Market Valuation
-    InsuranceAPI-->>CatalogSvc: 6. Valid VIN (Market Value: $28,000, Policy: Active)
+    Cat->>+InsAPI: queryVehicleValuation(vin, licensePlate)
+    InsAPI-->>-Cat: return ValuationRecord(isValid=true, marketValue=$28000, insuranceStatus="ACTIVE")
     
-    CatalogSvc->>Vault: 7. Store Baseline Reference Photos
-    Vault-->>CatalogSvc: 8. Return Baseline Image URLs
-    
-    CatalogSvc->>DB: 9. INSERT INTO vehicles (owner_id, make, model, rate, status='available')
-    DB-->>CatalogSvc: 10. Vehicle Record Created (ID: veh_512)
-    
-    CatalogSvc-->>Gateway-->>WebUI: 11. HTTP 201 Created: Vehicle Enrolled Successfully
-    WebUI-->>Owner: 12. Display Vehicle in "Active Fleet Dashboard"
+    alt [VIN Valid & Insurance Coverage Active]
+        loop [For Each of 6 Baseline Photos]
+            Cat->>+Vault: storeBaselinePhoto(photoFile, angleTag)
+            Vault-->>-Cat: return permanentStorageURL
+        end
+        
+        Cat->>Cat: computeRecommendedSecurityDeposit(marketValue=$28000, category="SUV")
+        Cat->>+DB: insertVehicleRecord(ownerId, specs, marketValue, photoURLs, status="AVAILABLE")
+        DB-->>-Cat: return vehicleId="veh_512"
+        
+        Cat-->>GW: return EnrollmentSuccess(vehicleId, status="ACTIVE")
+        GW-->>UI: return HTTP 201 Created
+        UI-->>Owner: displayFleetEnrollmentSuccess("Vehicle Listed in Active Fleet")
+    else [VIN Invalid or Blacklisted]
+        Cat-->>-GW: return ValidationError(status=422, "INVALID_VIN_OR_EXPIRED_INSURANCE")
+        GW-->>-UI: return HTTP 422 Unprocessable Entity
+        UI-->>-Owner: displayEnrollmentError("Vehicle validation failed: Invalid VIN or expired insurance policy")
+    end
 ```
+
+**Scenarios satisfied:**
+- **FR-07 (Listing Creation):** Enrolls vehicle specifications and calculates baseline deposit tier.
+- **FR-08 (Baseline Photo Ingestion):** Stores permanent reference images in Object Vault for future AI differential comparison.
 
 ---
 
-## 5.5 User Flow 5: Rental Return, Deposit Calculation & Settlement Flow
+## 5.5 Flow 5: Rental Return, Deposit Calculation & Financial Settlement
 
 ```mermaid
 sequenceDiagram
     autonumber
-    actor Owner as 👤 Vehicle Owner
-    participant WebUI as 🖥️ Client UI
-    participant Gateway as 🛡️ API Gateway
-    participant BookingSvc as 📅 Booking Service
-    participant FinSvc as 💼 Financial Service
-    participant Strategy as ⚖️ Deposit Strategy Engine
-    participant PayGW as 💳 External Payment Gateway
-    participant DB as 🗄️ Relational Database
-    actor Renter as 👤 Renter
+    actor Owner as 👤 owner: FleetOwner
+    participant UI as :ClientApp
+    participant GW as :APIGateway
+    participant Book as booking: BookingService
+    participant Fin as finance: FinancialService
+    participant Strat as strategy: DepositStrategy
+    participant Pay as :PaymentGateway
+    participant DB as db: RelationalDatabase
+    actor Renter as 👤 renter: Renter
 
-    Owner->>WebUI: 1. Confirm Return Odometer Mileage & Accept Damage Assessment
-    WebUI->>Gateway: 2. POST /api/rentals/rent_9481/complete
-    Gateway->>BookingSvc: 3. Complete Rental Request
+    Owner->>+UI: confirmReturnAndInspection(rentalId="rent_9481", returnMileage=45200)
+    UI->>+GW: POST /api/rentals/rent_9481/complete
+    GW->>+Book: processRentalReturn(rentalId, returnMileage)
     
-    BookingSvc->>DB: 4. SELECT damage_report, security_deposit FROM rentals WHERE id='rent_9481'
-    DB-->>BookingSvc: 5. Return Deposit: $1,000, Damage: Minor ($120.00 Repair Cost)
+    Book->>+DB: getRentalSettlementData(rentalId)
+    DB-->>-Book: return SettlementData(depositAmount=1000, repairCost=120, severity="MINOR", holdRefToken="hold_8821")
     
-    BookingSvc->>FinSvc: 6. Calculate Final Deposit Settlement(Deposit=$1,000, Repair=$120, Severity='minor')
+    Book->>+Fin: executeSettlement(depositAmount=1000, repairCost=120, severity="MINOR", holdRefToken)
     
-    Note over FinSvc,Strategy: Strategy Pattern Invocation: Selects PartialDeductionStrategy
-    FinSvc->>Strategy: 7. PartialDeductionStrategy.calculate($1000, $120, 'minor')
-    Strategy-->>FinSvc: 8. DepositOutcome(Status: partial_deduction, Deduct: $120, Refund: $880)
+    Note over Fin,Strat: GoF Strategy Pattern: dynamic strategy dispatch based on damage severity
+    alt [Severity == "NONE"]
+        Fin->>+Strat: FullRefundStrategy.calculate(deposit=1000, repairCost=0)
+        Strat-->>-Fin: return DepositOutcome(deduction=0, refund=1000, status="FULL_REFUND")
+        Fin->>+Pay: releaseHoldFull(holdRefToken, amount=1000)
+        Pay-->>-Fin: return ReleaseConfirmed(transactionRef="rel_1102")
+    else [Severity == "MINOR" or "MODERATE"]
+        Fin->>+Strat: PartialDeductionStrategy.calculate(deposit=1000, repairCost=120)
+        Strat-->>-Fin: return DepositOutcome(deduction=120, refund=880, status="PARTIAL_DEDUCTION")
+        Fin->>+Pay: capturePartialHold(holdRefToken, captureAmount=120, releaseAmount=880)
+        Pay-->>-Fin: return SettlementConfirmed(capRef="cap_7731", refRef="ref_9921")
+    else [Severity == "SEVERE" / Total Loss]
+        Fin->>+Strat: ConfiscationStrategy.calculate(deposit=1000, repairCost=3500)
+        Strat-->>-Fin: return DepositOutcome(deduction=1000, refund=0, status="CONFISCATION")
+        Fin->>+Pay: captureFullHold(holdRefToken, captureAmount=1000)
+        Pay-->>-Fin: return CaptureConfirmed(capRef="cap_7732")
+    end
     
-    FinSvc->>PayGW: 9. Capture $120 from Held Deposit (Compensation to Owner)
-    PayGW-->>FinSvc: 10. Capture Authorized (Tx: cap_7731)
+    Fin->>+DB: BEGIN TRANSACTION & recordSettlement(rentalId, outcome)
+    DB->>DB: UPDATE rentals SET status="COMPLETED", deposit_status=outcome.status, deduction=outcome.deduction
+    DB->>DB: INSERT INTO payment_transactions (rentalId, deductionAmount, refundAmount, timestamps)
+    DB->>DB: UPDATE vehicles SET status="AVAILABLE" WHERE id=vehicleId
+    DB->>DB: COMMIT TRANSACTION
+    DB-->>-Fin: return transactionCommitted (ACID)
     
-    FinSvc->>PayGW: 11. Release Remaining $880 to Renter Credit Card
-    PayGW-->>FinSvc: 12. Refund Confirmed (Tx: ref_9921)
+    Fin-->>-Book: return SettlementSummary(outcome)
+    Book-)Renter: sendSettlementReceipt(refundAmount=$880, deductionAmount=$120, rationale="Front Bumper Scratch")
+    Book-)Owner: sendPayoutNotification(creditedAmount=$120, vehicleStatus="Available")
     
-    FinSvc->>DB: 13. UPDATE rentals SET status='completed', deposit_status='partial_refund', deposit_deduction=120
-    DB-->>FinSvc: 14. Transaction Committed
-    
-    FinSvc-->>BookingSvc-->>Gateway-->>WebUI: 15. Display Final Settlement Invoice
-    BookingSvc-)Renter: 16. Email/SMS: "$880 Deposit Refund Released, $120 Deducted for Damage"
-    BookingSvc-)Owner: 17. Email/SMS: "$120 Damage Compensation Credited to Your Account"
+    Book-->>-GW: return CompletionResponse(status=200, outcome)
+    GW-->>-UI: return HTTP 200 OK
+    UI-->>-Owner: displaySettlementReport("Vehicle return successfully closed and settled")
 ```
+
+**Scenarios satisfied:**
+- **M-1 (Modifiability via Strategy Pattern):** Financial deposit settlement calculation dynamically delegated to pluggable `DepositStrategy` implementations without modifying reservation lifecycle orchestration.
+- **ASR-06 (Data Integrity & Consistency):** Multi-table financial and inventory state updates enclosed in atomic ACID database transaction.
 
 ---
 

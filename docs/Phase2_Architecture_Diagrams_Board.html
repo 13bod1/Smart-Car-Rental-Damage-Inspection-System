@@ -524,40 +524,55 @@ flowchart TB
       <div>
         <span class="badge bg-amber-500/20 text-amber-400 border border-amber-500/30">Required Output #5 — Flow 1 of 5</span>
         <h2 class="text-lg font-bold text-white mt-1">Sequence: Customer Identity Verification &amp; KYC</h2>
-        <p class="text-xs text-slate-400 mt-0.5">Satisfies: ASR-04 (S-1 encryption), FR-04, FR-05, FR-06</p>
+        <p class="text-xs text-slate-400 mt-0.5">UML 2.5 Sequence Diagram with formal Activation Bars, Alt fragment &amp; Return messages. Satisfies: ASR-04 (S-1 encryption), FR-04, FR-05, FR-06</p>
       </div>
       <button onclick="copyDiagram('d-seq-kyc')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded border border-slate-700 text-slate-300 ml-4 shrink-0">📋 Copy Mermaid</button>
     </div>
+
+    <!-- SRS UML Notation Guide Banner -->
+    <div class="mb-3 p-2.5 rounded-lg bg-slate-900 border border-slate-800 text-[11px] grid grid-cols-2 md:grid-cols-4 gap-2 text-slate-300">
+      <div><span class="text-emerald-400 font-bold">👤 Actor:</span> Stick figure (External Initiator)</div>
+      <div><span class="text-blue-400 font-bold">📦 Object:</span> <code>instance: Class</code> (Internal Entity)</div>
+      <div><span class="text-amber-400 font-bold">❚ Activation:</span> Active Execution Window</div>
+      <div><span class="text-purple-400 font-bold">🔲 Alt / Loop:</span> Guarded Alternative / Loop</div>
+    </div>
+
     <div class="mermaid-wrap">
       <div class="mermaid" id="d-seq-kyc">
 sequenceDiagram
     autonumber
-    actor Renter as 👤 Renter
-    participant UI as 🖥️ Client UI
-    participant GW as 🛡️ API Gateway
-    participant KYC as ⚙️ KYC Service
-    participant Vault as 📁 Object Vault
-    participant GovAPI as 🏛️ KYC Authority
-    participant DB as 🗄️ Database
+    actor Renter as 👤 renter: Renter
+    participant UI as :ClientApp
+    participant GW as :APIGateway
+    participant KYC as kyc: KYCService
+    participant Vault as vault: DocumentVault
+    participant GovAPI as :NationalKYCAuthority
+    participant DB as db: RelationalDatabase
 
-    Renter->>UI: Upload National ID + Driver License photos
-    UI->>GW: POST /api/kyc/verify (multipart/form-data)
-    GW->>GW: Verify JWT session token
-    GW->>GW: Check rate limit (Upstash Redis)
-    GW->>KYC: Forward document upload payload
-
-    KYC->>Vault: Store encrypted ID + License images (AES-256)
-    Vault-->>KYC: Return secure storage URIs
-
-    KYC->>GovAPI: Validate ID authenticity (NationalID, LicenseNumber)
-    GovAPI-->>KYC: Status: Valid — Verification approved
-
-    KYC->>DB: UPDATE profiles SET kyc_verified=TRUE, license_url=URI
-    DB-->>KYC: Record updated successfully
-
-    KYC-->>GW: KYC verification confirmed
-    GW-->>UI: HTTP 200 OK — Profile verified badge
-    UI-->>Renter: Show "Account Verified — You may now rent vehicles"
+    Renter->>+UI: submitKYCDocuments(nationalIdPhoto, licensePhoto)
+    UI->>+GW: POST /api/kyc/verify(formData: MultipartStream)
+    GW->>GW: verifySessionToken(jwtToken)
+    GW->>+KYC: processVerification(userId, documents)
+    
+    KYC->>+Vault: storeEncryptedDocument(licensePhoto, AES_256)
+    Vault-->>-KYC: return storageURI
+    
+    KYC->>+GovAPI: verifyNationalIdentity(nationalId, licenseNo)
+    GovAPI-->>-KYC: return verificationStatus
+    
+    alt [verificationStatus == VALID]
+        KYC->>+DB: updateProfileKYC(userId, status="VERIFIED", storageURI)
+        DB-->>-KYC: return success
+        KYC-->>GW: return VerificationResponse(status=200, "VERIFIED")
+        GW-->>UI: return HTTP 200 OK
+        UI-->>Renter: displayVerificationSuccess("Account Verified — Rental Privileges Granted")
+    else [verificationStatus == INVALID]
+        KYC->>+DB: updateProfileKYC(userId, status="REJECTED", reason="Document Mismatch")
+        DB-->>-KYC: return success
+        KYC-->>-GW: return ErrorResponse(status=400, "INVALID_DOCUMENTS")
+        GW-->>-UI: return HTTP 400 Bad Request
+        UI-->>-Renter: displayRejectionNotice("Verification Failed: Please re-upload valid government ID")
+    end
       </div>
     </div>
   </div>
@@ -572,7 +587,7 @@ sequenceDiagram
       <div>
         <span class="badge bg-amber-500/20 text-amber-400 border border-amber-500/30">Required Output #5 — Flow 2 of 5</span>
         <h2 class="text-lg font-bold text-white mt-1">Sequence: Vehicle Search, Filter &amp; Reservation Booking</h2>
-        <p class="text-xs text-slate-400 mt-0.5">Satisfies: ASR-02 (P-1 latency ≤1.5s), ASR-06 (ACID booking transaction), FR-09 to FR-16</p>
+        <p class="text-xs text-slate-400 mt-0.5">UML 2.5 Sequence Diagram with Activation Bars, Nested Alt fragments &amp; ACID transaction lock. Satisfies: ASR-02 (P-1 latency ≤1.5s), ASR-06 (ACID booking), FR-09 to FR-16</p>
       </div>
       <button onclick="copyDiagram('d-seq-book')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded border border-slate-700 text-slate-300 ml-4 shrink-0">📋 Copy Mermaid</button>
     </div>
@@ -580,58 +595,72 @@ sequenceDiagram
       <div class="mermaid" id="d-seq-book">
 sequenceDiagram
     autonumber
-    actor Renter as 👤 Renter
-    participant UI as 🖥️ Client UI
-    participant GW as 🛡️ API Gateway
-    participant Cat as 🚗 Catalog Service
-    participant Book as 📅 Booking Service
-    participant Fin as 💰 Finance Service
-    participant Pay as 💳 Payment Gateway
-    participant DB as 🗄️ Database
-    actor Owner as 👤 Fleet Owner
+    actor Renter as 👤 renter: Renter
+    participant UI as :ClientApp
+    participant GW as :APIGateway
+    participant Cat as catalog: CatalogService
+    participant Book as booking: BookingService
+    participant Fin as finance: FinancialService
+    participant Pay as :PaymentGateway
+    participant DB as db: RelationalDatabase
+    actor Owner as 👤 owner: FleetOwner
 
-    Renter->>UI: Enter search filters (Category: SUV, Dates: May 1-5, Max Rate: $150)
-    UI->>GW: GET /api/vehicles/search?category=suv&start=2026-05-01&end=2026-05-05
-    GW->>GW: Validate JWT + Rate limit check
-    GW->>Cat: Forward search query
-    Cat->>DB: SELECT * FROM vehicles WHERE status='available' AND category='SUV' AND NOT RESERVED
-    DB-->>Cat: Return 8 matching available vehicles
-    Cat-->>GW-->>UI: Render filtered fleet catalog (8 results)
+    %% ── Phase 1: Search & Filtering ──
+    Renter->>+UI: searchVehicles(category="SUV", startDate, endDate, maxPrice=150)
+    UI->>+GW: GET /api/vehicles/search(queryFilters)
+    GW->>+Cat: queryAvailableFleet(category, startDate, endDate, maxPrice)
+    Cat->>+DB: SELECT * FROM vehicles WHERE status='available' AND dates NOT RESERVED
+    DB-->>-Cat: return matchingVehiclesList
+    Cat-->>-GW: return filteredCatalogResults
+    GW-->>-UI: renderCatalog(matchingVehiclesList)
+    UI-->>-Renter: displayAvailableVehicles()
 
-    Renter->>UI: Select BMW X5 and click "Reserve Now"
-    UI->>GW: POST /api/bookings (vehicleId, startDate, endDate, paymentMethod)
-    GW->>GW: Verify JWT session + check KYC verified
-    GW->>Book: Initiate reservation workflow
-
-    Book->>DB: BEGIN TRANSACTION — lock vehicle row for dates
-    Book->>Cat: Confirm vehicle still available (re-check for race condition)
-    Cat->>DB: SELECT FOR UPDATE — confirm no overlap
-    DB-->>Cat: Available — row locked
-    Cat-->>Book: Availability confirmed
-
-    Book->>Fin: Compute rental cost (4 days * $150 = $600) + deposit (category: SUV)
-    Fin->>Fin: Apply deposit rule: SUV category = $1,000 security deposit
-    Fin-->>Book: Subtotal: $600 | Security Deposit: $1,000 | Total: $1,600
-
-    Book->>Pay: Pre-authorize credit card hold ($1,600)
-    Pay-->>Book: Hold authorized — reference token: hold_8821
-
-    Book->>DB: INSERT INTO bookings (status='pending', deposit_status='held', total=1600)
-    DB-->>Book: Booking created — ID: rent_9481
-    Book->>DB: UPDATE vehicles SET status='reserved' WHERE id=vehicleId
-    DB-->>Book: Vehicle status updated
-    Book->>DB: COMMIT TRANSACTION
-    DB-->>Book: Transaction committed (ACID)
-
-    Book-->>GW-->>UI: 201 Created — Booking confirmed: rent_9481
-    UI-->>Renter: Show "Booking Placed — Awaiting Owner Approval"
-    Book-)Owner: Push notification: "New booking request for your BMW X5 — May 1-5"
+    %% ── Phase 2: Booking Initiation & Concurrency Check ──
+    Renter->>+UI: selectVehicleAndBook(vehicleId="veh_512", dates, paymentToken)
+    UI->>+GW: POST /api/rentals/book(bookingPayload)
+    GW->>+Book: initiateReservation(renterId, vehicleId, dates)
+    
+    Book->>+DB: BEGIN TRANSACTION & lockVehicleDates(vehicleId, dates)
+    DB-->>-Book: return isAvailable (Row-level lock acquired)
+    
+    alt [Vehicle is Available for Selected Dates]
+        Book->>+Fin: calculateTotalAndDeposit(vehicleId, durationDays=4)
+        Fin->>Fin: applyCategoryDepositPolicy(category="SUV")
+        Fin-->>-Book: return PricingSummary(subtotal=$600, depositAmount=$1000, total=$1600)
+        
+        Book->>+Pay: preAuthorizeDepositHold(paymentToken, amount=$1600)
+        Pay-->>-Book: return AuthorizationResult(status, holdRefToken="hold_8821")
+        
+        alt [Payment Authorization SUCCESS]
+            Book->>+DB: insertRentalRecord(renterId, vehicleId, holdRefToken, status="PENDING_APPROVAL")
+            DB->>DB: UPDATE vehicles SET status="RESERVED"
+            DB->>DB: COMMIT TRANSACTION
+            DB-->>-Book: return rentalId="rent_9481"
+            
+            Book-)Owner: notifyNewBookingRequest(rentalId, dates, vehicleId)
+            Book-->>GW: return BookingConfirmation(rentalId, status="PENDING_APPROVAL")
+            GW-->>UI: return HTTP 201 Created
+            UI-->>Renter: displayBookingSuccess("Booking Confirmed — Awaiting Owner Approval")
+        else [Payment Authorization DECLINED]
+            Book->>+DB: ROLLBACK TRANSACTION & releaseVehicleLock(vehicleId)
+            DB-->>-Book: return lockReleased
+            Book-->>GW: return PaymentError(status=402, "CARD_DECLINED_OR_INSUFFICIENT_FUNDS")
+            GW-->>UI: return HTTP 402 Payment Required
+            UI-->>Renter: displayPaymentError("Pre-authorization failed. Please use another card.")
+        end
+    else [Vehicle Already Reserved (Schedule Conflict)]
+        Book->>+DB: ROLLBACK TRANSACTION
+        DB-->>-Book: return transactionAborted
+        Book-->>-GW: return ConflictError(status=409, "DATES_ALREADY_RESERVED")
+        GW-->>-UI: return HTTP 409 Conflict
+        UI-->>-Renter: displayConflictAlert("Selected vehicle was just reserved by another customer.")
+    end
       </div>
     </div>
     <div class="mt-3 grid grid-cols-1 md:grid-cols-3 gap-2 text-xs">
-      <div class="p-2 rounded bg-blue-950/30 border border-blue-900/40 text-blue-200"><strong>ACID Transaction:</strong> Steps 11–19 execute inside a database transaction. If payment fails, the entire booking is rolled back — no partial state.</div>
-      <div class="p-2 rounded bg-green-950/30 border border-green-900/40 text-green-200"><strong>Race Condition Guard:</strong> Step 13 uses SELECT FOR UPDATE to prevent two renters booking the same vehicle simultaneously.</div>
-      <div class="p-2 rounded bg-amber-950/30 border border-amber-900/40 text-amber-200"><strong>Rate Limiting:</strong> Step 3 blocks excessive booking attempts per user via Upstash Redis rate limiter in the middleware.</div>
+      <div class="p-2 rounded bg-blue-950/30 border border-blue-900/40 text-blue-200"><strong>ACID Transaction:</strong> Row locking and commit/rollback blocks prevent inconsistent booking states across concurrent users.</div>
+      <div class="p-2 rounded bg-green-950/30 border border-green-900/40 text-green-200"><strong>Synchronous vs Asynchronous:</strong> Synchronous calls block for validation; notification to FleetOwner is asynchronous non-blocking.</div>
+      <div class="p-2 rounded bg-amber-950/30 border border-amber-900/40 text-amber-200"><strong>Nested Alt Fragments:</strong> Models both concurrency conflict branch and card payment authorization branch cleanly.</div>
     </div>
   </div>
 </section>
@@ -645,7 +674,7 @@ sequenceDiagram
       <div>
         <span class="badge bg-amber-500/20 text-amber-400 border border-amber-500/30">Required Output #5 — Flow 3 of 5</span>
         <h2 class="text-lg font-bold text-white mt-1">Sequence: AI Vehicle Damage Inspection &amp; Assessment</h2>
-        <p class="text-xs text-slate-400 mt-0.5">Satisfies: ASR-03 (P-2 full inspection ≤15s), ASR-04 (S-1 encrypted photos), FR-18 to FR-22</p>
+        <p class="text-xs text-slate-400 mt-0.5">UML 2.5 Sequence Diagram with Loop fragment (6 angles), Alt branches &amp; self-call inference methods. Satisfies: ASR-03 (P-2 latency ≤15s), ASR-04 (S-1 encrypted photos), FR-18 to FR-22</p>
       </div>
       <button onclick="copyDiagram('d-seq-ai')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded border border-slate-700 text-slate-300 ml-4 shrink-0">📋 Copy Mermaid</button>
     </div>
@@ -653,54 +682,59 @@ sequenceDiagram
       <div class="mermaid" id="d-seq-ai">
 sequenceDiagram
     autonumber
-    actor User as 👤 Renter / Owner
-    participant UI as 🖥️ Damage Scanner Page
-    participant GW as 🛡️ API Gateway + Rate Limiter
-    participant API as ⚙️ AI Damage API Route
-    participant Groq as 🧠 Groq AI — LLaMA 3.2 Vision
-    participant Vault as 📁 Object Storage Vault
-    participant DB as 🗄️ Database
+    actor Renter as 👤 renter: Renter
+    participant UI as :ClientApp
+    participant GW as :APIGateway
+    participant Inspect as inspect: InspectionService
+    participant Vault as vault: DocumentVault
+    participant AI as aiEngine: ComputerVisionEngine
+    participant DB as db: RelationalDatabase
 
-    User->>UI: Upload car photo (drag and drop or file input)
-    UI->>UI: Preview image and validate file type (JPG/PNG/WEBP)
-
-    UI->>GW: POST /api/ai/damage (FormData: image file)
-    GW->>GW: Check rate limit by IP (5 requests per minute — Upstash Redis)
-
-    alt Rate limit exceeded
-        GW-->>UI: 429 Too Many Requests
-        UI-->>User: Show "Too many scans — please wait 60 seconds"
-    else Within rate limit
-        GW->>API: Forward request with image file
-
-        API->>API: Extract image from FormData to ArrayBuffer
-        API->>API: Convert to base64 string — get MIME type
-        API->>Vault: Store uploaded photo (encrypted, AES-256) for audit trail
-        Vault-->>API: Return permanent storage URL
-
-        API->>Groq: POST {model: llama-3.2-11b-vision, messages: [{role: user, content: [image, prompt]}]}
-        Note over Groq: LLaMA analyzes image pixels:<br/>Detect damage zones (bumpers, doors, hood, fenders, windshield)<br/>Classify severity: none / minor / moderate / severe<br/>Estimate repair cost in EGP adjusted for vehicle make/model
-        Groq-->>API: JSON response {damage_detected, severity, zones[], total_repair_cost_egp, confidence}
-
-        API->>API: Parse JSON — validate structure
-        alt AI returns invalid JSON
-            API->>API: Use safe fallback default response
+    Renter->>+UI: submitReturnPhotos(rentalId="rent_9481", photos[6])
+    UI->>+GW: POST /api/rentals/rent_9481/inspection(multipartStream)
+    GW->>GW: checkRateLimit(clientIP, maxBurst=5)
+    
+    alt [Within Permitted Rate Limit]
+        GW->>+Inspect: processInspectionImages(rentalId, photos[6])
+        
+        loop [For Each of 6 Vehicle Angles (Front, Rear, Left, Right, Interior, Roof)]
+            Inspect->>+Vault: storeReturnPhoto(imageFile, angleTag)
+            Vault-->>-Inspect: return storageURL
         end
-
-        API->>DB: INSERT INTO damage_reports (booking_id, severity, zones, cost_egp, photo_url)
-        DB-->>API: Report saved — ID: dmg_4421
-
-        API-->>GW-->>UI: 200 OK — Full damage report JSON
-        UI-->>User: Display damage card with severity badge (color coded)
-        UI-->>User: Show zone-by-zone breakdown with EGP repair costs
-        UI-->>User: Show deposit recommendation (Full Refund / Partial / Confiscate)
+        
+        Inspect->>+DB: fetchBaselinePhotos(vehicleId)
+        DB-->>-Inspect: return baselinePhotoURLs
+        
+        Inspect->>+AI: runComparativeDamageInference(baselineURLs, returnURLs)
+        Note over AI: Dedicated Accelerated AI Inference Node<br/>Convolutional Feature Extraction & Bounding Box Localization
+        AI->>AI: detectSurfaceAnomalies()
+        AI->>AI: classifyDamageSeverity(none / minor / moderate / severe)
+        AI->>AI: computeRepairEstimate(vehicleMake, damagedZones)
+        AI-->>-Inspect: return DamageAssessment(zones=["Front Bumper"], severity="MINOR", cost=120, conf=0.94)
+        
+        alt [Damage Detected (Repair Cost > 0)]
+            Inspect->>+DB: insertDamageReport(rentalId, severity="MINOR", repairCost=120, zones)
+            DB-->>-Inspect: return reportId="dmg_4421"
+            Inspect-->>GW: return DamageReportResponse(reportId, severity="MINOR", cost=120, zones)
+            GW-->>UI: return HTTP 200 OK (Damage Identified)
+            UI-->>Renter: displayDamageAssessment(zones, repairCost="$120.00", annotatedImages)
+        else [No Damage Detected (Clean Return)]
+            Inspect->>+DB: insertDamageReport(rentalId, severity="NONE", repairCost=0, zones=[])
+            DB-->>-Inspect: return reportId="dmg_4422"
+            Inspect-->>-GW: return CleanReturnResponse(reportId, "NO_DAMAGE")
+            GW-->>UI: return HTTP 200 OK (Clean)
+            UI-->>Renter: displayCleanReturnConfirmation("No damage detected — Full deposit eligible for refund")
+        end
+    else [Rate Limit Exceeded]
+        GW-->>-UI: return HTTP 429 Too Many Requests
+        UI-->>-Renter: displayRateLimitWarning("Scan limit reached. Please wait 60 seconds before retrying.")
     end
       </div>
     </div>
     <div class="mt-3 grid grid-cols-1 md:grid-cols-3 gap-2 text-xs">
-      <div class="p-2 rounded bg-purple-950/30 border border-purple-900/40 text-purple-200"><strong>AI Model:</strong> Groq LLaMA 3.2 Vision (11B parameters) analyzes the image. Response time target: ≤ 15 seconds including upload and processing (ASR-03 P-2).</div>
-      <div class="p-2 rounded bg-red-950/30 border border-red-900/40 text-red-200"><strong>Rate Limiting:</strong> 5 AI scans per minute per IP. Prevents API abuse and controls Groq API costs. Returns 429 with retry-after header.</div>
-      <div class="p-2 rounded bg-green-950/30 border border-green-900/40 text-green-200"><strong>Fallback Safety:</strong> If Groq returns malformed JSON (rare), the API returns a safe default response so the UI never crashes.</div>
+      <div class="p-2 rounded bg-purple-950/30 border border-purple-900/40 text-purple-200"><strong>Loop Fragment:</strong> Ingests all 6 vehicle angles iteratively and stores them in the encrypted vault before batch inference.</div>
+      <div class="p-2 rounded bg-blue-950/30 border border-blue-900/40 text-blue-200"><strong>Self-Calls on AI Engine:</strong> Reflects internal model stages (anomaly detection, severity classification, cost calibration).</div>
+      <div class="p-2 rounded bg-green-950/30 border border-green-900/40 text-green-200"><strong>Alt Fragment:</strong> Explicitly separates the path for damage detected vs clean vehicle return.</div>
     </div>
   </div>
 </section>
@@ -714,7 +748,7 @@ sequenceDiagram
       <div>
         <span class="badge bg-amber-500/20 text-amber-400 border border-amber-500/30">Required Output #5 — Flow 4 of 5</span>
         <h2 class="text-lg font-bold text-white mt-1">Sequence: Vehicle Owner Fleet Enrollment</h2>
-        <p class="text-xs text-slate-400 mt-0.5">Satisfies: FR-07 (Vehicle listing creation), FR-08 (Baseline photo ingestion), FR-15 (Deposit calculation)</p>
+        <p class="text-xs text-slate-400 mt-0.5">UML 2.5 Sequence Diagram with Loop fragment for baseline ingestion, insurance external API &amp; Alt verification. Satisfies: FR-07, FR-08, FR-15</p>
       </div>
       <button onclick="copyDiagram('d-seq-enr')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded border border-slate-700 text-slate-300 ml-4 shrink-0">📋 Copy Mermaid</button>
     </div>
@@ -722,32 +756,40 @@ sequenceDiagram
       <div class="mermaid" id="d-seq-enr">
 sequenceDiagram
     autonumber
-    actor Owner as 👤 Vehicle Owner
-    participant UI as 🖥️ Client UI
-    participant GW as 🛡️ API Gateway
-    participant Cat as 🚗 Fleet Catalog Service
-    participant Vault as 📁 Object Storage Vault
-    participant InsAPI as 🛡️ Insurance and Valuation API
-    participant DB as 🗄️ Database
+    actor Owner as 👤 owner: FleetOwner
+    participant UI as :ClientApp
+    participant GW as :APIGateway
+    participant Cat as catalog: CatalogService
+    participant InsAPI as :InsuranceValuationAPI
+    participant Vault as vault: DocumentVault
+    participant DB as db: RelationalDatabase
 
-    Owner->>UI: Fill vehicle form (Make, Model, Year, VIN, Plate, Daily Rate, Category)
-    Owner->>UI: Upload 6 baseline exterior and interior reference photos
-    UI->>GW: POST /api/fleet/enroll (vehicle data + photo stream multipart)
-    GW->>GW: Verify JWT + confirm role is VehicleOwner
-
-    GW->>Cat: Forward fleet enrollment request
-    Cat->>InsAPI: Verify VIN authenticity + retrieve market valuation
-    InsAPI-->>Cat: VIN valid — Market Value: $28,000 — Insurance: Active
-
-    Cat->>Vault: Store 6 baseline reference photos (encrypted AES-256)
-    Vault-->>Cat: Return 6 secure baseline image storage URLs
-
-    Cat->>Cat: Compute recommended security deposit based on market value and category
-    Cat->>DB: INSERT INTO vehicles (owner_id, make, model, year, vin, plate, daily_rate, status='available', baseline_photos=[...])
-    DB-->>Cat: Vehicle record created — ID: veh_512
-
-    Cat-->>GW-->>UI: HTTP 201 Created — Vehicle enrolled successfully
-    UI-->>Owner: Show vehicle in Active Fleet Dashboard with veh_512 listing
+    Owner->>+UI: submitVehicleEnrollment(specs, baselinePhotos[6])
+    UI->>+GW: POST /api/fleet/enroll(formData: MultipartStream)
+    GW->>GW: verifyRoleAuthorization(role="VehicleOwner")
+    GW->>+Cat: enrollNewVehicle(ownerId, specs, baselinePhotos)
+    
+    Cat->>+InsAPI: queryVehicleValuation(vin, licensePlate)
+    InsAPI-->>-Cat: return ValuationRecord(isValid=true, marketValue=$28000, insuranceStatus="ACTIVE")
+    
+    alt [VIN Valid & Insurance Coverage Active]
+        loop [For Each of 6 Baseline Photos]
+            Cat->>+Vault: storeBaselinePhoto(photoFile, angleTag)
+            Vault-->>-Cat: return permanentStorageURL
+        end
+        
+        Cat->>Cat: computeRecommendedSecurityDeposit(marketValue=$28000, category="SUV")
+        Cat->>+DB: insertVehicleRecord(ownerId, specs, marketValue, photoURLs, status="AVAILABLE")
+        DB-->>-Cat: return vehicleId="veh_512"
+        
+        Cat-->>GW: return EnrollmentSuccess(vehicleId, status="ACTIVE")
+        GW-->>UI: return HTTP 201 Created
+        UI-->>Owner: displayFleetEnrollmentSuccess("Vehicle Listed in Active Fleet")
+    else [VIN Invalid or Blacklisted]
+        Cat-->>-GW: return ValidationError(status=422, "INVALID_VIN_OR_EXPIRED_INSURANCE")
+        GW-->>-UI: return HTTP 422 Unprocessable Entity
+        UI-->>-Owner: displayEnrollmentError("Vehicle validation failed: Invalid VIN or expired insurance policy")
+    end
       </div>
     </div>
   </div>
@@ -762,7 +804,7 @@ sequenceDiagram
       <div>
         <span class="badge bg-amber-500/20 text-amber-400 border border-amber-500/30">Required Output #5 — Flow 5 of 5</span>
         <h2 class="text-lg font-bold text-white mt-1">Sequence: Rental Return, Deposit Calculation &amp; Financial Settlement</h2>
-        <p class="text-xs text-slate-400 mt-0.5">Satisfies: ASR-05 (M-1 Strategy Pattern), ASR-06 (ACID settlement commit), FR-23 to FR-26</p>
+        <p class="text-xs text-slate-400 mt-0.5">UML 2.5 Sequence Diagram illustrating Strategy Pattern execution across 3 polymorphic branches. Satisfies: ASR-05 (M-1 Strategy Pattern), ASR-06 (ACID settlement), FR-23 to FR-26</p>
       </div>
       <button onclick="copyDiagram('d-seq-ret')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded border border-slate-700 text-slate-300 ml-4 shrink-0">📋 Copy Mermaid</button>
     </div>
@@ -770,48 +812,61 @@ sequenceDiagram
       <div class="mermaid" id="d-seq-ret">
 sequenceDiagram
     autonumber
-    actor Owner as 👤 Vehicle Owner
-    participant UI as 🖥️ Client UI
-    participant GW as 🛡️ API Gateway
-    participant Book as 📅 Booking Service
-    participant Fin as 💰 Finance Service
-    participant Strat as ⚖️ Deposit Strategy Engine
-    participant Pay as 💳 Payment Gateway
-    participant DB as 🗄️ Database
-    actor Renter as 👤 Renter
+    actor Owner as 👤 owner: FleetOwner
+    participant UI as :ClientApp
+    participant GW as :APIGateway
+    participant Book as booking: BookingService
+    participant Fin as finance: FinancialService
+    participant Strat as strategy: DepositStrategy
+    participant Pay as :PaymentGateway
+    participant DB as db: RelationalDatabase
+    actor Renter as 👤 renter: Renter
 
-    Owner->>UI: Confirm return mileage and acknowledge damage assessment
-    UI->>GW: POST /api/rentals/rent_9481/complete
-
-    GW->>Book: Complete rental workflow request
-    Book->>DB: SELECT damage_report, security_deposit FROM bookings WHERE id='rent_9481'
-    DB-->>Book: Deposit held: $1,000 — Damage severity: minor — Repair cost: $120
-
-    Book->>Fin: Calculate final deposit settlement (deposit=$1000, repair=$120, severity=minor)
-
-    Note over Fin,Strat: Strategy Pattern: Select PartialDeductionStrategy based on severity=minor
-    Fin->>Strat: PartialDeductionStrategy.calculate(depositAmount=1000, repairCost=120, severity=minor)
-    Strat-->>Fin: DepositOutcome — Deduction: $120 | Refund: $880 | Status: partial_deduction
-
-    Fin->>Pay: Capture $120 from held deposit (compensation to owner)
-    Pay-->>Fin: Capture authorized — Transaction ID: cap_7731
-
-    Fin->>Pay: Release remaining $880 to renter payment method
-    Pay-->>Fin: Refund confirmed — Transaction ID: ref_9921
-
-    Fin->>DB: BEGIN TRANSACTION
-    Fin->>DB: UPDATE bookings SET status='completed', deposit_status='partial_refund', deduction=120
-    Fin->>DB: INSERT INTO payment_transactions (cap_7731, ref_9921, amounts, timestamps)
-    DB-->>Fin: COMMIT — Transaction committed (ACID)
-
-    Fin-->>Book-->>GW-->>UI: Display final settlement invoice
-    UI-->>Owner: Show settlement: $120 credited to your account
-    Book-)Renter: SMS and email: "$880 deposit refunded — $120 deducted for front bumper damage"
-    Book-)Owner: SMS and email: "$120 damage compensation credited — Vehicle available again"
+    Owner->>+UI: confirmReturnAndInspection(rentalId="rent_9481", returnMileage=45200)
+    UI->>+GW: POST /api/rentals/rent_9481/complete
+    GW->>+Book: processRentalReturn(rentalId, returnMileage)
+    
+    Book->>+DB: getRentalSettlementData(rentalId)
+    DB-->>-Book: return SettlementData(depositAmount=1000, repairCost=120, severity="MINOR", holdRefToken="hold_8821")
+    
+    Book->>+Fin: executeSettlement(depositAmount=1000, repairCost=120, severity="MINOR", holdRefToken)
+    
+    Note over Fin,Strat: GoF Strategy Pattern: dynamic strategy dispatch based on damage severity
+    alt [Severity == "NONE"]
+        Fin->>+Strat: FullRefundStrategy.calculate(deposit=1000, repairCost=0)
+        Strat-->>-Fin: return DepositOutcome(deduction=0, refund=1000, status="FULL_REFUND")
+        Fin->>+Pay: releaseHoldFull(holdRefToken, amount=1000)
+        Pay-->>-Fin: return ReleaseConfirmed(transactionRef="rel_1102")
+    else [Severity == "MINOR" or "MODERATE"]
+        Fin->>+Strat: PartialDeductionStrategy.calculate(deposit=1000, repairCost=120)
+        Strat-->>-Fin: return DepositOutcome(deduction=120, refund=880, status="PARTIAL_DEDUCTION")
+        Fin->>+Pay: capturePartialHold(holdRefToken, captureAmount=120, releaseAmount=880)
+        Pay-->>-Fin: return SettlementConfirmed(capRef="cap_7731", refRef="ref_9921")
+    else [Severity == "SEVERE" / Total Loss]
+        Fin->>+Strat: ConfiscationStrategy.calculate(deposit=1000, repairCost=3500)
+        Strat-->>-Fin: return DepositOutcome(deduction=1000, refund=0, status="CONFISCATION")
+        Fin->>+Pay: captureFullHold(holdRefToken, captureAmount=1000)
+        Pay-->>-Fin: return CaptureConfirmed(capRef="cap_7732")
+    end
+    
+    Fin->>+DB: BEGIN TRANSACTION & recordSettlement(rentalId, outcome)
+    DB->>DB: UPDATE rentals SET status="COMPLETED", deposit_status=outcome.status, deduction=outcome.deduction
+    DB->>DB: INSERT INTO payment_transactions (rentalId, deductionAmount, refundAmount, timestamps)
+    DB->>DB: UPDATE vehicles SET status="AVAILABLE" WHERE id=vehicleId
+    DB->>DB: COMMIT TRANSACTION
+    DB-->>-Fin: return transactionCommitted (ACID)
+    
+    Fin-->>-Book: return SettlementSummary(outcome)
+    Book-)Renter: sendSettlementReceipt(refundAmount=$880, deductionAmount=$120, rationale="Front Bumper Scratch")
+    Book-)Owner: sendPayoutNotification(creditedAmount=$120, vehicleStatus="Available")
+    
+    Book-->>-GW: return CompletionResponse(status=200, outcome)
+    GW-->>-UI: return HTTP 200 OK
+    UI-->>-Owner: displaySettlementReport("Vehicle return successfully closed and settled")
       </div>
     </div>
     <div class="mt-3 p-3 rounded-lg bg-orange-950/30 border border-orange-900/40 text-xs text-orange-200">
-      <strong>Strategy Pattern in Action (Step 7):</strong> The <code>FinancialService</code> does NOT contain deposit calculation logic itself. It delegates to the selected <code>DepositStrategy</code> implementation at runtime. If a new rule is needed (e.g., "luxury vehicles: 150% penalty"), only a new strategy class is written — zero changes to Booking or Finance service code. This satisfies <strong>ASR-05 Modifiability (Scenario M-1)</strong>.
+      <strong>Strategy Pattern in Action (Step 7):</strong> The <code>FinancialService</code> delegates deposit deduction to the pluggable <code>DepositStrategy</code> interface. Depending on damage severity, execution dynamically resolves to <code>FullRefundStrategy</code>, <code>PartialDeductionStrategy</code>, or <code>ConfiscationStrategy</code>. Modifying or adding business rules requires zero code changes to the booking engine (satisfies <strong>ASR-05 Modifiability / Scenario M-1</strong>).
     </div>
   </div>
 </section>

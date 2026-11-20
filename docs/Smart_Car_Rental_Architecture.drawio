@@ -1,156 +1,130 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<mxfile host="app.diagrams.net" modified="2026-11-20" agent="Antigravity" version="21.0.0">
-
-  <!-- ========================================================== -->
-  <!-- PAGE 1: SYSTEM CONTEXT DIAGRAM                             -->
-  <!-- ========================================================== -->
+<mxfile host="app.diagrams.net" agent="Antigravity" pages="6">
   <diagram id="page1-context" name="1. System Context">
-    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="3828" dy="972" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-
-        <!-- Title -->
-        <mxCell id="title1" value="Smart Car Rental Platform — System Context Diagram" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;fontColor=#1a1a2e;" vertex="1" parent="1">
-          <mxGeometry x="300" y="30" width="1050" height="40" as="geometry" />
+        <mxCell id="title1" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;fontColor=#1a1a2e;" value="Smart Car Rental Platform — System Context Diagram" vertex="1">
+          <mxGeometry height="40" width="1050" x="300" y="30" as="geometry" />
         </mxCell>
-
-        <!-- === CENTRAL SYSTEM === -->
-        <mxCell id="system" value="&lt;b&gt;Smart Car Rental Platform&lt;/b&gt;&lt;br/&gt;&lt;i&gt;[Software System]&lt;/i&gt;&lt;br/&gt;&lt;br/&gt;Web-based platform for browsing,&lt;br/&gt;booking, and managing car rentals.&lt;br/&gt;Includes AI damage scanning &amp; KYC." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1a237e;strokeColor=#283593;fontColor=#ffffff;fontSize=12;fontStyle=1;arcSize=10;" vertex="1" parent="1">
-          <mxGeometry x="577" y="400" width="300" height="130" as="geometry" />
+        <mxCell id="system" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1a237e;strokeColor=#283593;fontColor=#ffffff;fontSize=12;fontStyle=1;arcSize=10;" value="&lt;b&gt;Smart Car Rental Platform&lt;/b&gt;&lt;br/&gt;&lt;i&gt;[Software System]&lt;/i&gt;&lt;br/&gt;&lt;br/&gt;Web-based platform for browsing,&lt;br/&gt;booking, and managing car rentals.&lt;br/&gt;Includes AI damage scanning &amp; KYC." vertex="1">
+          <mxGeometry height="130" width="300" x="577" y="400" as="geometry" />
         </mxCell>
-
-        <!-- === USERS / ACTORS === -->
-        <!-- Renter -->
-        <mxCell id="renter" value="&lt;b&gt;Renter&lt;/b&gt;&lt;br/&gt;[Person]&lt;br/&gt;&lt;br/&gt;Customer who browses,&lt;br/&gt;books, and pays for&lt;br/&gt;vehicle rentals." style="shape=mxgraph.archimate3.actor;fillColor=#e8f5e9;strokeColor=#388e3c;fontColor=#1b5e20;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="180" y="410" width="120" height="110" as="geometry" />
+        <mxCell id="renter" parent="1" style="shape=mxgraph.archimate3.actor;fillColor=#e8f5e9;strokeColor=#388e3c;fontColor=#1b5e20;fontSize=11;" value="&lt;b&gt;Renter&lt;/b&gt;&lt;br/&gt;[Person]&lt;br/&gt;&lt;br/&gt;Customer who browses,&lt;br/&gt;books, and pays for&lt;br/&gt;vehicle rentals." vertex="1">
+          <mxGeometry height="110" width="120" x="-170" y="430" as="geometry" />
         </mxCell>
-
-        <!-- Fleet Owner -->
-        <mxCell id="owner" value="&lt;b&gt;Fleet Owner&lt;/b&gt;&lt;br/&gt;[Person]&lt;br/&gt;&lt;br/&gt;Registers vehicles,&lt;br/&gt;sets pricing, manages&lt;br/&gt;rental requests." style="shape=mxgraph.archimate3.actor;fillColor=#e3f2fd;strokeColor=#1565c0;fontColor=#0d47a1;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="980" y="410" width="120" height="110" as="geometry" />
+        <mxCell id="owner" parent="1" style="shape=mxgraph.archimate3.actor;fillColor=#e3f2fd;strokeColor=#1565c0;fontColor=#0d47a1;fontSize=11;" value="&lt;b&gt;Fleet Owner&lt;/b&gt;&lt;br/&gt;[Person]&lt;br/&gt;&lt;br/&gt;Registers vehicles,&lt;br/&gt;sets pricing, manages&lt;br/&gt;rental requests." vertex="1">
+          <mxGeometry height="110" width="120" x="1320" y="510" as="geometry" />
         </mxCell>
-
-        <!-- Admin -->
-        <mxCell id="admin" value="&lt;b&gt;System Admin&lt;/b&gt;&lt;br/&gt;[Person]&lt;br/&gt;&lt;br/&gt;Manages users, roles,&lt;br/&gt;monitoring, and&lt;br/&gt;platform settings." style="shape=mxgraph.archimate3.actor;fillColor=#fff3e0;strokeColor=#e65100;fontColor=#bf360c;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="577" y="600" width="120" height="110" as="geometry" />
+        <mxCell id="admin" parent="1" style="shape=mxgraph.archimate3.actor;fillColor=#fff3e0;strokeColor=#e65100;fontColor=#bf360c;fontSize=11;" value="&lt;b&gt;System Admin&lt;/b&gt;&lt;br/&gt;[Person]&lt;br/&gt;&lt;br/&gt;Manages users, roles,&lt;br/&gt;monitoring, and&lt;br/&gt;platform settings." vertex="1">
+          <mxGeometry height="110" width="120" x="720" y="670" as="geometry" />
         </mxCell>
-
-        <!-- === EXTERNAL SYSTEMS === -->
-        <!-- Supabase -->
-        <mxCell id="supabase" value="&lt;b&gt;Supabase&lt;/b&gt;&lt;br/&gt;[External System]&lt;br/&gt;&lt;br/&gt;Provides authentication,&lt;br/&gt;PostgreSQL database,&lt;br/&gt;and file storage." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fce4ec;strokeColor=#c2185b;fontColor=#880e4f;fontSize=11;arcSize=10;" vertex="1" parent="1">
-          <mxGeometry x="180" y="200" width="170" height="110" as="geometry" />
+        <mxCell id="supabase" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fce4ec;strokeColor=#c2185b;fontColor=#880e4f;fontSize=11;arcSize=10;" value="&lt;b&gt;Supabase&lt;/b&gt;&lt;br/&gt;[External System]&lt;br/&gt;&lt;br/&gt;Provides authentication,&lt;br/&gt;PostgreSQL database,&lt;br/&gt;and file storage." vertex="1">
+          <mxGeometry height="110" width="170" x="180" y="130" as="geometry" />
         </mxCell>
-
-        <!-- Groq AI -->
-        <mxCell id="groq" value="&lt;b&gt;Groq AI API&lt;/b&gt;&lt;br/&gt;[External System]&lt;br/&gt;&lt;br/&gt;LLaMA Vision model for&lt;br/&gt;AI damage detection&lt;br/&gt;and cost estimation." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e5f5;strokeColor=#7b1fa2;fontColor=#4a148c;fontSize=11;arcSize=10;" vertex="1" parent="1">
-          <mxGeometry x="980" y="200" width="170" height="110" as="geometry" />
+        <mxCell id="groq" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e5f5;strokeColor=#7b1fa2;fontColor=#4a148c;fontSize=11;arcSize=10;" value="&lt;b&gt;Groq AI API&lt;/b&gt;&lt;br/&gt;[External System]&lt;br/&gt;&lt;br/&gt;LLaMA Vision model for&lt;br/&gt;AI damage detection&lt;br/&gt;and cost estimation." vertex="1">
+          <mxGeometry height="110" width="170" x="980" y="200" as="geometry" />
         </mxCell>
-
-        <!-- Upstash Redis -->
-        <mxCell id="upstash" value="&lt;b&gt;Upstash Redis&lt;/b&gt;&lt;br/&gt;[External System]&lt;br/&gt;&lt;br/&gt;Serverless rate-limiting&lt;br/&gt;for API endpoints." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0f2f1;strokeColor=#00695c;fontColor=#004d40;fontSize=11;arcSize=10;" vertex="1" parent="1">
-          <mxGeometry x="980" y="600" width="170" height="110" as="geometry" />
+        <mxCell id="upstash" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0f2f1;strokeColor=#00695c;fontColor=#004d40;fontSize=11;arcSize=10;" value="&lt;b&gt;Upstash Redis&lt;/b&gt;&lt;br/&gt;[External System]&lt;br/&gt;&lt;br/&gt;Serverless rate-limiting&lt;br/&gt;for API endpoints." vertex="1">
+          <mxGeometry height="110" width="170" x="1110" y="820" as="geometry" />
         </mxCell>
-
-        <!-- Vercel -->
-        <mxCell id="vercel" value="&lt;b&gt;Vercel Platform&lt;/b&gt;&lt;br/&gt;[External System]&lt;br/&gt;&lt;br/&gt;Hosts and deploys&lt;br/&gt;the Next.js app with&lt;br/&gt;CDN &amp; edge functions." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fffde7;strokeColor=#f9a825;fontColor=#f57f17;fontSize=11;arcSize=10;" vertex="1" parent="1">
-          <mxGeometry x="577" y="200" width="170" height="110" as="geometry" />
+        <mxCell id="vercel" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fffde7;strokeColor=#f9a825;fontColor=#f57f17;fontSize=11;arcSize=10;" value="&lt;b&gt;Vercel Platform&lt;/b&gt;&lt;br/&gt;[External System]&lt;br/&gt;&lt;br/&gt;Hosts and deploys&lt;br/&gt;the Next.js app with&lt;br/&gt;CDN &amp; edge functions." vertex="1">
+          <mxGeometry height="110" width="170" x="580" y="120" as="geometry" />
         </mxCell>
-
-        <!-- OpenStreetMap -->
-        <mxCell id="osm" value="&lt;b&gt;OpenStreetMap / Leaflet&lt;/b&gt;&lt;br/&gt;[External System]&lt;br/&gt;&lt;br/&gt;Interactive maps for&lt;br/&gt;branch/service location&lt;br/&gt;visualization." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8eaf6;strokeColor=#3949ab;fontColor=#1a237e;fontSize=11;arcSize=10;" vertex="1" parent="1">
-          <mxGeometry x="180" y="600" width="170" height="110" as="geometry" />
+        <mxCell id="osm" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8eaf6;strokeColor=#3949ab;fontColor=#1a237e;fontSize=11;arcSize=10;" value="&lt;b&gt;OpenStreetMap / Leaflet&lt;/b&gt;&lt;br/&gt;[External System]&lt;br/&gt;&lt;br/&gt;Interactive maps for&lt;br/&gt;branch/service location&lt;br/&gt;visualization." vertex="1">
+          <mxGeometry height="110" width="170" x="180" y="600" as="geometry" />
         </mxCell>
-
-        <!-- === ARROWS: USERS → SYSTEM === -->
-        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#388e3c;fontColor=#1b5e20;fontSize=10;" edge="1" source="renter" target="system" parent="1">
+        <mxCell id="e1" edge="1" parent="1" source="renter" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#388e3c;fontColor=#1b5e20;fontSize=10;" target="system">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e1l" value="Browses fleet, books&lt;br/&gt;vehicles, pays online" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#388e3c;" vertex="1" connectable="0" parent="e1">
-          <mxGeometry x="-0.1" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        <mxCell id="e1l" connectable="0" parent="e1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#388e3c;" value="Browses fleet, books&lt;br/&gt;vehicles, pays online" vertex="1">
+          <mxGeometry relative="1" x="-0.1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
         </mxCell>
-
-        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#1565c0;fontColor=#0d47a1;fontSize=10;" edge="1" source="owner" target="system" parent="1">
+        <mxCell id="e2" edge="1" parent="1" source="owner" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#1565c0;fontColor=#0d47a1;fontSize=10;" target="system">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e2l" value="Manages fleet,&lt;br/&gt;approves bookings" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#1565c0;" vertex="1" connectable="0" parent="e2">
-          <mxGeometry x="-0.1" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        <mxCell id="e2l" connectable="0" parent="e2" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#1565c0;" value="Manages fleet,&lt;br/&gt;approves bookings" vertex="1">
+          <mxGeometry relative="1" x="-0.1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
         </mxCell>
-
-        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#e65100;fontColor=#bf360c;fontSize=10;" edge="1" source="admin" target="system" parent="1">
+        <mxCell id="e3" edge="1" parent="1" source="admin" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#e65100;fontColor=#bf360c;fontSize=10;" target="system">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e3l" value="User management,&lt;br/&gt;monitoring" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#e65100;" vertex="1" connectable="0" parent="e3">
-          <mxGeometry x="-0.1" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        <mxCell id="e3l" connectable="0" parent="e3" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#e65100;" value="User management,&lt;br/&gt;monitoring" vertex="1">
+          <mxGeometry relative="1" x="-0.1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
         </mxCell>
-
-        <!-- === ARROWS: SYSTEM → EXTERNAL === -->
-        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#c2185b;dashed=1;fontSize=10;" edge="1" source="system" target="supabase" parent="1">
+        <mxCell id="e4" edge="1" parent="1" source="system" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#c2185b;dashed=1;fontSize=10;" target="supabase">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e4l" value="Auth, DB queries,&lt;br/&gt;file storage API" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#c2185b;" vertex="1" connectable="0" parent="e4">
-          <mxGeometry x="-0.1" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        <mxCell id="e4l" connectable="0" parent="e4" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#c2185b;" value="Auth, DB queries,&lt;br/&gt;file storage API" vertex="1">
+          <mxGeometry relative="1" x="-0.1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
         </mxCell>
-
-        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#7b1fa2;dashed=1;fontSize=10;" edge="1" source="system" target="groq" parent="1">
+        <mxCell id="e5" edge="1" parent="1" source="system" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#7b1fa2;dashed=1;fontSize=10;" target="groq">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e5l" value="HTTPS POST image,&lt;br/&gt;receive damage JSON" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#7b1fa2;" vertex="1" connectable="0" parent="e5">
-          <mxGeometry x="-0.1" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        <mxCell id="e5l" connectable="0" parent="e5" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#7b1fa2;" value="HTTPS POST image,&lt;br/&gt;receive damage JSON" vertex="1">
+          <mxGeometry relative="1" x="-0.1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
         </mxCell>
-
-        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#00695c;dashed=1;fontSize=10;" edge="1" source="system" target="upstash" parent="1">
+        <mxCell id="e6" edge="1" parent="1" source="system" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#00695c;dashed=1;fontSize=10;" target="upstash">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e6l" value="Rate limit checks&lt;br/&gt;per user/IP" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#00695c;" vertex="1" connectable="0" parent="e6">
-          <mxGeometry x="-0.1" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        <mxCell id="e6l" connectable="0" parent="e6" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#00695c;" value="Rate limit checks&lt;br/&gt;per user/IP" vertex="1">
+          <mxGeometry relative="1" x="-0.1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
         </mxCell>
-
-        <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#f9a825;dashed=1;fontSize=10;" edge="1" source="vercel" target="system" parent="1">
+        <mxCell id="e7" edge="1" parent="1" source="vercel" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#f9a825;dashed=1;fontSize=10;" target="system">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e7l" value="Deploys &amp; hosts&lt;br/&gt;Next.js application" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#f9a825;" vertex="1" connectable="0" parent="e7">
-          <mxGeometry x="-0.1" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        <mxCell id="e7l" connectable="0" parent="e7" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#f9a825;" value="Deploys &amp; hosts&lt;br/&gt;Next.js application" vertex="1">
+          <mxGeometry relative="1" x="-0.1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
         </mxCell>
-
-        <mxCell id="e8" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#3949ab;dashed=1;fontSize=10;" edge="1" source="system" target="osm" parent="1">
-          <mxGeometry relative="1" as="geometry" />
+        <mxCell id="e8" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#3949ab;dashed=1;fontSize=10;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="577" y="510" as="sourcePoint" />
+            <mxPoint x="265" y="645" as="targetPoint" />
+          </mxGeometry>
         </mxCell>
-        <mxCell id="e8l" value="Loads map tiles,&lt;br/&gt;branch markers" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#3949ab;" vertex="1" connectable="0" parent="e8">
-          <mxGeometry x="-0.1" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        <mxCell id="e8l" connectable="0" parent="e8" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#3949ab;" value="Loads map tiles,&lt;br/&gt;branch markers" vertex="1">
+          <mxGeometry relative="1" x="-0.1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
         </mxCell>
-
-        <!-- Legend -->
-        <mxCell id="leg1" value="Legend" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="80" y="790" width="80" height="30" as="geometry" />
+        <mxCell id="leg1" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontStyle=1;" value="Legend" vertex="1">
+          <mxGeometry height="30" width="80" x="80" y="790" as="geometry" />
         </mxCell>
-        <mxCell id="leg2" value="[Person] = User role" style="text;html=1;strokeColor=none;fillColor=#e8f5e9;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=10;rounded=1;" vertex="1" parent="1">
-          <mxGeometry x="80" y="825" width="160" height="30" as="geometry" />
+        <mxCell id="leg2" parent="1" style="text;html=1;strokeColor=none;fillColor=#e8f5e9;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=10;rounded=1;" value="[Person] = User role" vertex="1">
+          <mxGeometry height="30" width="160" x="80" y="825" as="geometry" />
         </mxCell>
-        <mxCell id="leg3" value="[External System] = 3rd-party service" style="text;html=1;strokeColor=none;fillColor=#fce4ec;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=10;rounded=1;" vertex="1" parent="1">
-          <mxGeometry x="260" y="825" width="220" height="30" as="geometry" />
+        <mxCell id="leg3" parent="1" style="text;html=1;strokeColor=none;fillColor=#fce4ec;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=10;rounded=1;" value="[External System] = 3rd-party service" vertex="1">
+          <mxGeometry height="30" width="220" x="260" y="825" as="geometry" />
         </mxCell>
-        <mxCell id="leg4" value="[Software System] = Our system (scope)" style="text;html=1;strokeColor=none;fillColor=#e8eaf6;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=10;rounded=1;" vertex="1" parent="1">
-          <mxGeometry x="500" y="825" width="230" height="30" as="geometry" />
+        <mxCell id="leg4" parent="1" style="text;html=1;strokeColor=none;fillColor=#e8eaf6;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=10;rounded=1;" value="[Software System] = Our system (scope)" vertex="1">
+          <mxGeometry height="30" width="230" x="500" y="825" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
-
-  <!-- ========================================================== -->
-  <!-- PAGE 2: MODULE / USES DIAGRAM                              -->
-  <!-- ========================================================== -->
   <diagram id="page2-module" name="2. Module Uses Diagram">
     <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-
         <!-- Title -->
         <mxCell id="t" value="Smart Car Rental Platform — Module Uses Diagram" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;fontColor=#1a1a2e;" vertex="1" parent="1">
           <mxGeometry x="300" y="30" width="1050" height="40" as="geometry" />
         </mxCell>
-
         <!-- Layer: Presentation -->
         <mxCell id="L1" value="Presentation Layer" style="swimlane;startSize=30;fillColor=#e8eaf6;strokeColor=#3949ab;fontColor=#1a237e;fontStyle=1;fontSize=12;" vertex="1" parent="1">
           <mxGeometry x="80" y="90" width="1480" height="160" as="geometry" />
@@ -179,7 +153,6 @@
         <mxCell id="m8" value="&lt;b&gt;Snap ID UI&lt;/b&gt;&lt;br/&gt;KYC Document Upload" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c5cae9;strokeColor=#3949ab;fontSize=11;" vertex="1" parent="L1">
           <mxGeometry x="1310" y="60" width="140" height="70" as="geometry" />
         </mxCell>
-
         <!-- Layer: Application (API Routes) -->
         <mxCell id="L2" value="Application Layer (Next.js API Routes)" style="swimlane;startSize=30;fillColor=#e8f5e9;strokeColor=#388e3c;fontColor=#1b5e20;fontStyle=1;fontSize=12;" vertex="1" parent="1">
           <mxGeometry x="80" y="310" width="1480" height="160" as="geometry" />
@@ -208,7 +181,6 @@
         <mxCell id="a8" value="&lt;b&gt;Roadtrip Planner&lt;/b&gt;&lt;br/&gt;/api/roadtrip/*" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#a5d6a7;strokeColor=#388e3c;fontSize=11;" vertex="1" parent="L2">
           <mxGeometry x="1360" y="55" width="90" height="70" as="geometry" />
         </mxCell>
-
         <!-- Layer: Data Access -->
         <mxCell id="L3" value="Data Access Layer" style="swimlane;startSize=30;fillColor=#fff3e0;strokeColor=#e65100;fontColor=#bf360c;fontStyle=1;fontSize=12;" vertex="1" parent="1">
           <mxGeometry x="80" y="530" width="1480" height="150" as="geometry" />
@@ -225,7 +197,6 @@
         <mxCell id="d4" value="&lt;b&gt;Types &amp; Schema&lt;/b&gt;&lt;br/&gt;/lib/types.ts&lt;br/&gt;/lib/validators.ts" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcc80;strokeColor=#e65100;fontSize=11;" vertex="1" parent="L3">
           <mxGeometry x="1040" y="50" width="200" height="70" as="geometry" />
         </mxCell>
-
         <!-- Layer: External Services -->
         <mxCell id="L4" value="External Services" style="swimlane;startSize=30;fillColor=#fce4ec;strokeColor=#c2185b;fontColor=#880e4f;fontStyle=1;fontSize=12;" vertex="1" parent="1">
           <mxGeometry x="80" y="745" width="1480" height="150" as="geometry" />
@@ -245,7 +216,6 @@
         <mxCell id="ext5" value="&lt;b&gt;Vercel&lt;/b&gt;&lt;br/&gt;Hosting + CDN" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8bbd0;strokeColor=#c2185b;fontSize=11;" vertex="1" parent="L4">
           <mxGeometry x="1270" y="50" width="170" height="70" as="geometry" />
         </mxCell>
-
         <!-- Uses arrows: Presentation → Application -->
         <mxCell id="u1" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#3949ab;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="m1" target="a1" parent="1">
           <mxGeometry relative="1" as="geometry" />
@@ -271,7 +241,6 @@
         <mxCell id="u8" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#3949ab;" edge="1" source="m8" target="a8" parent="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-
         <!-- Uses arrows: Application → Data Access -->
         <mxCell id="u9" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#388e3c;" edge="1" source="a1" target="d1" parent="1">
           <mxGeometry relative="1" as="geometry" />
@@ -288,7 +257,6 @@
         <mxCell id="u13" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#388e3c;" edge="1" source="a6" target="d3" parent="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-
         <!-- Uses arrows: Data Access → External -->
         <mxCell id="u14" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#e65100;" edge="1" source="d1" target="ext1" parent="1">
           <mxGeometry relative="1" as="geometry" />
@@ -305,270 +273,228 @@
       </root>
     </mxGraphModel>
   </diagram>
-
-  <!-- ========================================================== -->
-  <!-- PAGE 3: CLASS DIAGRAM                                      -->
-  <!-- ========================================================== -->
   <diagram id="page3-class" name="3. Class Diagram">
-    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="2174" dy="972" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-
-        <!-- Title -->
-        <mxCell id="t" value="Smart Car Rental Platform — Class Diagram" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;fontColor=#1a1a2e;" vertex="1" parent="1">
-          <mxGeometry x="300" y="20" width="1050" height="40" as="geometry" />
+        <mxCell id="t" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;fontColor=#1a1a2e;" value="Smart Car Rental Platform — Class Diagram" vertex="1">
+          <mxGeometry height="40" width="1050" x="300" y="20" as="geometry" />
         </mxCell>
-
-        <!-- === User class === -->
-        <mxCell id="cUser" value="&lt;b&gt;User&lt;/b&gt;" style="swimlane;startSize=30;fillColor=#e3f2fd;strokeColor=#1565c0;fontColor=#0d47a1;fontStyle=1;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="80" y="100" width="240" height="200" as="geometry" />
+        <mxCell id="cUser" parent="1" style="swimlane;startSize=30;fillColor=#e3f2fd;strokeColor=#1565c0;fontColor=#0d47a1;fontStyle=1;fontSize=12;" value="&lt;b&gt;User&lt;/b&gt;" vertex="1">
+          <mxGeometry height="200" width="240" x="80" y="100" as="geometry" />
         </mxCell>
-        <mxCell id="cUserA" value="+ id: UUID&lt;br/&gt;+ email: String&lt;br/&gt;+ full_name: String&lt;br/&gt;+ role: Enum {renter, owner, admin}&lt;br/&gt;+ phone: String&lt;br/&gt;+ national_id: String&lt;br/&gt;+ kyc_verified: Boolean&lt;br/&gt;+ avatar_url: String" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;fontSize=10;" vertex="1" parent="cUser">
-          <mxGeometry x="0" y="30" width="240" height="110" as="geometry" />
+        <mxCell id="cUserA" parent="cUser" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;fontSize=10;" value="+ id: UUID&lt;br/&gt;+ email: String&lt;br/&gt;+ full_name: String&lt;br/&gt;+ role: Enum {renter, owner, admin}&lt;br/&gt;+ phone: String&lt;br/&gt;+ national_id: String&lt;br/&gt;+ kyc_verified: Boolean&lt;br/&gt;+ avatar_url: String" vertex="1">
+          <mxGeometry height="110" width="240" y="30" as="geometry" />
         </mxCell>
-        <mxCell id="cUserS" value="─────────────────────&lt;br/&gt;+ signIn(): void&lt;br/&gt;+ signOut(): void&lt;br/&gt;+ updateProfile(): void" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;fontSize=10;" vertex="1" parent="cUser">
-          <mxGeometry x="0" y="140" width="240" height="60" as="geometry" />
+        <mxCell id="cUserS" parent="cUser" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;fontSize=10;" value="─────────────────────&lt;br/&gt;+ signIn(): void&lt;br/&gt;+ signOut(): void&lt;br/&gt;+ updateProfile(): void" vertex="1">
+          <mxGeometry height="60" width="240" y="140" as="geometry" />
         </mxCell>
-
-        <!-- === Vehicle class === -->
-        <mxCell id="cVeh" value="&lt;b&gt;Vehicle&lt;/b&gt;" style="swimlane;startSize=30;fillColor=#e8f5e9;strokeColor=#388e3c;fontColor=#1b5e20;fontStyle=1;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="400" y="100" width="250" height="220" as="geometry" />
+        <mxCell id="cVeh" parent="1" style="swimlane;startSize=30;fillColor=#e8f5e9;strokeColor=#388e3c;fontColor=#1b5e20;fontStyle=1;fontSize=12;" value="&lt;b&gt;Vehicle&lt;/b&gt;" vertex="1">
+          <mxGeometry height="220" width="250" x="1340" y="410" as="geometry" />
         </mxCell>
-        <mxCell id="cVehA" value="+ id: UUID&lt;br/&gt;+ owner_id: UUID&lt;br/&gt;+ make: String&lt;br/&gt;+ model: String&lt;br/&gt;+ year: Integer&lt;br/&gt;+ category: String&lt;br/&gt;+ daily_rate: Decimal&lt;br/&gt;+ status: Enum {available, rented, maintenance}&lt;br/&gt;+ image_url: String&lt;br/&gt;+ fuel_type: String" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;fontSize=10;" vertex="1" parent="cVeh">
-          <mxGeometry x="0" y="30" width="250" height="130" as="geometry" />
+        <mxCell id="cVehA" parent="cVeh" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;fontSize=10;" value="+ id: UUID&lt;br/&gt;+ owner_id: UUID&lt;br/&gt;+ make: String&lt;br/&gt;+ model: String&lt;br/&gt;+ year: Integer&lt;br/&gt;+ category: String&lt;br/&gt;+ daily_rate: Decimal&lt;br/&gt;+ status: Enum {available, rented, maintenance}&lt;br/&gt;+ image_url: String&lt;br/&gt;+ fuel_type: String" vertex="1">
+          <mxGeometry height="130" width="250" y="30" as="geometry" />
         </mxCell>
-        <mxCell id="cVehS" value="─────────────────────&lt;br/&gt;+ getAvailability(): Boolean&lt;br/&gt;+ updateStatus(): void&lt;br/&gt;+ calcRentalCost(days): Decimal" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;fontSize=10;" vertex="1" parent="cVeh">
-          <mxGeometry x="0" y="160" width="250" height="60" as="geometry" />
+        <mxCell id="cVehS" parent="cVeh" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;fontSize=10;" value="─────────────────────&lt;br/&gt;+ getAvailability(): Boolean&lt;br/&gt;+ updateStatus(): void&lt;br/&gt;+ calcRentalCost(days): Decimal" vertex="1">
+          <mxGeometry height="60" width="250" y="160" as="geometry" />
         </mxCell>
-
-        <!-- === Booking class === -->
-        <mxCell id="cBook" value="&lt;b&gt;Booking&lt;/b&gt;" style="swimlane;startSize=30;fillColor=#fff3e0;strokeColor=#e65100;fontColor=#bf360c;fontStyle=1;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="730" y="100" width="250" height="220" as="geometry" />
+        <mxCell id="cBook" parent="1" style="swimlane;startSize=30;fillColor=#fff3e0;strokeColor=#e65100;fontColor=#bf360c;fontStyle=1;fontSize=12;" value="&lt;b&gt;Booking&lt;/b&gt;" vertex="1">
+          <mxGeometry height="220" width="250" x="840" y="100" as="geometry" />
         </mxCell>
-        <mxCell id="cBookA" value="+ id: UUID&lt;br/&gt;+ renter_id: UUID&lt;br/&gt;+ vehicle_id: UUID&lt;br/&gt;+ start_date: Date&lt;br/&gt;+ end_date: Date&lt;br/&gt;+ total_cost: Decimal&lt;br/&gt;+ status: Enum {pending, confirmed, active, completed, cancelled}&lt;br/&gt;+ created_at: Timestamp" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;fontSize=10;" vertex="1" parent="cBook">
-          <mxGeometry x="0" y="30" width="250" height="130" as="geometry" />
+        <mxCell id="cBookA" parent="cBook" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;fontSize=10;" value="+ id: UUID&lt;br/&gt;+ renter_id: UUID&lt;br/&gt;+ vehicle_id: UUID&lt;br/&gt;+ start_date: Date&lt;br/&gt;+ end_date: Date&lt;br/&gt;+ total_cost: Decimal&lt;br/&gt;+ status: Enum {pending, confirmed, active, completed, cancelled}&lt;br/&gt;+ created_at: Timestamp" vertex="1">
+          <mxGeometry height="130" width="250" y="30" as="geometry" />
         </mxCell>
-        <mxCell id="cBookS" value="─────────────────────&lt;br/&gt;+ confirm(): void&lt;br/&gt;+ cancel(): void&lt;br/&gt;+ calcCost(): Decimal" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;fontSize=10;" vertex="1" parent="cBook">
-          <mxGeometry x="0" y="160" width="250" height="60" as="geometry" />
+        <mxCell id="cBookS" parent="cBook" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;fontSize=10;" value="─────────────────────&lt;br/&gt;+ confirm(): void&lt;br/&gt;+ cancel(): void&lt;br/&gt;+ calcCost(): Decimal" vertex="1">
+          <mxGeometry height="60" width="250" y="160" as="geometry" />
         </mxCell>
-
-        <!-- === DamageReport class === -->
-        <mxCell id="cDmg" value="&lt;b&gt;DamageReport&lt;/b&gt;" style="swimlane;startSize=30;fillColor=#f3e5f5;strokeColor=#7b1fa2;fontColor=#4a148c;fontStyle=1;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="80" y="380" width="250" height="210" as="geometry" />
+        <mxCell id="cDmg" parent="1" style="swimlane;startSize=30;fillColor=#f3e5f5;strokeColor=#7b1fa2;fontColor=#4a148c;fontStyle=1;fontSize=12;" value="&lt;b&gt;DamageReport&lt;/b&gt;" vertex="1">
+          <mxGeometry height="210" width="250" x="80" y="380" as="geometry" />
         </mxCell>
-        <mxCell id="cDmgA" value="+ id: UUID&lt;br/&gt;+ booking_id: UUID&lt;br/&gt;+ image_url: String&lt;br/&gt;+ damage_detected: Boolean&lt;br/&gt;+ severity: Enum {none, minor, moderate, severe}&lt;br/&gt;+ total_repair_cost_egp: Decimal&lt;br/&gt;+ damage_zones: JSON[]&lt;br/&gt;+ created_at: Timestamp" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;fontSize=10;" vertex="1" parent="cDmg">
-          <mxGeometry x="0" y="30" width="250" height="120" as="geometry" />
+        <mxCell id="cDmgA" parent="cDmg" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;fontSize=10;" value="+ id: UUID&lt;br/&gt;+ booking_id: UUID&lt;br/&gt;+ image_url: String&lt;br/&gt;+ damage_detected: Boolean&lt;br/&gt;+ severity: Enum {none, minor, moderate, severe}&lt;br/&gt;+ total_repair_cost_egp: Decimal&lt;br/&gt;+ damage_zones: JSON[]&lt;br/&gt;+ created_at: Timestamp" vertex="1">
+          <mxGeometry height="120" width="250" y="30" as="geometry" />
         </mxCell>
-        <mxCell id="cDmgS" value="─────────────────────&lt;br/&gt;+ analyze(image): DamageReport&lt;br/&gt;+ getDeposit(): String" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;fontSize=10;" vertex="1" parent="cDmg">
-          <mxGeometry x="0" y="150" width="250" height="60" as="geometry" />
+        <mxCell id="cDmgS" parent="cDmg" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;fontSize=10;" value="─────────────────────&lt;br/&gt;+ analyze(image): DamageReport&lt;br/&gt;+ getDeposit(): String" vertex="1">
+          <mxGeometry height="60" width="250" y="150" as="geometry" />
         </mxCell>
-
-        <!-- === Review class === -->
-        <mxCell id="cRev" value="&lt;b&gt;Review&lt;/b&gt;" style="swimlane;startSize=30;fillColor=#e0f2f1;strokeColor=#00695c;fontColor=#004d40;fontStyle=1;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="400" y="380" width="230" height="180" as="geometry" />
+        <mxCell id="cRev" parent="1" style="swimlane;startSize=30;fillColor=#e0f2f1;strokeColor=#00695c;fontColor=#004d40;fontStyle=1;fontSize=12;" value="&lt;b&gt;Review&lt;/b&gt;" vertex="1">
+          <mxGeometry height="180" width="230" x="475" y="410" as="geometry" />
         </mxCell>
-        <mxCell id="cRevA" value="+ id: UUID&lt;br/&gt;+ booking_id: UUID&lt;br/&gt;+ reviewer_id: UUID&lt;br/&gt;+ vehicle_id: UUID&lt;br/&gt;+ rating: Integer (1-5)&lt;br/&gt;+ comment: String&lt;br/&gt;+ created_at: Timestamp" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;fontSize=10;" vertex="1" parent="cRev">
-          <mxGeometry x="0" y="30" width="230" height="100" as="geometry" />
+        <mxCell id="cRevA" parent="cRev" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;fontSize=10;" value="+ id: UUID&lt;br/&gt;+ booking_id: UUID&lt;br/&gt;+ reviewer_id: UUID&lt;br/&gt;+ vehicle_id: UUID&lt;br/&gt;+ rating: Integer (1-5)&lt;br/&gt;+ comment: String&lt;br/&gt;+ created_at: Timestamp" vertex="1">
+          <mxGeometry height="100" width="230" y="30" as="geometry" />
         </mxCell>
-        <mxCell id="cRevS" value="─────────────────────&lt;br/&gt;+ submit(): void&lt;br/&gt;+ getAvgRating(): Float" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;fontSize=10;" vertex="1" parent="cRev">
-          <mxGeometry x="0" y="130" width="230" height="50" as="geometry" />
+        <mxCell id="cRevS" parent="cRev" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;fontSize=10;" value="─────────────────────&lt;br/&gt;+ submit(): void&lt;br/&gt;+ getAvgRating(): Float" vertex="1">
+          <mxGeometry height="50" width="230" y="130" as="geometry" />
         </mxCell>
-
-        <!-- === Notification class === -->
-        <mxCell id="cNot" value="&lt;b&gt;Notification&lt;/b&gt;" style="swimlane;startSize=30;fillColor=#fffde7;strokeColor=#f9a825;fontColor=#f57f17;fontStyle=1;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="700" y="380" width="230" height="180" as="geometry" />
+        <mxCell id="cNot" parent="1" style="swimlane;startSize=30;fillColor=#fffde7;strokeColor=#f9a825;fontColor=#f57f17;fontStyle=1;fontSize=12;" value="&lt;b&gt;Notification&lt;/b&gt;" vertex="1">
+          <mxGeometry height="180" width="230" x="850" y="445" as="geometry" />
         </mxCell>
-        <mxCell id="cNotA" value="+ id: UUID&lt;br/&gt;+ user_id: UUID&lt;br/&gt;+ type: Enum {booking, reminder, alert}&lt;br/&gt;+ title: String&lt;br/&gt;+ body: String&lt;br/&gt;+ read: Boolean&lt;br/&gt;+ created_at: Timestamp" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;fontSize=10;" vertex="1" parent="cNot">
-          <mxGeometry x="0" y="30" width="230" height="100" as="geometry" />
+        <mxCell id="cNotA" parent="cNot" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;fontSize=10;" value="+ id: UUID&lt;br/&gt;+ user_id: UUID&lt;br/&gt;+ type: Enum {booking, reminder, alert}&lt;br/&gt;+ title: String&lt;br/&gt;+ body: String&lt;br/&gt;+ read: Boolean&lt;br/&gt;+ created_at: Timestamp" vertex="1">
+          <mxGeometry height="100" width="230" y="30" as="geometry" />
         </mxCell>
-        <mxCell id="cNotS" value="─────────────────────&lt;br/&gt;+ send(): void&lt;br/&gt;+ markRead(): void" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;fontSize=10;" vertex="1" parent="cNot">
-          <mxGeometry x="0" y="130" width="230" height="50" as="geometry" />
+        <mxCell id="cNotS" parent="cNot" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;fontSize=10;" value="─────────────────────&lt;br/&gt;+ send(): void&lt;br/&gt;+ markRead(): void" vertex="1">
+          <mxGeometry height="50" width="230" y="130" as="geometry" />
         </mxCell>
-
-        <!-- === RateLimiter class === -->
-        <mxCell id="cRL" value="&lt;b&gt;RateLimiter&lt;/b&gt;" style="swimlane;startSize=30;fillColor=#fce4ec;strokeColor=#c2185b;fontColor=#880e4f;fontStyle=1;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="980" y="100" width="240" height="160" as="geometry" />
+        <mxCell id="cRL" parent="1" style="swimlane;startSize=30;fillColor=#fce4ec;strokeColor=#c2185b;fontColor=#880e4f;fontStyle=1;fontSize=12;" value="&lt;b&gt;RateLimiter&lt;/b&gt;" vertex="1">
+          <mxGeometry height="160" width="240" x="1290" y="130" as="geometry" />
         </mxCell>
-        <mxCell id="cRLA" value="+ windowMs: Integer&lt;br/&gt;+ maxRequests: Integer&lt;br/&gt;+ identifier: String" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;fontSize=10;" vertex="1" parent="cRL">
-          <mxGeometry x="0" y="30" width="240" height="60" as="geometry" />
+        <mxCell id="cRLA" parent="cRL" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;fontSize=10;" value="+ windowMs: Integer&lt;br/&gt;+ maxRequests: Integer&lt;br/&gt;+ identifier: String" vertex="1">
+          <mxGeometry height="60" width="240" y="30" as="geometry" />
         </mxCell>
-        <mxCell id="cRLS" value="─────────────────────&lt;br/&gt;+ check(ip): Boolean&lt;br/&gt;+ reset(): void" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;fontSize=10;" vertex="1" parent="cRL">
-          <mxGeometry x="0" y="90" width="240" height="70" as="geometry" />
+        <mxCell id="cRLS" parent="cRL" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;fontSize=10;" value="─────────────────────&lt;br/&gt;+ check(ip): Boolean&lt;br/&gt;+ reset(): void" vertex="1">
+          <mxGeometry height="70" width="240" y="90" as="geometry" />
         </mxCell>
-
-        <!-- === Relationships === -->
-        <!-- User 1..* Vehicle (owner has vehicles) -->
-        <mxCell id="r1" style="endArrow=ERmanyToOne;startArrow=none;html=1;strokeColor=#1565c0;strokeWidth=2;" edge="1" source="cUser" target="cVeh" parent="1">
+        <mxCell id="r1" edge="1" parent="1" source="cUser" style="endArrow=ERmanyToOne;startArrow=none;html=1;strokeColor=#1565c0;strokeWidth=2;" target="cVeh">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="r1l" value="owns (1..* vehicles)" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#1565c0;" vertex="1" connectable="0" parent="r1">
-          <mxGeometry x="-0.1" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        <mxCell id="r1l" connectable="0" parent="r1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#1565c0;" value="owns (1..* vehicles)" vertex="1">
+          <mxGeometry relative="1" x="-0.1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
         </mxCell>
-
-        <!-- User 1..* Booking (renter makes bookings) -->
-        <mxCell id="r2" style="endArrow=ERmanyToOne;startArrow=none;html=1;strokeColor=#388e3c;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" source="cUser" target="cBook" parent="1">
+        <mxCell id="r2" edge="1" parent="1" source="cUser" style="endArrow=ERmanyToOne;startArrow=none;html=1;strokeColor=#388e3c;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="cBook">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="r2l" value="makes (1..* bookings)" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#388e3c;" vertex="1" connectable="0" parent="r2">
-          <mxGeometry x="-0.2" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        <mxCell id="r2l" connectable="0" parent="r2" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#388e3c;" value="makes (1..* bookings)" vertex="1">
+          <mxGeometry relative="1" x="-0.2" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
         </mxCell>
-
-        <!-- Booking 1..1 DamageReport -->
-        <mxCell id="r3" style="endArrow=ERone;startArrow=ERone;html=1;strokeColor=#7b1fa2;strokeWidth=2;" edge="1" source="cBook" target="cDmg" parent="1">
+        <mxCell id="r3" edge="1" parent="1" source="cBook" style="endArrow=ERone;startArrow=ERone;html=1;strokeColor=#7b1fa2;strokeWidth=2;" target="cDmg">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="r3l" value="generates (0..1)" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#7b1fa2;" vertex="1" connectable="0" parent="r3">
-          <mxGeometry x="-0.1" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        <mxCell id="r3l" connectable="0" parent="r3" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#7b1fa2;" value="generates (0..1)" vertex="1">
+          <mxGeometry relative="1" x="-0.1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
         </mxCell>
-
-        <!-- Booking 1..1 Review -->
-        <mxCell id="r4" style="endArrow=ERone;startArrow=ERone;html=1;strokeColor=#00695c;strokeWidth=2;" edge="1" source="cBook" target="cRev" parent="1">
+        <mxCell id="r4" edge="1" parent="1" source="cBook" style="endArrow=ERone;startArrow=ERone;html=1;strokeColor=#00695c;strokeWidth=2;" target="cRev">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="r4l" value="has (0..1)" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#00695c;" vertex="1" connectable="0" parent="r4">
-          <mxGeometry x="-0.1" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        <mxCell id="r4l" connectable="0" parent="r4" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#00695c;" value="has (0..1)" vertex="1">
+          <mxGeometry relative="1" x="-0.1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
         </mxCell>
-
-        <!-- User 1..* Notification -->
-        <mxCell id="r5" style="endArrow=ERmanyToOne;startArrow=none;html=1;strokeColor=#f9a825;strokeWidth=2;" edge="1" source="cUser" target="cNot" parent="1">
+        <mxCell id="r5" edge="1" parent="1" source="cUser" style="endArrow=ERmanyToOne;startArrow=none;html=1;strokeColor=#f9a825;strokeWidth=2;" target="cNot">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="r5l" value="receives (0..*)" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#f9a825;" vertex="1" connectable="0" parent="r5">
-          <mxGeometry x="-0.3" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        <mxCell id="r5l" connectable="0" parent="r5" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#f9a825;" value="receives (0..*)" vertex="1">
+          <mxGeometry relative="1" x="-0.3" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
         </mxCell>
-
-        <!-- API uses RateLimiter -->
-        <mxCell id="r6" style="endArrow=open;startArrow=none;dashed=1;html=1;strokeColor=#c2185b;strokeWidth=1.5;" edge="1" source="cBook" target="cRL" parent="1">
+        <mxCell id="r6" edge="1" parent="1" source="cBook" style="endArrow=open;startArrow=none;dashed=1;html=1;strokeColor=#c2185b;strokeWidth=1.5;" target="cRL">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="r6l" value="«uses»" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#c2185b;" vertex="1" connectable="0" parent="r6">
-          <mxGeometry x="-0.1" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        <mxCell id="r6l" connectable="0" parent="r6" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#c2185b;" value="«uses»" vertex="1">
+          <mxGeometry relative="1" x="-0.1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
-
-  <!-- ========================================================== -->
-  <!-- PAGE 4: COMPONENT & CONNECTOR + DEPLOYMENT DIAGRAM         -->
-  <!-- ========================================================== -->
   <diagram id="page4-cc" name="4. C&amp;C + Deployment">
-    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="2174" dy="972" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-
-        <!-- Title -->
-        <mxCell id="t" value="Smart Car Rental Platform — Component &amp; Connector + Deployment Diagram" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1;fontColor=#1a1a2e;" vertex="1" parent="1">
-          <mxGeometry x="200" y="20" width="1250" height="40" as="geometry" />
+        <mxCell id="t" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1;fontColor=#1a1a2e;" value="Smart Car Rental Platform — Component &amp; Connector + Deployment Diagram" vertex="1">
+          <mxGeometry height="40" width="1250" x="200" y="20" as="geometry" />
         </mxCell>
-
-        <!-- ==== USER BROWSER ==== -->
-        <mxCell id="browser" value="&lt;b&gt;User Browser&lt;/b&gt;" style="swimlane;startSize=30;fillColor=#eceff1;strokeColor=#546e7a;fontColor=#263238;fontStyle=1;fontSize=12;dashed=1;" vertex="1" parent="1">
-          <mxGeometry x="40" y="80" width="220" height="160" as="geometry" />
+        <mxCell id="browser" parent="1" style="swimlane;startSize=30;fillColor=#eceff1;strokeColor=#546e7a;fontColor=#263238;fontStyle=1;fontSize=12;dashed=1;" value="&lt;b&gt;User Browser&lt;/b&gt;" vertex="1">
+          <mxGeometry height="160" width="220" x="40" y="80" as="geometry" />
         </mxCell>
-        <mxCell id="b1" value="React / Next.js&lt;br/&gt;Client Components&lt;br/&gt;(Pages &amp; UI)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b0bec5;strokeColor=#546e7a;fontSize=10;" vertex="1" parent="browser">
-          <mxGeometry x="20" y="50" width="175" height="80" as="geometry" />
+        <mxCell id="b1" parent="browser" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b0bec5;strokeColor=#546e7a;fontSize=10;" value="React / Next.js&lt;br/&gt;Client Components&lt;br/&gt;(Pages &amp; UI)" vertex="1">
+          <mxGeometry height="80" width="175" x="20" y="50" as="geometry" />
         </mxCell>
-
-        <!-- ==== VERCEL EDGE ==== -->
-        <mxCell id="vercelBox" value="&lt;b&gt;Vercel Edge / CDN&lt;/b&gt;" style="swimlane;startSize=30;fillColor=#fff9c4;strokeColor=#f9a825;fontColor=#f57f17;fontStyle=1;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="310" y="80" width="380" height="380" as="geometry" />
+        <mxCell id="vercelBox" parent="1" style="swimlane;startSize=30;fillColor=#fff9c4;strokeColor=#f9a825;fontColor=#f57f17;fontStyle=1;fontSize=12;" value="&lt;b&gt;Vercel Edge / CDN&lt;/b&gt;" vertex="1">
+          <mxGeometry height="380" width="380" x="490" y="80" as="geometry" />
         </mxCell>
-        <mxCell id="v1" value="&lt;b&gt;Next.js App Router&lt;/b&gt;&lt;br/&gt;Server Components&lt;br/&gt;Static Pages (SSG/ISR)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff176;strokeColor=#f9a825;fontSize=11;" vertex="1" parent="vercelBox">
-          <mxGeometry x="20" y="50" width="175" height="80" as="geometry" />
+        <mxCell id="v1" parent="vercelBox" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff176;strokeColor=#f9a825;fontSize=11;" value="&lt;b&gt;Next.js App Router&lt;/b&gt;&lt;br/&gt;Server Components&lt;br/&gt;Static Pages (SSG/ISR)" vertex="1">
+          <mxGeometry height="80" width="175" x="20" y="50" as="geometry" />
         </mxCell>
-        <mxCell id="v2" value="&lt;b&gt;API Route: Fleet&lt;/b&gt;&lt;br/&gt;/api/vehicles" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff176;strokeColor=#f9a825;fontSize=11;" vertex="1" parent="vercelBox">
-          <mxGeometry x="210" y="50" width="150" height="80" as="geometry" />
+        <mxCell id="v2" parent="vercelBox" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff176;strokeColor=#f9a825;fontSize=11;" value="&lt;b&gt;API Route: Fleet&lt;/b&gt;&lt;br/&gt;/api/vehicles" vertex="1">
+          <mxGeometry height="80" width="150" x="210" y="50" as="geometry" />
         </mxCell>
-        <mxCell id="v3" value="&lt;b&gt;API Route: Bookings&lt;/b&gt;&lt;br/&gt;/api/bookings" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff176;strokeColor=#f9a825;fontSize=11;" vertex="1" parent="vercelBox">
-          <mxGeometry x="20" y="150" width="150" height="80" as="geometry" />
+        <mxCell id="v3" parent="vercelBox" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff176;strokeColor=#f9a825;fontSize=11;" value="&lt;b&gt;API Route: Bookings&lt;/b&gt;&lt;br/&gt;/api/bookings" vertex="1">
+          <mxGeometry height="80" width="150" x="20" y="150" as="geometry" />
         </mxCell>
-        <mxCell id="v4" value="&lt;b&gt;API Route: AI Damage&lt;/b&gt;&lt;br/&gt;/api/ai/damage&lt;br/&gt;(Groq Vision call)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff176;strokeColor=#f9a825;fontSize=11;" vertex="1" parent="vercelBox">
-          <mxGeometry x="190" y="150" width="170" height="80" as="geometry" />
+        <mxCell id="v4" parent="vercelBox" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff176;strokeColor=#f9a825;fontSize=11;" value="&lt;b&gt;API Route: AI Damage&lt;/b&gt;&lt;br/&gt;/api/ai/damage&lt;br/&gt;(Groq Vision call)" vertex="1">
+          <mxGeometry height="80" width="170" x="190" y="150" as="geometry" />
         </mxCell>
-        <mxCell id="v5" value="&lt;b&gt;Middleware&lt;/b&gt;&lt;br/&gt;Auth Check + Rate Limit&lt;br/&gt;(Upstash Redis)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffeb3b;strokeColor=#f9a825;fontSize=11;fontStyle=1;" vertex="1" parent="vercelBox">
-          <mxGeometry x="80" y="260" width="220" height="80" as="geometry" />
+        <mxCell id="v5" parent="vercelBox" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffeb3b;strokeColor=#f9a825;fontSize=11;fontStyle=1;" value="&lt;b&gt;Middleware&lt;/b&gt;&lt;br/&gt;Auth Check + Rate Limit&lt;br/&gt;(Upstash Redis)" vertex="1">
+          <mxGeometry height="80" width="220" x="80" y="260" as="geometry" />
         </mxCell>
-
-        <!-- ==== SUPABASE PLATFORM ==== -->
-        <mxCell id="supabaseBox" value="&lt;b&gt;Supabase Platform&lt;/b&gt;" style="swimlane;startSize=30;fillColor=#fce4ec;strokeColor=#c2185b;fontColor=#880e4f;fontStyle=1;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="750" y="80" width="390" height="380" as="geometry" />
+        <mxCell id="supabaseBox" parent="1" style="swimlane;startSize=30;fillColor=#fce4ec;strokeColor=#c2185b;fontColor=#880e4f;fontStyle=1;fontSize=12;" value="&lt;b&gt;Supabase Platform&lt;/b&gt;" vertex="1">
+          <mxGeometry height="380" width="390" x="1190" y="70" as="geometry" />
         </mxCell>
-        <mxCell id="s1" value="&lt;b&gt;Auth Service&lt;/b&gt;&lt;br/&gt;JWT tokens, OAuth,&lt;br/&gt;Email/Password" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8bbd0;strokeColor=#c2185b;fontSize=11;" vertex="1" parent="supabaseBox">
-          <mxGeometry x="20" y="55" width="165" height="90" as="geometry" />
+        <mxCell id="s1" parent="supabaseBox" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8bbd0;strokeColor=#c2185b;fontSize=11;" value="&lt;b&gt;Auth Service&lt;/b&gt;&lt;br/&gt;JWT tokens, OAuth,&lt;br/&gt;Email/Password" vertex="1">
+          <mxGeometry height="90" width="165" x="20" y="55" as="geometry" />
         </mxCell>
-        <mxCell id="s2" value="&lt;b&gt;PostgreSQL Database&lt;/b&gt;&lt;br/&gt;Tables: users, vehicles,&lt;br/&gt;bookings, reviews,&lt;br/&gt;damage_reports" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8bbd0;strokeColor=#c2185b;fontSize=11;" vertex="1" parent="supabaseBox">
-          <mxGeometry x="205" y="55" width="165" height="90" as="geometry" />
+        <mxCell id="s2" parent="supabaseBox" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8bbd0;strokeColor=#c2185b;fontSize=11;" value="&lt;b&gt;PostgreSQL Database&lt;/b&gt;&lt;br/&gt;Tables: users, vehicles,&lt;br/&gt;bookings, reviews,&lt;br/&gt;damage_reports" vertex="1">
+          <mxGeometry height="90" width="165" x="205" y="55" as="geometry" />
         </mxCell>
-        <mxCell id="s3" value="&lt;b&gt;Row Level Security (RLS)&lt;/b&gt;&lt;br/&gt;Owners see own fleet only.&lt;br/&gt;Renters see own bookings." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8bbd0;strokeColor=#c2185b;fontSize=11;" vertex="1" parent="supabaseBox">
-          <mxGeometry x="20" y="165" width="165" height="90" as="geometry" />
+        <mxCell id="s3" parent="supabaseBox" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8bbd0;strokeColor=#c2185b;fontSize=11;" value="&lt;b&gt;Row Level Security (RLS)&lt;/b&gt;&lt;br/&gt;Owners see own fleet only.&lt;br/&gt;Renters see own bookings." vertex="1">
+          <mxGeometry height="90" width="165" x="20" y="165" as="geometry" />
         </mxCell>
-        <mxCell id="s4" value="&lt;b&gt;Supabase Storage&lt;/b&gt;&lt;br/&gt;Vehicle images,&lt;br/&gt;KYC documents" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8bbd0;strokeColor=#c2185b;fontSize=11;" vertex="1" parent="supabaseBox">
-          <mxGeometry x="205" y="165" width="165" height="90" as="geometry" />
+        <mxCell id="s4" parent="supabaseBox" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8bbd0;strokeColor=#c2185b;fontSize=11;" value="&lt;b&gt;Supabase Storage&lt;/b&gt;&lt;br/&gt;Vehicle images,&lt;br/&gt;KYC documents" vertex="1">
+          <mxGeometry height="90" width="165" x="205" y="165" as="geometry" />
         </mxCell>
-        <mxCell id="s5" value="&lt;b&gt;Realtime Engine&lt;/b&gt;&lt;br/&gt;Booking status push&lt;br/&gt;notifications (WebSocket)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f48fb1;strokeColor=#c2185b;fontSize=11;" vertex="1" parent="supabaseBox">
-          <mxGeometry x="80" y="275" width="230" height="80" as="geometry" />
+        <mxCell id="s5" parent="supabaseBox" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f48fb1;strokeColor=#c2185b;fontSize=11;" value="&lt;b&gt;Realtime Engine&lt;/b&gt;&lt;br/&gt;Booking status push&lt;br/&gt;notifications (WebSocket)" vertex="1">
+          <mxGeometry height="80" width="230" x="80" y="275" as="geometry" />
         </mxCell>
-
-        <!-- ==== EXTERNAL AI ==== -->
-        <mxCell id="groqBox" value="&lt;b&gt;Groq AI API&lt;/b&gt;&lt;br/&gt;LLaMA 3.2 Vision" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e5f5;strokeColor=#7b1fa2;fontColor=#4a148c;fontSize=12;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="310" y="530" width="200" height="90" as="geometry" />
+        <mxCell id="groqBox" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e5f5;strokeColor=#7b1fa2;fontColor=#4a148c;fontSize=12;fontStyle=1;" value="&lt;b&gt;Groq AI API&lt;/b&gt;&lt;br/&gt;LLaMA 3.2 Vision" vertex="1">
+          <mxGeometry height="90" width="200" x="430" y="660" as="geometry" />
         </mxCell>
-
-        <!-- ==== UPSTASH REDIS ==== -->
-        <mxCell id="upstashBox" value="&lt;b&gt;Upstash Redis&lt;/b&gt;&lt;br/&gt;Rate Limiting Storage" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0f2f1;strokeColor=#00695c;fontColor=#004d40;fontSize=12;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="560" y="530" width="200" height="90" as="geometry" />
+        <mxCell id="upstashBox" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0f2f1;strokeColor=#00695c;fontColor=#004d40;fontSize=12;fontStyle=1;" value="&lt;b&gt;Upstash Redis&lt;/b&gt;&lt;br/&gt;Rate Limiting Storage" vertex="1">
+          <mxGeometry height="90" width="200" x="1000" y="600" as="geometry" />
         </mxCell>
-
-        <!-- ==== OPENSTREETMAP ==== -->
-        <mxCell id="osmBox" value="&lt;b&gt;OpenStreetMap + Leaflet&lt;/b&gt;&lt;br/&gt;Map Tiles (CDN)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8eaf6;strokeColor=#3949ab;fontColor=#1a237e;fontSize=12;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="40" y="400" width="220" height="90" as="geometry" />
+        <mxCell id="osmBox" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8eaf6;strokeColor=#3949ab;fontColor=#1a237e;fontSize=12;fontStyle=1;" value="&lt;b&gt;OpenStreetMap + Leaflet&lt;/b&gt;&lt;br/&gt;Map Tiles (CDN)" vertex="1">
+          <mxGeometry height="90" width="220" x="40" y="400" as="geometry" />
         </mxCell>
-
-        <!-- ==== ARROWS ==== -->
-        <!-- Browser → Vercel -->
-        <mxCell id="c1" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#546e7a;strokeWidth=2;" edge="1" source="browser" target="vercelBox" parent="1">
+        <mxCell id="c1" edge="1" parent="1" source="browser" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#546e7a;strokeWidth=2;" target="vercelBox">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="c1l" value="HTTPS requests" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;" vertex="1" connectable="0" parent="c1">
-          <mxGeometry x="-0.1" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        <mxCell id="c1l" connectable="0" parent="c1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;" value="HTTPS requests" vertex="1">
+          <mxGeometry relative="1" x="-0.1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
         </mxCell>
-
-        <!-- Vercel → Supabase -->
-        <mxCell id="c2" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#c2185b;strokeWidth=2;" edge="1" source="vercelBox" target="supabaseBox" parent="1">
+        <mxCell id="c2" edge="1" parent="1" source="vercelBox" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#c2185b;strokeWidth=2;" target="supabaseBox">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="c2l" value="Supabase Client API" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#c2185b;" vertex="1" connectable="0" parent="c2">
-          <mxGeometry x="-0.1" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        <mxCell id="c2l" connectable="0" parent="c2" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#c2185b;" value="Supabase Client API" vertex="1">
+          <mxGeometry relative="1" x="-0.1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
         </mxCell>
-
-        <!-- Vercel → Groq -->
-        <mxCell id="c3" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#7b1fa2;strokeWidth=2;dashed=1;" edge="1" source="v4" target="groqBox" parent="1">
+        <mxCell id="c3" edge="1" parent="1" source="v4" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#7b1fa2;strokeWidth=2;dashed=1;" target="groqBox">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="c3l" value="HTTPS POST image&lt;br/&gt;(base64)" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#7b1fa2;" vertex="1" connectable="0" parent="c3">
-          <mxGeometry x="-0.1" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        <mxCell id="c3l" connectable="0" parent="c3" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#7b1fa2;" value="HTTPS POST image&lt;br/&gt;(base64)" vertex="1">
+          <mxGeometry relative="1" x="-0.1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
         </mxCell>
-
-        <!-- Vercel → Upstash -->
-        <mxCell id="c4" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#00695c;strokeWidth=2;dashed=1;" edge="1" source="v5" target="upstashBox" parent="1">
+        <mxCell id="c4" edge="1" parent="1" source="v5" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#00695c;strokeWidth=2;dashed=1;" target="upstashBox">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="c4l" value="Redis INCR check" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#00695c;" vertex="1" connectable="0" parent="c4">
-          <mxGeometry x="-0.1" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        <mxCell id="c4l" connectable="0" parent="c4" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#00695c;" value="Redis INCR check" vertex="1">
+          <mxGeometry relative="1" x="-0.1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
         </mxCell>
-
-        <!-- Browser → OSM -->
-        <mxCell id="c5" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#3949ab;strokeWidth=1.5;dashed=1;" edge="1" source="b1" target="osmBox" parent="1">
+        <mxCell id="c5" edge="1" parent="1" source="b1" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#3949ab;strokeWidth=1.5;dashed=1;" target="osmBox">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="c5l" value="Loads map tiles" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#3949ab;" vertex="1" connectable="0" parent="c5">
-          <mxGeometry x="-0.1" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        <mxCell id="c5l" connectable="0" parent="c5" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#3949ab;" value="Loads map tiles" vertex="1">
+          <mxGeometry relative="1" x="-0.1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
         </mxCell>
-
-        <!-- Supabase → Browser (Realtime) -->
-        <mxCell id="c6" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#c2185b;strokeWidth=1.5;dashed=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="s5" target="b1" parent="1">
+        <mxCell id="c6" edge="1" parent="1" source="s5" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#c2185b;strokeWidth=1.5;dashed=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="b1">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="680" y="435" />
@@ -577,207 +503,353 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="c6l" value="WebSocket push&lt;br/&gt;(realtime updates)" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#c2185b;" vertex="1" connectable="0" parent="c6">
-          <mxGeometry x="-0.3" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        <mxCell id="c6l" connectable="0" parent="c6" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#c2185b;" value="WebSocket push&lt;br/&gt;(realtime updates)" vertex="1">
+          <mxGeometry relative="1" x="-0.3" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
-
-  <!-- ========================================================== -->
-  <!-- PAGE 5: SEQUENCE DIAGRAM — Book a Vehicle                  -->
-  <!-- ========================================================== -->
   <diagram id="page5-seq1" name="5. Sequence: Book Vehicle">
-    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="2174" dy="972" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-
         <!-- Title -->
-        <mxCell id="t" value="Sequence Diagram: Book a Vehicle" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1;fontColor=#1a1a2e;" vertex="1" parent="1">
-          <mxGeometry x="300" y="20" width="1050" height="40" as="geometry" />
+        <mxCell id="t5" value="Sequence Diagram: Vehicle Catalog Search &amp; Reservation Booking (UML 2.5 Standard)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;fontColor=#0f172a;" vertex="1" parent="1">
+          <mxGeometry x="200" y="20" width="1250" height="40" as="geometry" />
+        </mxCell>
+        <!-- Lifeline Headers -->
+        <mxCell id="act_r" value="&lt;b&gt;renter: Renter&lt;/b&gt;&lt;br/&gt;[Customer Actor]" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#e8f5e9;strokeColor=#2e7d32;fontColor=#1b5e20;" vertex="1" parent="1">
+          <mxGeometry x="90" y="80" width="60" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="obj_ui" value="&lt;b&gt;:ClientApp&lt;/b&gt;&lt;br/&gt;[Web / Mobile UI]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e0f2fe;strokeColor=#0284c7;fontColor=#0369a1;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="270" y="95" width="130" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="obj_gw" value="&lt;b&gt;:APIGateway&lt;/b&gt;&lt;br/&gt;[Reverse Proxy &amp; WAF]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#d97706;fontColor=#b45309;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="470" y="95" width="130" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="obj_cat" value="&lt;b&gt;catalog: CatalogService&lt;/b&gt;&lt;br/&gt;[Fleet Query Engine]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ede9fe;strokeColor=#7c3aed;fontColor=#6d28d9;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="670" y="95" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="obj_book" value="&lt;b&gt;booking: BookingService&lt;/b&gt;&lt;br/&gt;[Reservation Manager]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#dc2626;fontColor=#b91c1c;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="880" y="95" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="obj_fin" value="&lt;b&gt;fin: FinancialService&lt;/b&gt;&lt;br/&gt;[Strategy Settlement]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffedd5;strokeColor=#ea580c;fontColor=#c2410c;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1090" y="95" width="130" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="obj_pay" value="&lt;b&gt;:PaymentGateway&lt;/b&gt;&lt;br/&gt;[Card Pre-Auth API]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#9333ea;fontColor=#7e22ce;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1280" y="95" width="130" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="obj_db" value="&lt;b&gt;db: RelationalDatabase&lt;/b&gt;&lt;br/&gt;[ACID Persistence Store]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#475569;fontColor=#334155;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1470" y="95" width="140" height="50" as="geometry" />
         </mxCell>
 
-        <!-- Participants -->
-        <mxCell id="pR" value="&lt;b&gt;Renter&lt;/b&gt;&lt;br/&gt;(Browser)" style="shape=mxgraph.uml.actor2;fillColor=#e8f5e9;strokeColor=#388e3c;fontColor=#1b5e20;fontStyle=1;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="80" y="80" width="80" height="90" as="geometry" />
+        <!-- Dashed Lifelines -->
+        <mxCell id="ll_r" style="edgeStyle=none;html=1;dashed=1;strokeColor=#94a3b8;endArrow=none;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="120" y="180" as="sourcePoint" /><mxPoint x="120" y="950" as="targetPoint" /></mxGeometry>
         </mxCell>
-        <mxCell id="pW" value="&lt;b&gt;Next.js&lt;/b&gt;&lt;br/&gt;(Vercel)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fffde7;strokeColor=#f9a825;fontColor=#f57f17;fontStyle=1;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="300" y="90" width="130" height="60" as="geometry" />
+        <mxCell id="ll_ui" style="edgeStyle=none;html=1;dashed=1;strokeColor=#94a3b8;endArrow=none;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="335" y="150" as="sourcePoint" /><mxPoint x="335" y="950" as="targetPoint" /></mxGeometry>
         </mxCell>
-        <mxCell id="pMW" value="&lt;b&gt;Middleware&lt;/b&gt;&lt;br/&gt;(Auth Check)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e0;strokeColor=#e65100;fontColor=#bf360c;fontStyle=1;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="510" y="90" width="130" height="60" as="geometry" />
+        <mxCell id="ll_gw" style="edgeStyle=none;html=1;dashed=1;strokeColor=#94a3b8;endArrow=none;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="535" y="150" as="sourcePoint" /><mxPoint x="535" y="950" as="targetPoint" /></mxGeometry>
         </mxCell>
-        <mxCell id="pAPI" value="&lt;b&gt;Booking API&lt;/b&gt;&lt;br/&gt;/api/bookings" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8f5e9;strokeColor=#388e3c;fontColor=#1b5e20;fontStyle=1;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="720" y="90" width="130" height="60" as="geometry" />
+        <mxCell id="ll_cat" style="edgeStyle=none;html=1;dashed=1;strokeColor=#94a3b8;endArrow=none;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="740" y="150" as="sourcePoint" /><mxPoint x="740" y="950" as="targetPoint" /></mxGeometry>
         </mxCell>
-        <mxCell id="pDB" value="&lt;b&gt;Supabase&lt;/b&gt;&lt;br/&gt;PostgreSQL" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fce4ec;strokeColor=#c2185b;fontColor=#880e4f;fontStyle=1;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="930" y="90" width="130" height="60" as="geometry" />
+        <mxCell id="ll_book" style="edgeStyle=none;html=1;dashed=1;strokeColor=#94a3b8;endArrow=none;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="950" y="150" as="sourcePoint" /><mxPoint x="950" y="950" as="targetPoint" /></mxGeometry>
         </mxCell>
-
-        <!-- Lifelines -->
-        <mxCell id="ll1" style="edgeStyle=none;html=1;strokeColor=#388e3c;strokeWidth=1;dashed=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;endArrow=none;startArrow=none;" edge="1" source="pR" target="pR" parent="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="120" y="175"/><mxPoint x="120" y="850"/></Array></mxGeometry>
+        <mxCell id="ll_fin" style="edgeStyle=none;html=1;dashed=1;strokeColor=#94a3b8;endArrow=none;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="1155" y="150" as="sourcePoint" /><mxPoint x="1155" y="950" as="targetPoint" /></mxGeometry>
         </mxCell>
-        <!-- Simplified lifelines as lines -->
-        <mxCell id="l1" style="edgeStyle=none;html=1;strokeColor=#777;dashed=1;strokeWidth=1;startArrow=none;endArrow=none;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="365" y="150"/><mxPoint x="365" y="850"/></Array></mxGeometry>
+        <mxCell id="ll_pay" style="edgeStyle=none;html=1;dashed=1;strokeColor=#94a3b8;endArrow=none;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="1345" y="150" as="sourcePoint" /><mxPoint x="1345" y="950" as="targetPoint" /></mxGeometry>
         </mxCell>
-        <mxCell id="l2" style="edgeStyle=none;html=1;strokeColor=#777;dashed=1;strokeWidth=1;startArrow=none;endArrow=none;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="575" y="150"/><mxPoint x="575" y="850"/></Array></mxGeometry>
-        </mxCell>
-        <mxCell id="l3" style="edgeStyle=none;html=1;strokeColor=#777;dashed=1;strokeWidth=1;startArrow=none;endArrow=none;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="785" y="150"/><mxPoint x="785" y="850"/></Array></mxGeometry>
-        </mxCell>
-        <mxCell id="l4" style="edgeStyle=none;html=1;strokeColor=#777;dashed=1;strokeWidth=1;startArrow=none;endArrow=none;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="995" y="150"/><mxPoint x="995" y="850"/></Array></mxGeometry>
+        <mxCell id="ll_db" style="edgeStyle=none;html=1;dashed=1;strokeColor=#94a3b8;endArrow=none;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="1540" y="150" as="sourcePoint" /><mxPoint x="1540" y="950" as="targetPoint" /></mxGeometry>
         </mxCell>
 
-        <!-- === Messages === -->
-        <!-- 1 -->
-        <mxCell id="msg1" value="1. GET /fleet (browse vehicles)" style="html=1;startArrow=none;endArrow=block;endFill=1;fontSize=11;strokeColor=#388e3c;fontColor=#1b5e20;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="120" y="200"/><mxPoint x="365" y="200"/></Array></mxGeometry>
+        <!-- Activation Bars -->
+        <mxCell id="act_ui_1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="328" y="190" width="14" height="140" as="geometry" />
         </mxCell>
-        <!-- 2 -->
-        <mxCell id="msg2" value="2. Check session cookie" style="html=1;startArrow=none;endArrow=block;endFill=1;fontSize=11;strokeColor=#e65100;fontColor=#bf360c;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="365" y="230"/><mxPoint x="575" y="230"/></Array></mxGeometry>
+        <mxCell id="act_gw_1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d97706;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="528" y="205" width="14" height="110" as="geometry" />
         </mxCell>
-        <!-- 3 -->
-        <mxCell id="msg3" value="3. Session valid → continue" style="html=1;startArrow=none;endArrow=block;endFill=1;fontSize=11;strokeColor=#e65100;fontColor=#bf360c;dashed=1;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="575" y="260"/><mxPoint x="365" y="260"/></Array></mxGeometry>
+        <mxCell id="act_cat_1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7c3aed;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="733" y="220" width="14" height="80" as="geometry" />
         </mxCell>
-        <!-- 4 -->
-        <mxCell id="msg4" value="4. Query: SELECT vehicles WHERE status=available" style="html=1;startArrow=none;endArrow=block;endFill=1;fontSize=11;strokeColor=#c2185b;fontColor=#880e4f;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="365" y="295"/><mxPoint x="995" y="295"/></Array></mxGeometry>
+        <mxCell id="act_db_1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#475569;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="1533" y="235" width="14" height="40" as="geometry" />
         </mxCell>
-        <!-- 5 -->
-        <mxCell id="msg5" value="5. Return vehicle list []" style="html=1;startArrow=none;endArrow=block;endFill=1;fontSize=11;strokeColor=#c2185b;fontColor=#880e4f;dashed=1;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="995" y="330"/><mxPoint x="365" y="330"/></Array></mxGeometry>
+
+        <!-- Search Call Flow -->
+        <mxCell id="m1" value="1: searchVehicles(category=&quot;SUV&quot;, dates, maxPrice=150)" style="html=1;verticalAlign=bottom;endArrow=block;strokeColor=#0284c7;fontColor=#0369a1;fontSize=10;fontStyle=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="120" y="195" as="sourcePoint" /><mxPoint x="328" y="195" as="targetPoint" /></mxGeometry>
         </mxCell>
-        <!-- 6 -->
-        <mxCell id="msg6" value="6. Render fleet page → browser" style="html=1;startArrow=none;endArrow=block;endFill=1;fontSize=11;strokeColor=#388e3c;fontColor=#1b5e20;dashed=1;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="365" y="360"/><mxPoint x="120" y="360"/></Array></mxGeometry>
+        <mxCell id="m2" value="2: GET /api/vehicles/search(queryFilters)" style="html=1;verticalAlign=bottom;endArrow=block;strokeColor=#d97706;fontColor=#b45309;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="342" y="210" as="sourcePoint" /><mxPoint x="528" y="210" as="targetPoint" /></mxGeometry>
         </mxCell>
-        <!-- 7 -->
-        <mxCell id="msg7" value="7. POST /api/bookings (vehicleId, startDate, endDate)" style="html=1;startArrow=none;endArrow=block;endFill=1;fontSize=11;strokeColor=#388e3c;fontColor=#1b5e20;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="120" y="410"/><mxPoint x="785" y="410"/></Array></mxGeometry>
+        <mxCell id="m3" value="3: queryAvailableFleet(filters)" style="html=1;verticalAlign=bottom;endArrow=block;strokeColor=#7c3aed;fontColor=#6d28d9;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="542" y="225" as="sourcePoint" /><mxPoint x="733" y="225" as="targetPoint" /></mxGeometry>
         </mxCell>
-        <!-- 8 -->
-        <mxCell id="msg8" value="8. Rate limit check (Upstash Redis)" style="html=1;startArrow=none;endArrow=block;endFill=1;fontSize=11;strokeColor=#e65100;fontColor=#bf360c;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="785" y="440"/><mxPoint x="575" y="440"/></Array></mxGeometry>
+        <mxCell id="m4" value="4: SELECT * FROM vehicles WHERE status='available' AND dates NOT RESERVED" style="html=1;verticalAlign=bottom;endArrow=block;strokeColor=#475569;fontColor=#334155;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="747" y="240" as="sourcePoint" /><mxPoint x="1533" y="240" as="targetPoint" /></mxGeometry>
         </mxCell>
-        <!-- 9 -->
-        <mxCell id="msg9" value="9. OK (within limit)" style="html=1;startArrow=none;endArrow=block;endFill=1;fontSize=11;strokeColor=#e65100;fontColor=#bf360c;dashed=1;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="575" y="470"/><mxPoint x="785" y="470"/></Array></mxGeometry>
+        <mxCell id="m5" value="5: return matchingVehiclesList" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;strokeColor=#475569;fontColor=#334155;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="1533" y="270" as="sourcePoint" /><mxPoint x="747" y="270" as="targetPoint" /></mxGeometry>
         </mxCell>
-        <!-- 10 -->
-        <mxCell id="msg10" value="10. Check vehicle availability (SELECT)" style="html=1;startArrow=none;endArrow=block;endFill=1;fontSize=11;strokeColor=#c2185b;fontColor=#880e4f;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="785" y="510"/><mxPoint x="995" y="510"/></Array></mxGeometry>
+        <mxCell id="m6" value="6: return filteredCatalogResults" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;strokeColor=#7c3aed;fontColor=#6d28d9;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="733" y="290" as="sourcePoint" /><mxPoint x="542" y="290" as="targetPoint" /></mxGeometry>
         </mxCell>
-        <!-- 11 -->
-        <mxCell id="msg11" value="11. Available → INSERT booking record" style="html=1;startArrow=none;endArrow=block;endFill=1;fontSize=11;strokeColor=#c2185b;fontColor=#880e4f;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="785" y="550"/><mxPoint x="995" y="550"/></Array></mxGeometry>
+        <mxCell id="m7" value="7: renderCatalog(matchingVehiclesList)" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;strokeColor=#d97706;fontColor=#b45309;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="528" y="310" as="sourcePoint" /><mxPoint x="342" y="310" as="targetPoint" /></mxGeometry>
         </mxCell>
-        <!-- 12 -->
-        <mxCell id="msg12" value="12. UPDATE vehicle status = 'rented'" style="html=1;startArrow=none;endArrow=block;endFill=1;fontSize=11;strokeColor=#c2185b;fontColor=#880e4f;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="785" y="590"/><mxPoint x="995" y="590"/></Array></mxGeometry>
+        <mxCell id="m8" value="8: displayAvailableVehicles()" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;strokeColor=#0284c7;fontColor=#0369a1;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="328" y="325" as="sourcePoint" /><mxPoint x="120" y="325" as="targetPoint" /></mxGeometry>
         </mxCell>
-        <!-- 13 -->
-        <mxCell id="msg13" value="13. Booking confirmed → 201" style="html=1;startArrow=none;endArrow=block;endFill=1;fontSize=11;strokeColor=#c2185b;fontColor=#880e4f;dashed=1;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="995" y="630"/><mxPoint x="785" y="630"/></Array></mxGeometry>
+
+        <!-- Phase 2: Booking Activation Bars -->
+        <mxCell id="act_ui_2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="328" y="360" width="14" height="520" as="geometry" />
         </mxCell>
-        <!-- 14 -->
-        <mxCell id="msg14" value="14. Redirect /dashboard → booking details" style="html=1;startArrow=none;endArrow=block;endFill=1;fontSize=11;strokeColor=#388e3c;fontColor=#1b5e20;dashed=1;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="785" y="670"/><mxPoint x="120" y="670"/></Array></mxGeometry>
+        <mxCell id="act_gw_2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d97706;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="528" y="375" width="14" height="490" as="geometry" />
+        </mxCell>
+        <mxCell id="act_book_2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#dc2626;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="943" y="390" width="14" height="460" as="geometry" />
+        </mxCell>
+
+        <mxCell id="m9" value="9: selectVehicleAndBook(vehicleId=&quot;veh_512&quot;, dates, paymentToken)" style="html=1;verticalAlign=bottom;endArrow=block;strokeColor=#0284c7;fontColor=#0369a1;fontSize=10;fontStyle=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="120" y="365" as="sourcePoint" /><mxPoint x="328" y="365" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m10" value="10: POST /api/rentals/book(bookingPayload)" style="html=1;verticalAlign=bottom;endArrow=block;strokeColor=#d97706;fontColor=#b45309;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="342" y="380" as="sourcePoint" /><mxPoint x="528" y="380" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m11" value="11: initiateReservation(renterId, vehicleId, dates)" style="html=1;verticalAlign=bottom;endArrow=block;strokeColor=#dc2626;fontColor=#b91c1c;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="542" y="395" as="sourcePoint" /><mxPoint x="943" y="395" as="targetPoint" /></mxGeometry>
+        </mxCell>
+
+        <mxCell id="m12" value="12: BEGIN TRANSACTION &amp; lockVehicleDates(vehicleId, dates)" style="html=1;verticalAlign=bottom;endArrow=block;strokeColor=#475569;fontColor=#334155;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="957" y="415" as="sourcePoint" /><mxPoint x="1533" y="415" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m13" value="13: return isAvailable (Row-level lock acquired)" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;strokeColor=#475569;fontColor=#334155;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="1533" y="435" as="sourcePoint" /><mxPoint x="957" y="435" as="targetPoint" /></mxGeometry>
+        </mxCell>
+
+        <!-- Outer Alt Frame: Availability -->
+        <mxCell id="frame_alt1" value="alt [Vehicle is Available for Selected Dates]" style="shape=umlFrame;whiteSpace=wrap;html=1;width=280;height=25;fillColor=none;strokeColor=#dc2626;strokeWidth=1.5;fontStyle=1;fontSize=10;fontColor=#dc2626;" vertex="1" parent="1">
+          <mxGeometry x="60" y="455" width="1520" height="435" as="geometry" />
+        </mxCell>
+
+        <mxCell id="act_fin_2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#ea580c;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="1148" y="470" width="14" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="m14" value="14: calculateTotalAndDeposit(vehicleId, durationDays=4)" style="html=1;verticalAlign=bottom;endArrow=block;strokeColor=#ea580c;fontColor=#c2410c;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="957" y="475" as="sourcePoint" /><mxPoint x="1148" y="475" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m15" value="15: return PricingSummary(subtotal=$600, depositAmount=$1000, total=$1600)" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;strokeColor=#ea580c;fontColor=#c2410c;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="1148" y="510" as="sourcePoint" /><mxPoint x="957" y="510" as="targetPoint" /></mxGeometry>
+        </mxCell>
+
+        <mxCell id="act_pay_2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9333ea;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="1338" y="530" width="14" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="m16" value="16: preAuthorizeDepositHold(paymentToken, amount=$1600)" style="html=1;verticalAlign=bottom;endArrow=block;strokeColor=#9333ea;fontColor=#7e22ce;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="957" y="535" as="sourcePoint" /><mxPoint x="1338" y="535" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m17" value="17: return AuthorizationResult(status=&quot;AUTHORIZED&quot;, holdRefToken=&quot;hold_8821&quot;)" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;strokeColor=#9333ea;fontColor=#7e22ce;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="1338" y="570" as="sourcePoint" /><mxPoint x="957" y="570" as="targetPoint" /></mxGeometry>
+        </mxCell>
+
+        <!-- Nested Alt Frame: Payment Result -->
+        <mxCell id="frame_alt2" value="alt [Payment Authorization SUCCESS]" style="shape=umlFrame;whiteSpace=wrap;html=1;width=250;height=22;fillColor=none;strokeColor=#16a34a;strokeWidth=1.2;fontStyle=1;fontSize=10;fontColor=#16a34a;" vertex="1" parent="1">
+          <mxGeometry x="80" y="590" width="1480" height="175" as="geometry" />
+        </mxCell>
+        <mxCell id="m18" value="18: insertRentalRecord(renterId, vehicleId, holdRefToken, status=&quot;PENDING_APPROVAL&quot;) &amp; COMMIT" style="html=1;verticalAlign=bottom;endArrow=block;strokeColor=#475569;fontColor=#334155;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="957" y="615" as="sourcePoint" /><mxPoint x="1533" y="615" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m19" value="19: return rentalId=&quot;rent_9481&quot;" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;strokeColor=#475569;fontColor=#334155;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="1533" y="640" as="sourcePoint" /><mxPoint x="957" y="640" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m20" value="20: return BookingConfirmation(rentalId, status=&quot;PENDING_APPROVAL&quot;)" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;strokeColor=#dc2626;fontColor=#b91c1c;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="943" y="665" as="sourcePoint" /><mxPoint x="542" y="665" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m21" value="21: return HTTP 201 Created" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;strokeColor=#d97706;fontColor=#b45309;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="528" y="685" as="sourcePoint" /><mxPoint x="342" y="685" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m22" value="22: displayBookingSuccess(&quot;Booking Confirmed — Awaiting Owner Approval&quot;)" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;strokeColor=#0284c7;fontColor=#0369a1;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="328" y="705" as="sourcePoint" /><mxPoint x="120" y="705" as="targetPoint" /></mxGeometry>
+        </mxCell>
+
+        <!-- Divider line for nested alt -->
+        <mxCell id="line_div_pay" value="[else Payment Authorization DECLINED]" style="line;strokeWidth=1;dashed=1;labelPosition=right;align=left;fontSize=10;fontColor=#b91c1c;strokeColor=#94a3b8;" vertex="1" parent="1">
+          <mxGeometry x="80" y="718" width="1480" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="m23" value="23: return PaymentError(status=402) --&gt; displayPaymentError()" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;strokeColor=#dc2626;fontColor=#b91c1c;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="943" y="745" as="sourcePoint" /><mxPoint x="120" y="745" as="targetPoint" /></mxGeometry>
+        </mxCell>
+
+        <!-- Divider line for outer alt -->
+        <mxCell id="line_div_avail" value="[else Vehicle Already Reserved (Schedule Conflict)]" style="line;strokeWidth=1.5;dashed=1;labelPosition=right;align=left;fontSize=10;fontColor=#b91c1c;strokeColor=#dc2626;" vertex="1" parent="1">
+          <mxGeometry x="60" y="780" width="1520" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="m24" value="24: ROLLBACK &amp; return ConflictError(status=409) --&gt; displayConflictAlert(&quot;Dates unavailable&quot;)" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;strokeColor=#b91c1c;fontColor=#b91c1c;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="943" y="825" as="sourcePoint" /><mxPoint x="120" y="825" as="targetPoint" /></mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
-
-  <!-- ========================================================== -->
-  <!-- PAGE 6: SEQUENCE DIAGRAM — AI Damage Scan                  -->
-  <!-- ========================================================== -->
   <diagram id="page6-seq2" name="6. Sequence: AI Damage Scan">
     <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-
         <!-- Title -->
-        <mxCell id="t" value="Sequence Diagram: AI Damage Scan" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1;fontColor=#1a1a2e;" vertex="1" parent="1">
-          <mxGeometry x="300" y="20" width="1050" height="40" as="geometry" />
+        <mxCell id="t6" value="Sequence Diagram: AI Vehicle Damage Inspection &amp; Assessment (UML 2.5 Standard)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;fontColor=#0f172a;" vertex="1" parent="1">
+          <mxGeometry x="200" y="20" width="1250" height="40" as="geometry" />
+        </mxCell>
+        <!-- Lifeline Headers -->
+        <mxCell id="act_r6" value="&lt;b&gt;renter: Renter&lt;/b&gt;&lt;br/&gt;[Customer Actor]" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#e8f5e9;strokeColor=#2e7d32;fontColor=#1b5e20;" vertex="1" parent="1">
+          <mxGeometry x="90" y="80" width="60" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="obj_ui6" value="&lt;b&gt;:ClientApp&lt;/b&gt;&lt;br/&gt;[Inspection UI]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e0f2fe;strokeColor=#0284c7;fontColor=#0369a1;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="290" y="95" width="130" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="obj_gw6" value="&lt;b&gt;:APIGateway&lt;/b&gt;&lt;br/&gt;[Reverse Proxy &amp; WAF]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#d97706;fontColor=#b45309;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="510" y="95" width="130" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="obj_insp6" value="&lt;b&gt;inspect: InspectionService&lt;/b&gt;&lt;br/&gt;[Inspection Orchestrator]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ede9fe;strokeColor=#7c3aed;fontColor=#6d28d9;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="730" y="95" width="150" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="obj_vault6" value="&lt;b&gt;vault: DocumentVault&lt;/b&gt;&lt;br/&gt;[Encrypted Object Vault]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#9333ea;fontColor=#7e22ce;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="960" y="95" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="obj_ai6" value="&lt;b&gt;aiEngine: ComputerVisionEngine&lt;/b&gt;&lt;br/&gt;[Accelerated Inference Node]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fdf4ff;strokeColor=#c026d3;fontColor=#a21caf;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1180" y="95" width="170" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="obj_db6" value="&lt;b&gt;db: RelationalDatabase&lt;/b&gt;&lt;br/&gt;[ACID Persistence Store]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#475569;fontColor=#334155;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1440" y="95" width="140" height="50" as="geometry" />
         </mxCell>
 
-        <!-- Participants -->
-        <mxCell id="pU" value="&lt;b&gt;User&lt;/b&gt;&lt;br/&gt;(Browser)" style="shape=mxgraph.uml.actor2;fillColor=#e8f5e9;strokeColor=#388e3c;fontColor=#1b5e20;fontStyle=1;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="80" y="80" width="80" height="90" as="geometry" />
+        <!-- Dashed Lifelines -->
+        <mxCell id="ll_r6" style="edgeStyle=none;html=1;dashed=1;strokeColor=#94a3b8;endArrow=none;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="120" y="180" as="sourcePoint" /><mxPoint x="120" y="920" as="targetPoint" /></mxGeometry>
         </mxCell>
-        <mxCell id="pDUI" value="&lt;b&gt;Damage Scanner UI&lt;/b&gt;&lt;br/&gt;/damage (page)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8eaf6;strokeColor=#3949ab;fontColor=#1a237e;fontStyle=1;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="260" y="90" width="150" height="60" as="geometry" />
+        <mxCell id="ll_ui6" style="edgeStyle=none;html=1;dashed=1;strokeColor=#94a3b8;endArrow=none;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="355" y="150" as="sourcePoint" /><mxPoint x="355" y="920" as="targetPoint" /></mxGeometry>
         </mxCell>
-        <mxCell id="pRL" value="&lt;b&gt;Rate Limiter MW&lt;/b&gt;&lt;br/&gt;Upstash Redis" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0f2f1;strokeColor=#00695c;fontColor=#004d40;fontStyle=1;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="480" y="90" width="150" height="60" as="geometry" />
+        <mxCell id="ll_gw6" style="edgeStyle=none;html=1;dashed=1;strokeColor=#94a3b8;endArrow=none;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="575" y="150" as="sourcePoint" /><mxPoint x="575" y="920" as="targetPoint" /></mxGeometry>
         </mxCell>
-        <mxCell id="pDAI" value="&lt;b&gt;AI Damage API&lt;/b&gt;&lt;br/&gt;/api/ai/damage" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e5f5;strokeColor=#7b1fa2;fontColor=#4a148c;fontStyle=1;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="700" y="90" width="150" height="60" as="geometry" />
+        <mxCell id="ll_insp6" style="edgeStyle=none;html=1;dashed=1;strokeColor=#94a3b8;endArrow=none;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="805" y="150" as="sourcePoint" /><mxPoint x="805" y="920" as="targetPoint" /></mxGeometry>
         </mxCell>
-        <mxCell id="pGA" value="&lt;b&gt;Groq AI API&lt;/b&gt;&lt;br/&gt;LLaMA 3.2 Vision" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e5f5;strokeColor=#7b1fa2;fontColor=#4a148c;fontStyle=1;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="930" y="90" width="150" height="60" as="geometry" />
+        <mxCell id="ll_vault6" style="edgeStyle=none;html=1;dashed=1;strokeColor=#94a3b8;endArrow=none;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="1030" y="150" as="sourcePoint" /><mxPoint x="1030" y="920" as="targetPoint" /></mxGeometry>
         </mxCell>
-
-        <!-- Lifelines -->
-        <mxCell id="l0" style="edgeStyle=none;html=1;strokeColor=#777;dashed=1;strokeWidth=1;startArrow=none;endArrow=none;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="120" y="170"/><mxPoint x="120" y="800"/></Array></mxGeometry>
+        <mxCell id="ll_ai6" style="edgeStyle=none;html=1;dashed=1;strokeColor=#94a3b8;endArrow=none;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="1265" y="150" as="sourcePoint" /><mxPoint x="1265" y="920" as="targetPoint" /></mxGeometry>
         </mxCell>
-        <mxCell id="l1" style="edgeStyle=none;html=1;strokeColor=#777;dashed=1;strokeWidth=1;startArrow=none;endArrow=none;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="335" y="150"/><mxPoint x="335" y="800"/></Array></mxGeometry>
-        </mxCell>
-        <mxCell id="l2" style="edgeStyle=none;html=1;strokeColor=#777;dashed=1;strokeWidth=1;startArrow=none;endArrow=none;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="555" y="150"/><mxPoint x="555" y="800"/></Array></mxGeometry>
-        </mxCell>
-        <mxCell id="l3" style="edgeStyle=none;html=1;strokeColor=#777;dashed=1;strokeWidth=1;startArrow=none;endArrow=none;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="775" y="150"/><mxPoint x="775" y="800"/></Array></mxGeometry>
-        </mxCell>
-        <mxCell id="l4" style="edgeStyle=none;html=1;strokeColor=#777;dashed=1;strokeWidth=1;startArrow=none;endArrow=none;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1005" y="150"/><mxPoint x="1005" y="800"/></Array></mxGeometry>
+        <mxCell id="ll_db6" style="edgeStyle=none;html=1;dashed=1;strokeColor=#94a3b8;endArrow=none;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="1510" y="150" as="sourcePoint" /><mxPoint x="1510" y="920" as="targetPoint" /></mxGeometry>
         </mxCell>
 
-        <!-- Messages -->
-        <mxCell id="m1" value="1. Upload car photo (drag &amp; drop)" style="html=1;startArrow=none;endArrow=block;endFill=1;fontSize=11;strokeColor=#388e3c;fontColor=#1b5e20;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="120" y="200"/><mxPoint x="335" y="200"/></Array></mxGeometry>
+        <!-- Activation Bars -->
+        <mxCell id="act_ui6" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0284c7;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="348" y="190" width="14" height="690" as="geometry" />
         </mxCell>
-        <mxCell id="m2" value="2. POST /api/ai/damage (FormData: image)" style="html=1;startArrow=none;endArrow=block;endFill=1;fontSize=11;strokeColor=#3949ab;fontColor=#1a237e;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="335" y="240"/><mxPoint x="775" y="240"/></Array></mxGeometry>
+        <mxCell id="act_gw6" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d97706;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="568" y="210" width="14" height="650" as="geometry" />
         </mxCell>
-        <mxCell id="m3" value="3. Rate limit check (IP identifier)" style="html=1;startArrow=none;endArrow=block;endFill=1;fontSize=11;strokeColor=#00695c;fontColor=#004d40;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="775" y="275"/><mxPoint x="555" y="275"/></Array></mxGeometry>
+        <mxCell id="act_insp6" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7c3aed;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="798" y="230" width="14" height="610" as="geometry" />
         </mxCell>
-        <mxCell id="m4" value="4. Under limit → allow" style="html=1;startArrow=none;endArrow=block;endFill=1;fontSize=11;strokeColor=#00695c;fontColor=#004d40;dashed=1;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="555" y="310"/><mxPoint x="775" y="310"/></Array></mxGeometry>
+
+        <!-- Initial Submit -->
+        <mxCell id="m6_1" value="1: submitReturnPhotos(rentalId=&quot;rent_9481&quot;, photos[6])" style="html=1;verticalAlign=bottom;endArrow=block;strokeColor=#0284c7;fontColor=#0369a1;fontSize=10;fontStyle=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="120" y="195" as="sourcePoint" /><mxPoint x="348" y="195" as="targetPoint" /></mxGeometry>
         </mxCell>
-        <mxCell id="m5" value="5. Convert image → base64" style="html=1;startArrow=none;endArrow=none;fontSize=11;strokeColor=#7b1fa2;fontColor=#4a148c;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="720" y="345"/><mxPoint x="830" y="345"/></Array></mxGeometry>
+        <mxCell id="m6_2" value="2: POST /api/rentals/rent_9481/inspection(multipartStream)" style="html=1;verticalAlign=bottom;endArrow=block;strokeColor=#d97706;fontColor=#b45309;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="362" y="215" as="sourcePoint" /><mxPoint x="568" y="215" as="targetPoint" /></mxGeometry>
         </mxCell>
-        <mxCell id="m6" value="6. POST to Groq API (base64, prompt)" style="html=1;startArrow=none;endArrow=block;endFill=1;fontSize=11;strokeColor=#7b1fa2;fontColor=#4a148c;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="775" y="385"/><mxPoint x="1005" y="385"/></Array></mxGeometry>
+        <mxCell id="m6_3" value="3: processInspectionImages(rentalId, photos[6])" style="html=1;verticalAlign=bottom;endArrow=block;strokeColor=#7c3aed;fontColor=#6d28d9;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="582" y="235" as="sourcePoint" /><mxPoint x="798" y="235" as="targetPoint" /></mxGeometry>
         </mxCell>
-        <mxCell id="m7" value="7. LLaMA analyzes image" style="html=1;startArrow=none;endArrow=none;fontSize=11;strokeColor=#7b1fa2;fontColor=#4a148c;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="950" y="425"/><mxPoint x="1060" y="425"/></Array></mxGeometry>
+
+        <!-- Loop Frame: 6 Angles -->
+        <mxCell id="frame_loop6" value="loop [For Each of 6 Vehicle Angles (Front, Rear, Left, Right, Interior, Roof)]" style="shape=umlFrame;whiteSpace=wrap;html=1;width=420;height=22;fillColor=none;strokeColor=#9333ea;strokeWidth=1.2;fontStyle=1;fontSize=10;fontColor=#9333ea;" vertex="1" parent="1">
+          <mxGeometry x="760" y="260" width="320" height="100" as="geometry" />
         </mxCell>
-        <mxCell id="m8" value="8. Return JSON {severity, zones, cost_egp}" style="html=1;startArrow=none;endArrow=block;endFill=1;fontSize=11;strokeColor=#7b1fa2;fontColor=#4a148c;dashed=1;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1005" y="465"/><mxPoint x="775" y="465"/></Array></mxGeometry>
+        <mxCell id="act_vault6" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9333ea;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="1023" y="285" width="14" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="m9" value="9. Parse &amp; validate JSON response" style="html=1;startArrow=none;endArrow=none;fontSize=11;strokeColor=#7b1fa2;fontColor=#4a148c;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="720" y="505"/><mxPoint x="830" y="505"/></Array></mxGeometry>
+        <mxCell id="m6_4" value="4: storeReturnPhoto(imageFile, angleTag)" style="html=1;verticalAlign=bottom;endArrow=block;strokeColor=#9333ea;fontColor=#7e22ce;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="812" y="295" as="sourcePoint" /><mxPoint x="1023" y="295" as="targetPoint" /></mxGeometry>
         </mxCell>
-        <mxCell id="m10" value="10. 200 OK {damage report JSON}" style="html=1;startArrow=none;endArrow=block;endFill=1;fontSize=11;strokeColor=#3949ab;fontColor=#1a237e;dashed=1;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="775" y="545"/><mxPoint x="335" y="545"/></Array></mxGeometry>
+        <mxCell id="m6_5" value="5: return storageURL" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;strokeColor=#9333ea;fontColor=#7e22ce;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="1023" y="330" as="sourcePoint" /><mxPoint x="812" y="330" as="targetPoint" /></mxGeometry>
         </mxCell>
-        <mxCell id="m11" value="11. Render damage card&lt;br/&gt;(zones, severity badge, repair cost EGP)" style="html=1;startArrow=none;endArrow=block;endFill=1;fontSize=11;strokeColor=#388e3c;fontColor=#1b5e20;dashed=1;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="335" y="590"/><mxPoint x="120" y="590"/></Array></mxGeometry>
+
+        <!-- Fetch Baseline Photos -->
+        <mxCell id="act_db6_1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#475569;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="1503" y="375" width="14" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="m6_6" value="6: fetchBaselinePhotos(vehicleId)" style="html=1;verticalAlign=bottom;endArrow=block;strokeColor=#475569;fontColor=#334155;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="812" y="380" as="sourcePoint" /><mxPoint x="1503" y="380" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m6_7" value="7: return baselinePhotoURLs" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;strokeColor=#475569;fontColor=#334155;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="1503" y="405" as="sourcePoint" /><mxPoint x="812" y="405" as="targetPoint" /></mxGeometry>
+        </mxCell>
+
+        <!-- AI Engine Inference -->
+        <mxCell id="act_ai6" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#c026d3;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="1258" y="430" width="14" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="m6_8" value="8: runComparativeDamageInference(baselineURLs, returnURLs)" style="html=1;verticalAlign=bottom;endArrow=block;strokeColor=#c026d3;fontColor=#a21caf;fontSize=10;fontStyle=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="812" y="435" as="sourcePoint" /><mxPoint x="1258" y="435" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m6_self1" value="9: detectSurfaceAnomalies()" style="html=1;verticalAlign=bottom;endArrow=block;strokeColor=#c026d3;fontColor=#a21caf;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="1272" y="465" as="sourcePoint" /><mxPoint x="1272" y="490" as="targetPoint" /><Array as="points"><mxPoint x="1315" y="465" /><mxPoint x="1315" y="490" /></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="m6_self2" value="10: computeRepairEstimate(vehicleMake, damagedZones)" style="html=1;verticalAlign=bottom;endArrow=block;strokeColor=#c026d3;fontColor=#a21caf;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="1272" y="515" as="sourcePoint" /><mxPoint x="1272" y="540" as="targetPoint" /><Array as="points"><mxPoint x="1315" y="515" /><mxPoint x="1315" y="540" /></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="m6_9" value="11: return DamageAssessment(zones=[&quot;Front Bumper&quot;], severity=&quot;MINOR&quot;, cost=120, conf=0.94)" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;strokeColor=#c026d3;fontColor=#a21caf;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="1258" y="575" as="sourcePoint" /><mxPoint x="812" y="575" as="targetPoint" /></mxGeometry>
+        </mxCell>
+
+        <!-- Alt Frame: Damage Detected vs Clean Return -->
+        <mxCell id="frame_alt6" value="alt [Damage Detected (Repair Cost &gt; 0)]" style="shape=umlFrame;whiteSpace=wrap;html=1;width=250;height=22;fillColor=none;strokeColor=#dc2626;strokeWidth=1.5;fontStyle=1;fontSize=10;fontColor=#dc2626;" vertex="1" parent="1">
+          <mxGeometry x="60" y="600" width="1500" height="290" as="geometry" />
+        </mxCell>
+        <mxCell id="m6_12" value="12: insertDamageReport(rentalId, severity=&quot;MINOR&quot;, repairCost=120, zones)" style="html=1;verticalAlign=bottom;endArrow=block;strokeColor=#475569;fontColor=#334155;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="812" y="625" as="sourcePoint" /><mxPoint x="1503" y="625" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m6_13" value="13: return reportId=&quot;dmg_4421&quot;" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;strokeColor=#475569;fontColor=#334155;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="1503" y="650" as="sourcePoint" /><mxPoint x="812" y="650" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m6_14" value="14: return DamageReportResponse(reportId, severity=&quot;MINOR&quot;, cost=120, zones)" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;strokeColor=#7c3aed;fontColor=#6d28d9;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="798" y="675" as="sourcePoint" /><mxPoint x="582" y="675" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m6_15" value="15: return HTTP 200 OK (Damage Identified)" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;strokeColor=#d97706;fontColor=#b45309;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="568" y="695" as="sourcePoint" /><mxPoint x="362" y="695" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m6_16" value="16: displayDamageAssessment(zones, repairCost=&quot;$120.00&quot;, annotatedImages)" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;strokeColor=#0284c7;fontColor=#0369a1;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="348" y="715" as="sourcePoint" /><mxPoint x="120" y="715" as="targetPoint" /></mxGeometry>
+        </mxCell>
+
+        <!-- Divider line for Alt -->
+        <mxCell id="line_div_clean" value="[else No Damage Detected (Clean Return)]" style="line;strokeWidth=1.5;dashed=1;labelPosition=right;align=left;fontSize=10;fontColor=#16a34a;strokeColor=#16a34a;" vertex="1" parent="1">
+          <mxGeometry x="60" y="740" width="1500" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="m6_17" value="17: insertDamageReport(rentalId, severity=&quot;NONE&quot;, repairCost=0) &amp; return CleanReturnConfirmation()" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;strokeColor=#16a34a;fontColor=#15803d;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="812" y="780" as="sourcePoint" /><mxPoint x="120" y="780" as="targetPoint" /></mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
-
 </mxfile>

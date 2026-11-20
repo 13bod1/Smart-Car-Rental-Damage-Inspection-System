@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Car Rental — Architecture Visual Board (Phase 1 &amp; 2)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    body { background: #060b18; color: #e2e8f0; font-family: system-ui, sans-serif; }
+    .card { background: #0d1526; border: 1px solid #1e2d45; border-radius: 1rem; }
+    .tab-btn { transition: all 0.2s; }
+    .tab-btn.active { background: #2563eb; color: #fff; border-color: #3b82f6; }
+    .tab-btn:not(.active):hover { background: #1e293b; }
+    .mermaid-wrap { background: #030712; border: 1px solid #1e2d45; border-radius: 0.75rem; overflow-x: auto; padding: 1.5rem; min-height: 200px; }
+    .mermaid { display: block; }
+    .badge { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; border-radius: 4px; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+<!-- ══════════ HEADER ══════════ -->
+<header class="bg-slate-900 border-b border-slate-800 px-6 py-4 sticky top-0 z-50 shadow-xl">
+  <div class="max-w-screen-2xl mx-auto flex flex-wrap justify-between items-center gap-3">
+    <div>
+      <div class="flex items-center gap-2 flex-wrap">
+        <span class="badge bg-amber-500/20 text-amber-400 border border-amber-500/30">AASTMT · Software Architecture</span>
+        <span class="badge bg-blue-500/20 text-blue-400 border border-blue-500/30">ADD v3.0 · SEI Methodology</span>
+      </div>
+      <h1 class="text-xl font-black text-white mt-1">🚗 Smart Car Rental Platform — Architecture Visual Board</h1>
+      <p class="text-xs text-slate-400">Phase 1 (Requirements) + Phase 2 (ADD Architecture Design) · All Diagrams</p>
+    </div>
+    <div class="flex gap-2 flex-wrap text-xs">
+      <a href="SMART_CAR_RENTAL_COMPLETE_ARCHITECTURE_DOCUMENT.md" target="_blank" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 font-semibold rounded-lg border border-slate-700">📄 Full Document</a>
+      <a href="Smart_Car_Rental_Architecture.drawio" target="_blank" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 font-semibold rounded-lg border border-slate-700">🗂️ Draw.io File</a>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════ TAB BAR ══════════ -->
+<nav class="bg-slate-950 border-b border-slate-800 px-4 py-2 overflow-x-auto">
+  <div class="flex gap-1.5 min-w-max">
+    <button onclick="show('context')"  id="btn-context"     class="tab-btn active px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-700">① System Context</button>
+    <button onclick="show('uses')"     id="btn-uses"        class="tab-btn px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-700">② Module Uses</button>
+    <button onclick="show('class')"    id="btn-class"       class="tab-btn px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-700">③ Class Diagram</button>
+    <button onclick="show('cc')"       id="btn-cc"          class="tab-btn px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-700">④ C&amp;C + Deployment</button>
+    <button onclick="show('seq-kyc')"  id="btn-seq-kyc"     class="tab-btn px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-700">⑤ Seq: KYC</button>
+    <button onclick="show('seq-book')" id="btn-seq-book"    class="tab-btn px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-700">⑥ Seq: Book Vehicle</button>
+    <button onclick="show('seq-ai')"   id="btn-seq-ai"      class="tab-btn px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-700">⑦ Seq: AI Damage</button>
+    <button onclick="show('seq-enr')"  id="btn-seq-enr"     class="tab-btn px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-700">⑧ Seq: Fleet Enroll</button>
+    <button onclick="show('seq-ret')"  id="btn-seq-ret"     class="tab-btn px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-700">⑨ Seq: Return &amp; Settle</button>
+  </div>
+</nav>
+
+<!-- ══════════ MAIN ══════════ -->
+<main class="flex-1 max-w-screen-2xl mx-auto w-full p-5 space-y-4">
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<!-- VIEW 1 · SYSTEM CONTEXT                               -->
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<section id="view-context" class="space-y-4">
+  <div class="card p-5">
+    <div class="flex justify-between items-start mb-3 pb-3 border-b border-slate-800">
+      <div>
+        <span class="badge bg-amber-500/20 text-amber-400 border border-amber-500/30">Required Output #1</span>
+        <h2 class="text-lg font-bold text-white mt-1">System Context Diagram</h2>
+        <p class="text-xs text-slate-400 mt-0.5">Shows the system boundary, all human actors, all external services, and every directional data flow crossing the boundary.</p>
+      </div>
+      <button onclick="copyDiagram('d-context')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded border border-slate-700 text-slate-300 ml-4 shrink-0">📋 Copy Mermaid</button>
+    </div>
+    <div class="mermaid-wrap">
+      <div class="mermaid" id="d-context">
+flowchart LR
+    R(["👤 RENTER\n(Customer)"])
+    O(["👤 FLEET OWNER"])
+    AD(["👤 ADMIN"])
+
+    subgraph SYS [" ━━━━━  Smart Car Rental Platform  ━━━━━ "]
+        C["🚗 Core System\n──────────────────────\n• Booking Engine\n• AI Damage Inspector\n• KYC Verification Module\n• Payment Settlement Engine\n• Fleet Catalog & Search\n• Notification Hub"]
+    end
+
+    KYC["🏛️ KYC Authority\n(ID + License Validation)"]
+    PAY["💳 Payment Gateway\n(Capture · Hold · Refund)"]
+    SMS["📱 Notification Service\n(SMS + Push Alerts)"]
+    MAP["🗺️ Geospatial API\n(Maps + Route Planning)"]
+    INS["🛡️ Insurance API\n(Vehicle Valuation)"]
+
+    R -- "① Register / Login" --> C
+    R -- "② Search Vehicles + Apply Filters" --> C
+    R -- "③ Book Vehicle + Pay Deposit" --> C
+    R -- "④ Upload Return Inspection Photos" --> C
+    C -- "⑤ Vehicle Catalog Results" --> R
+    C -- "⑥ Booking Confirmation + Receipt" --> R
+    C -- "⑦ Damage Report + Deposit Decision" --> R
+
+    O -- "⑧ Enroll Vehicle + Upload Baseline Photos" --> C
+    O -- "⑨ Approve or Reject Booking Request" --> C
+    C -- "⑩ Incoming Booking Requests" --> O
+    C -- "⑪ Fleet Payout + Inspection Summary" --> O
+
+    AD -- "⑫ Manage Users / Override KYC / System Config" --> C
+    C -- "⑬ Audit Logs / System Metrics / Alerts" --> AD
+
+    C -- "⑭ Verify National ID + Driver License" --> KYC
+    KYC -- "⑮ Verification Status: Valid or Invalid" --> C
+
+    C -- "⑯ Pre-Auth Deposit Hold + Capture Payment" --> PAY
+    PAY -- "⑰ Authorization Token + Settlement Receipt" --> C
+
+    C -- "⑱ Send Booking SMS / OTP / Return Alert" --> SMS
+
+    C -- "⑲ Pickup Coordinates + Route Query" --> MAP
+    MAP -- "⑳ Distance Matrix + Map Tile Data" --> C
+
+    C -- "㉑ VIN + Plate Number Lookup" --> INS
+    INS -- "㉒ Market Valuation + Coverage Status" --> C
+
+    style C    fill:#0a1628,stroke:#3b82f6,stroke-width:3px,color:#f1f5f9
+    style R    fill:#052e16,stroke:#22c55e,stroke-width:2px,color:#f1f5f9
+    style O    fill:#172554,stroke:#60a5fa,stroke-width:2px,color:#f1f5f9
+    style AD   fill:#431407,stroke:#fb923c,stroke-width:2px,color:#f1f5f9
+    style KYC  fill:#1e1b4b,stroke:#818cf8,stroke-width:2px,color:#e2e8f0
+    style PAY  fill:#1c1917,stroke:#fbbf24,stroke-width:2px,color:#e2e8f0
+    style SMS  fill:#0c4a6e,stroke:#38bdf8,stroke-width:2px,color:#e2e8f0
+    style MAP  fill:#14532d,stroke:#4ade80,stroke-width:2px,color:#e2e8f0
+    style INS  fill:#500724,stroke:#fb7185,stroke-width:2px,color:#e2e8f0
+      </div>
+    </div>
+    <!-- Legend -->
+    <div class="mt-4 grid grid-cols-2 md:grid-cols-5 gap-2 text-xs">
+      <div class="flex items-center gap-2 p-2 rounded bg-green-950/40 border border-green-900/40"><span class="w-3 h-3 rounded-full bg-green-500 shrink-0"></span>Renter (Customer)</div>
+      <div class="flex items-center gap-2 p-2 rounded bg-blue-950/40 border border-blue-900/40"><span class="w-3 h-3 rounded-full bg-blue-400 shrink-0"></span>Fleet Owner</div>
+      <div class="flex items-center gap-2 p-2 rounded bg-orange-950/40 border border-orange-900/40"><span class="w-3 h-3 rounded-full bg-orange-400 shrink-0"></span>System Admin</div>
+      <div class="flex items-center gap-2 p-2 rounded bg-slate-950/40 border border-slate-700"><span class="w-3 h-3 rounded-full bg-blue-600 shrink-0"></span>Core System (Boundary)</div>
+      <div class="flex items-center gap-2 p-2 rounded bg-slate-950/40 border border-slate-700"><span class="w-3 h-3 rounded-full bg-purple-400 shrink-0"></span>External Services</div>
+    </div>
+  </div>
+  <!-- Data Flow Reference Table -->
+  <div class="card p-5">
+    <h3 class="text-sm font-bold text-slate-300 mb-3">Data Flow Reference Table</h3>
+    <div class="overflow-x-auto">
+      <table class="w-full text-xs border-collapse">
+        <thead><tr class="bg-slate-800 text-slate-300"><th class="p-2 text-left border border-slate-700">Flow #</th><th class="p-2 text-left border border-slate-700">From</th><th class="p-2 text-left border border-slate-700">To</th><th class="p-2 text-left border border-slate-700">Data / Purpose</th></tr></thead>
+        <tbody class="text-slate-400">
+          <tr class="border-b border-slate-800"><td class="p-2 border border-slate-700">①–④</td><td class="p-2 border border-slate-700">Renter</td><td class="p-2 border border-slate-700">Core System</td><td class="p-2 border border-slate-700">Credentials, search filters, booking request, inspection photos</td></tr>
+          <tr class="border-b border-slate-800"><td class="p-2 border border-slate-700">⑤–⑦</td><td class="p-2 border border-slate-700">Core System</td><td class="p-2 border border-slate-700">Renter</td><td class="p-2 border border-slate-700">Vehicle catalog, booking confirmation, damage report + deposit decision</td></tr>
+          <tr class="border-b border-slate-800"><td class="p-2 border border-slate-700">⑧–⑨</td><td class="p-2 border border-slate-700">Fleet Owner</td><td class="p-2 border border-slate-700">Core System</td><td class="p-2 border border-slate-700">Vehicle enrollment data, baseline photos, booking approval decisions</td></tr>
+          <tr class="border-b border-slate-800"><td class="p-2 border border-slate-700">⑩–⑪</td><td class="p-2 border border-slate-700">Core System</td><td class="p-2 border border-slate-700">Fleet Owner</td><td class="p-2 border border-slate-700">New booking requests, fleet payouts, inspection summaries</td></tr>
+          <tr class="border-b border-slate-800"><td class="p-2 border border-slate-700">⑫</td><td class="p-2 border border-slate-700">Admin</td><td class="p-2 border border-slate-700">Core System</td><td class="p-2 border border-slate-700">User management, KYC overrides, system configuration</td></tr>
+          <tr class="border-b border-slate-800"><td class="p-2 border border-slate-700">⑬</td><td class="p-2 border border-slate-700">Core System</td><td class="p-2 border border-slate-700">Admin</td><td class="p-2 border border-slate-700">Operational metrics, audit logs, security alerts</td></tr>
+          <tr class="border-b border-slate-800"><td class="p-2 border border-slate-700">⑭–⑮</td><td class="p-2 border border-slate-700">Core ↔ KYC</td><td class="p-2 border border-slate-700">KYC Authority</td><td class="p-2 border border-slate-700">ID + license verification request → validation status response</td></tr>
+          <tr class="border-b border-slate-800"><td class="p-2 border border-slate-700">⑯–⑰</td><td class="p-2 border border-slate-700">Core ↔ Pay</td><td class="p-2 border border-slate-700">Payment Gateway</td><td class="p-2 border border-slate-700">Pre-auth hold, payment capture → authorization token, settlement receipt</td></tr>
+          <tr class="border-b border-slate-800"><td class="p-2 border border-slate-700">⑱</td><td class="p-2 border border-slate-700">Core System</td><td class="p-2 border border-slate-700">SMS Service</td><td class="p-2 border border-slate-700">Booking alerts, OTP codes, return reminders</td></tr>
+          <tr class="border-b border-slate-800"><td class="p-2 border border-slate-700">⑲–⑳</td><td class="p-2 border border-slate-700">Core ↔ Map</td><td class="p-2 border border-slate-700">Geospatial API</td><td class="p-2 border border-slate-700">Pickup coordinates, route queries → distance matrix, map tiles</td></tr>
+          <tr><td class="p-2 border border-slate-700">㉑–㉒</td><td class="p-2 border border-slate-700">Core ↔ Ins</td><td class="p-2 border border-slate-700">Insurance API</td><td class="p-2 border border-slate-700">VIN + plate lookup → market valuation, insurance coverage status</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<!-- VIEW 2 · MODULE USES DIAGRAM                          -->
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<section id="view-uses" class="space-y-4 hidden">
+  <div class="card p-5">
+    <div class="flex justify-between items-start mb-3 pb-3 border-b border-slate-800">
+      <div>
+        <span class="badge bg-sky-500/20 text-sky-400 border border-sky-500/30">Required Output #2 — Part A</span>
+        <h2 class="text-lg font-bold text-white mt-1">Module Structure: Uses Diagram (Layered Dependencies)</h2>
+        <p class="text-xs text-slate-400 mt-0.5">Arrow A → B means "Module A uses Module B". All arrows flow strictly downward — acyclic layered architecture (satisfies ASR-05 Modifiability).</p>
+      </div>
+      <button onclick="copyDiagram('d-uses')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded border border-slate-700 text-slate-300 ml-4 shrink-0">📋 Copy Mermaid</button>
+    </div>
+    <div class="mermaid-wrap">
+      <div class="mermaid" id="d-uses">
+flowchart TD
+    subgraph L1 ["LAYER 1 — Presentation &amp; Client"]
+        UI["🖥️ Web Client Interface Module"]
+        ST["🔄 Client State &amp; Form Validation Module"]
+    end
+    subgraph L2 ["LAYER 2 — API Ingress &amp; Gateway Control"]
+        RT["🚦 API Router &amp; Ingress Controller"]
+        AU["🛡️ Auth &amp; Authorization Guard Middleware"]
+        SN["🧹 Input Schema Validator &amp; Sanitizer"]
+    end
+    subgraph L3 ["LAYER 3 — Application Service Modules"]
+        US["👤 User &amp; KYC Service"]
+        CS["🚗 Vehicle Catalog &amp; Search Service"]
+        BS["📅 Booking &amp; Contract Service"]
+        DS["🔍 Damage Inspection &amp; AI Service"]
+        FS["💰 Financial Settlement Service"]
+        NS["🔔 Notification Dispatcher Service"]
+    end
+    subgraph L4 ["LAYER 4 — Domain Core &amp; Business Rules"]
+        DM["📦 Core Domain Entities\n(User · Vehicle · Rental · DamageReport)"]
+        SP["⚖️ Deposit Strategy Pattern\n(Full · Partial · Confiscate)"]
+        DC["📐 Damage Zone Cost Calculator"]
+    end
+    subgraph L5 ["LAYER 5 — Data Access &amp; External Adapters"]
+        RR["🗄️ Persistence Repository\n(CRUD &amp; Transactions)"]
+        OV["📁 Object Storage Adapter\n(Photos &amp; KYC Docs)"]
+        PA["💳 Payment Gateway Client Adapter"]
+        SA["📱 Notification Client Adapter"]
+    end
+
+    UI --> ST
+    ST --> RT
+    RT --> AU
+    RT --> SN
+    RT --> US
+    RT --> CS
+    RT --> BS
+    RT --> DS
+    RT --> FS
+
+    US --> DM
+    US --> RR
+    US --> OV
+
+    CS --> DM
+    CS --> RR
+
+    BS --> DM
+    BS --> RR
+    BS --> FS
+    BS --> NS
+
+    DS --> DM
+    DS --> DC
+    DS --> OV
+    DS --> RR
+
+    FS --> DM
+    FS --> SP
+    FS --> PA
+    FS --> RR
+
+    NS --> SA
+
+    RR --> DM
+    SP --> DM
+    DC --> DM
+
+    style L1 fill:#0d1f3c,stroke:#3b82f6
+    style L2 fill:#1a1a3e,stroke:#818cf8
+    style L3 fill:#0d2d1a,stroke:#22c55e
+    style L4 fill:#2d1a0d,stroke:#fb923c
+    style L5 fill:#2d0d1a,stroke:#f43f5e
+      </div>
+    </div>
+    <div class="mt-4 overflow-x-auto">
+      <table class="w-full text-xs border-collapse">
+        <thead><tr class="bg-slate-800 text-slate-300"><th class="p-2 text-left border border-slate-700">Layer</th><th class="p-2 text-left border border-slate-700">Modules</th><th class="p-2 text-left border border-slate-700">Responsibility</th></tr></thead>
+        <tbody class="text-slate-400">
+          <tr class="border-b border-slate-800"><td class="p-2 border border-slate-700 font-semibold text-blue-400">1 — Presentation</td><td class="p-2 border border-slate-700">Web Client, State &amp; Validation</td><td class="p-2 border border-slate-700">Render UI, capture user input, validate forms client-side</td></tr>
+          <tr class="border-b border-slate-800"><td class="p-2 border border-slate-700 font-semibold text-purple-400">2 — API Ingress</td><td class="p-2 border border-slate-700">Router, Auth Guard, Input Sanitizer</td><td class="p-2 border border-slate-700">Route requests, enforce JWT auth, validate payloads, rate-limit</td></tr>
+          <tr class="border-b border-slate-800"><td class="p-2 border border-slate-700 font-semibold text-green-400">3 — App Services</td><td class="p-2 border border-slate-700">User, Catalog, Booking, Damage, Finance, Notify</td><td class="p-2 border border-slate-700">Orchestrate all business workflows per service domain</td></tr>
+          <tr class="border-b border-slate-800"><td class="p-2 border border-slate-700 font-semibold text-orange-400">4 — Domain Core</td><td class="p-2 border border-slate-700">Entities, Strategy Pattern, Cost Calculator</td><td class="p-2 border border-slate-700">Encode business rules, domain entities, pluggable calculation strategies</td></tr>
+          <tr><td class="p-2 border border-slate-700 font-semibold text-red-400">5 — Data Access</td><td class="p-2 border border-slate-700">Repository, Storage, Payment Client, SMS Client</td><td class="p-2 border border-slate-700">Abstract all external storage and third-party service integrations</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<!-- VIEW 3 · CLASS DIAGRAM                                -->
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<section id="view-class" class="space-y-4 hidden">
+  <div class="card p-5">
+    <div class="flex justify-between items-start mb-3 pb-3 border-b border-slate-800">
+      <div>
+        <span class="badge bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Required Output #2 — Part B</span>
+        <h2 class="text-lg font-bold text-white mt-1">Class Diagram — Domain Model &amp; GoF Strategy Pattern</h2>
+        <p class="text-xs text-slate-400 mt-0.5">Models domain entities with attributes, methods, and associations. The <strong class="text-white">DepositStrategy</strong> interface + 3 concrete implementations = GoF Strategy Pattern (satisfies ASR-05 &amp; Scenario M-1).</p>
+      </div>
+      <button onclick="copyDiagram('d-class')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded border border-slate-700 text-slate-300 ml-4 shrink-0">📋 Copy Mermaid</button>
+    </div>
+    <div class="mermaid-wrap">
+      <div class="mermaid" id="d-class">
+classDiagram
+    class User {
+        +UUID id
+        +String fullName
+        +String email
+        +String phone
+        +Role role
+        +Boolean kycVerified
+        +DateTime createdAt
+        +register() Boolean
+        +login(password) Token
+        +uploadKYC(idPhoto, licensePhoto) Boolean
+        +getProfile() UserProfile
+    }
+
+    class Renter {
+        +String nationalId
+        +String licenseNumber
+        +List~Rental~ rentalHistory
+        +searchVehicles(filters) List~Vehicle~
+        +bookVehicle(vehicleId, dates) Rental
+        +submitReturnPhotos(rentalId, photos) DamageReport
+    }
+
+    class VehicleOwner {
+        +String bankAccountNumber
+        +List~Vehicle~ fleet
+        +enrollVehicle(vehicleData) Vehicle
+        +approveBooking(rentalId) Boolean
+        +rejectBooking(rentalId, reason) Boolean
+        +getEarningsSummary() FinancialReport
+    }
+
+    class Vehicle {
+        +UUID id
+        +UUID ownerId
+        +String make
+        +String model
+        +Integer year
+        +String plateNumber
+        +VehicleCategory category
+        +Decimal dailyRate
+        +Decimal securityDeposit
+        +VehicleStatus status
+        +isAvailable(startDate, endDate) Boolean
+        +calculateRentalCost(days) Decimal
+        +updateStatus(newStatus) void
+    }
+
+    class Rental {
+        +UUID id
+        +UUID vehicleId
+        +UUID renterId
+        +Date startDate
+        +Date endDate
+        +Decimal subtotal
+        +Decimal securityDeposit
+        +DepositStatus depositStatus
+        +RentalStatus status
+        +calculateTotalCost() Decimal
+        +confirm() void
+        +completeRental() void
+        +cancel() void
+    }
+
+    class DamageReport {
+        +UUID id
+        +UUID rentalId
+        +DamageSeverity severity
+        +String overallCondition
+        +Decimal totalRepairCost
+        +Float confidenceScore
+        +List~DamageZone~ damageZones
+        +addDamageZone(zone) void
+        +computeTotalCost() Decimal
+    }
+
+    class DamageZone {
+        +String zoneName
+        +DamageType anomalyType
+        +DamageSeverity severity
+        +Decimal estimatedCostEGP
+        +String description
+    }
+
+    class DepositStrategy {
+        <<interface>>
+        +calculate(depositAmount, repairCost, severity)* DepositOutcome
+    }
+
+    class FullRefundStrategy {
+        +calculate(depositAmount, repairCost, severity) DepositOutcome
+    }
+
+    class PartialDeductionStrategy {
+        +calculate(depositAmount, repairCost, severity) DepositOutcome
+    }
+
+    class ConfiscationStrategy {
+        +calculate(depositAmount, repairCost, severity) DepositOutcome
+    }
+
+    class DepositOutcome {
+        +DepositStatus status
+        +Decimal amountHeld
+        +Decimal deductionAmount
+        +Decimal refundAmount
+        +String rationale
+    }
+
+    class PaymentTransaction {
+        +UUID transactionId
+        +UUID rentalId
+        +Decimal amount
+        +TransactionType type
+        +TransactionStatus status
+        +String gatewayRef
+        +authorizeHold() Boolean
+        +capturePayment() Boolean
+        +executeRefund(amount) Boolean
+    }
+
+    User <|-- Renter
+    User <|-- VehicleOwner
+    VehicleOwner "1" *-- "0..*" Vehicle : owns
+    Renter "1" --> "0..*" Rental : reserves
+    Vehicle "1" <-- "0..*" Rental : rented_in
+    Rental "1" *-- "0..1" DamageReport : generates
+    DamageReport "1" *-- "1..*" DamageZone : comprises
+    Rental "1" *-- "1..*" PaymentTransaction : settles_via
+    Rental ..> DepositStrategy : uses_for_settlement
+    DepositStrategy <|.. FullRefundStrategy : implements
+    DepositStrategy <|.. PartialDeductionStrategy : implements
+    DepositStrategy <|.. ConfiscationStrategy : implements
+    DepositStrategy ..> DepositOutcome : produces
+      </div>
+    </div>
+    <div class="mt-3 p-3 rounded-lg bg-orange-950/30 border border-orange-900/40 text-xs text-orange-200">
+      <strong>Strategy Pattern Key:</strong> At runtime, the <code>FinancialService</code> selects one of the three <code>DepositStrategy</code> implementations based on damage severity (None → FullRefund, Minor/Moderate → PartialDeduction, Severe → Confiscation). No booking code is modified when new rules are added — only a new strategy class is written and registered.
+    </div>
+  </div>
+</section>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<!-- VIEW 4 · C&C + DEPLOYMENT                             -->
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<section id="view-cc" class="space-y-4 hidden">
+  <div class="card p-5">
+    <div class="flex justify-between items-start mb-3 pb-3 border-b border-slate-800">
+      <div>
+        <span class="badge bg-purple-500/20 text-purple-400 border border-purple-500/30">Required Outputs #3 &amp; #4 — Unified</span>
+        <h2 class="text-lg font-bold text-white mt-1">Unified C&amp;C + Deployment Diagram</h2>
+        <p class="text-xs text-slate-400 mt-0.5">Maps every runtime software component onto its physical host node, network subnet, communication protocol, and port. Unified per Week 9 course guidelines.</p>
+      </div>
+      <button onclick="copyDiagram('d-cc')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded border border-slate-700 text-slate-300 ml-4 shrink-0">📋 Copy Mermaid</button>
+    </div>
+    <div class="mermaid-wrap">
+      <div class="mermaid" id="d-cc">
+flowchart TB
+    subgraph T1 ["CLIENT TIER — Public Internet"]
+        BR["💻 Web Browser\nComponent: React/Next.js SPA\nProtocol: HTTPS / TLS 1.3\nPort: 443 outbound"]
+        MB["📱 Mobile Browser\nComponent: Responsive PWA\nProtocol: HTTPS / TLS 1.3\nPort: 443 outbound"]
+    end
+
+    subgraph T2 ["DMZ / INGRESS TIER — Public Subnet"]
+        GW["🛡️ API Gateway + Reverse Proxy\nSSL Termination · JWT Validation\nRate Limiting · WAF Rules\nPort: :443 inbound → :3000 internal"]
+    end
+
+    subgraph T3 ["APPLICATION COMPUTE TIER — Private App Subnet"]
+        subgraph N1 ["App Server Node"]
+            WEB["⚙️ Web Orchestrator Service\nRuntime: Node.js Event Loop\nPort: :3000 internal\nRouting · Booking · Catalog · KYC · Notify"]
+        end
+        subgraph N2 ["Finance Worker Node"]
+            FIN["💼 Financial Settlement Service\nRuntime: High-Precision Worker\nPort: :8002 internal\nDeposit Calc · Escrow · Invoicing"]
+        end
+    end
+
+    subgraph T4 ["AI COMPUTE TIER — Isolated GPU Subnet"]
+        subgraph N3 ["GPU/SIMD Accelerated Node"]
+            AI["🧠 Computer Vision Engine\nRuntime: Deep Learning Inference\nPort: :8001 internal (gRPC/REST)\nDamage Localization · Severity · Cost Model"]
+        end
+    end
+
+    subgraph T5 ["PERSISTENCE TIER — Encrypted Private Storage Subnet"]
+        subgraph N4 ["Managed DB Cluster (Multi-AZ)"]
+            DB["🗄️ Relational DBMS\nEngine: ACID PostgreSQL\nPort: :5432 internal\nStorage: AES-256 Encrypted SSD"]
+        end
+        subgraph N5 ["Distributed Object Storage"]
+            OBJ["📁 Secure Object Vault\nEncrypted REST API internal\nVehicle Photos · KYC Documents\nBaseline + Return Images"]
+        end
+    end
+
+    subgraph T6 ["EXTERNAL THIRD-PARTY SERVICES"]
+        EXT1["💳 Payment Gateway API"]
+        EXT2["🏛️ National KYC Authority"]
+        EXT3["📱 SMS + Push Notification Service"]
+    end
+
+    BR  -->|"HTTPS TLS 1.3 (:443)"| GW
+    MB  -->|"HTTPS TLS 1.3 (:443)"| GW
+    GW  -->|"Internal HTTP (:3000) + JWT headers"| WEB
+    WEB -->|"Internal REST (:8002) — Settlement Mandate"| FIN
+    WEB -->|"Internal gRPC (:8001) — Image Stream"| AI
+    WEB -->|"TCP Pool (:5432) — Parameterized SQL"| DB
+    FIN -->|"TCP Pool (:5432) — Escrow Ledger SQL"| DB
+    AI  -->|"TCP Pool (:5432) — Write Damage Records"| DB
+    WEB -->|"Encrypted API — Store/Fetch Documents"| OBJ
+    AI  -->|"Direct Fetch — Raw Inspection Photos"| OBJ
+    FIN -->|"TLS 1.3 External API"| EXT1
+    WEB -->|"TLS 1.3 External API"| EXT2
+    WEB -->|"TLS 1.3 External API"| EXT3
+
+    style T1 fill:#0a0f1a,stroke:#475569
+    style T2 fill:#0d1a0d,stroke:#22c55e
+    style T3 fill:#0a0d1a,stroke:#3b82f6
+    style T4 fill:#1a0a1a,stroke:#a855f7
+    style T5 fill:#1a0a0a,stroke:#f43f5e
+    style T6 fill:#1a1200,stroke:#fbbf24
+      </div>
+    </div>
+    <div class="mt-4 overflow-x-auto">
+      <table class="w-full text-xs border-collapse">
+        <thead><tr class="bg-slate-800 text-slate-300"><th class="p-2 text-left border border-slate-700">Component</th><th class="p-2 text-left border border-slate-700">Host Tier</th><th class="p-2 text-left border border-slate-700">Port</th><th class="p-2 text-left border border-slate-700">ASR Addressed</th></tr></thead>
+        <tbody class="text-slate-400">
+          <tr class="border-b border-slate-800"><td class="p-2 border border-slate-700">API Gateway + WAF</td><td class="p-2 border border-slate-700">DMZ / Public Subnet</td><td class="p-2 border border-slate-700">:443 in → :3000 out</td><td class="p-2 border border-slate-700">ASR-04 Security (S-1, S-2)</td></tr>
+          <tr class="border-b border-slate-800"><td class="p-2 border border-slate-700">Web Orchestrator</td><td class="p-2 border border-slate-700">Private App Subnet</td><td class="p-2 border border-slate-700">:3000 internal</td><td class="p-2 border border-slate-700">ASR-01 Availability, SC-1 Scalability</td></tr>
+          <tr class="border-b border-slate-800"><td class="p-2 border border-slate-700">Finance Settlement Service</td><td class="p-2 border border-slate-700">Private App Subnet</td><td class="p-2 border border-slate-700">:8002 internal</td><td class="p-2 border border-slate-700">ASR-05 Modifiability (M-1 Strategy)</td></tr>
+          <tr class="border-b border-slate-800"><td class="p-2 border border-slate-700">CV Damage Engine</td><td class="p-2 border border-slate-700">Isolated GPU Subnet</td><td class="p-2 border border-slate-700">:8001 internal</td><td class="p-2 border border-slate-700">ASR-03 Performance (P-2 ≤15s)</td></tr>
+          <tr class="border-b border-slate-800"><td class="p-2 border border-slate-700">Relational DB Cluster</td><td class="p-2 border border-slate-700">Encrypted Data Subnet</td><td class="p-2 border border-slate-700">:5432 internal</td><td class="p-2 border border-slate-700">ASR-06 ACID Consistency</td></tr>
+          <tr><td class="p-2 border border-slate-700">Object Storage Vault</td><td class="p-2 border border-slate-700">Managed Cloud Storage</td><td class="p-2 border border-slate-700">Internal API</td><td class="p-2 border border-slate-700">ASR-04 Security (AES-256 at rest)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<!-- VIEW 5 · SEQUENCE: KYC                                -->
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<section id="view-seq-kyc" class="space-y-4 hidden">
+  <div class="card p-5">
+    <div class="flex justify-between items-start mb-3 pb-3 border-b border-slate-800">
+      <div>
+        <span class="badge bg-amber-500/20 text-amber-400 border border-amber-500/30">Required Output #5 — Flow 1 of 5</span>
+        <h2 class="text-lg font-bold text-white mt-1">Sequence: Customer Identity Verification &amp; KYC</h2>
+        <p class="text-xs text-slate-400 mt-0.5">Satisfies: ASR-04 (S-1 encryption), FR-04, FR-05, FR-06</p>
+      </div>
+      <button onclick="copyDiagram('d-seq-kyc')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded border border-slate-700 text-slate-300 ml-4 shrink-0">📋 Copy Mermaid</button>
+    </div>
+    <div class="mermaid-wrap">
+      <div class="mermaid" id="d-seq-kyc">
+sequenceDiagram
+    autonumber
+    actor Renter as 👤 Renter
+    participant UI as 🖥️ Client UI
+    participant GW as 🛡️ API Gateway
+    participant KYC as ⚙️ KYC Service
+    participant Vault as 📁 Object Vault
+    participant GovAPI as 🏛️ KYC Authority
+    participant DB as 🗄️ Database
+
+    Renter->>UI: Upload National ID + Driver License photos
+    UI->>GW: POST /api/kyc/verify (multipart/form-data)
+    GW->>GW: Verify JWT session token
+    GW->>GW: Check rate limit (Upstash Redis)
+    GW->>KYC: Forward document upload payload
+
+    KYC->>Vault: Store encrypted ID + License images (AES-256)
+    Vault-->>KYC: Return secure storage URIs
+
+    KYC->>GovAPI: Validate ID authenticity (NationalID, LicenseNumber)
+    GovAPI-->>KYC: Status: Valid — Verification approved
+
+    KYC->>DB: UPDATE profiles SET kyc_verified=TRUE, license_url=URI
+    DB-->>KYC: Record updated successfully
+
+    KYC-->>GW: KYC verification confirmed
+    GW-->>UI: HTTP 200 OK — Profile verified badge
+    UI-->>Renter: Show "Account Verified — You may now rent vehicles"
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<!-- VIEW 6 · SEQUENCE: BOOK VEHICLE                       -->
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<section id="view-seq-book" class="space-y-4 hidden">
+  <div class="card p-5">
+    <div class="flex justify-between items-start mb-3 pb-3 border-b border-slate-800">
+      <div>
+        <span class="badge bg-amber-500/20 text-amber-400 border border-amber-500/30">Required Output #5 — Flow 2 of 5</span>
+        <h2 class="text-lg font-bold text-white mt-1">Sequence: Vehicle Search, Filter &amp; Reservation Booking</h2>
+        <p class="text-xs text-slate-400 mt-0.5">Satisfies: ASR-02 (P-1 latency ≤1.5s), ASR-06 (ACID booking transaction), FR-09 to FR-16</p>
+      </div>
+      <button onclick="copyDiagram('d-seq-book')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded border border-slate-700 text-slate-300 ml-4 shrink-0">📋 Copy Mermaid</button>
+    </div>
+    <div class="mermaid-wrap">
+      <div class="mermaid" id="d-seq-book">
+sequenceDiagram
+    autonumber
+    actor Renter as 👤 Renter
+    participant UI as 🖥️ Client UI
+    participant GW as 🛡️ API Gateway
+    participant Cat as 🚗 Catalog Service
+    participant Book as 📅 Booking Service
+    participant Fin as 💰 Finance Service
+    participant Pay as 💳 Payment Gateway
+    participant DB as 🗄️ Database
+    actor Owner as 👤 Fleet Owner
+
+    Renter->>UI: Enter search filters (Category: SUV, Dates: May 1-5, Max Rate: $150)
+    UI->>GW: GET /api/vehicles/search?category=suv&start=2026-05-01&end=2026-05-05
+    GW->>GW: Validate JWT + Rate limit check
+    GW->>Cat: Forward search query
+    Cat->>DB: SELECT * FROM vehicles WHERE status='available' AND category='SUV' AND NOT RESERVED
+    DB-->>Cat: Return 8 matching available vehicles
+    Cat-->>GW-->>UI: Render filtered fleet catalog (8 results)
+
+    Renter->>UI: Select BMW X5 and click "Reserve Now"
+    UI->>GW: POST /api/bookings (vehicleId, startDate, endDate, paymentMethod)
+    GW->>GW: Verify JWT session + check KYC verified
+    GW->>Book: Initiate reservation workflow
+
+    Book->>DB: BEGIN TRANSACTION — lock vehicle row for dates
+    Book->>Cat: Confirm vehicle still available (re-check for race condition)
+    Cat->>DB: SELECT FOR UPDATE — confirm no overlap
+    DB-->>Cat: Available — row locked
+    Cat-->>Book: Availability confirmed
+
+    Book->>Fin: Compute rental cost (4 days * $150 = $600) + deposit (category: SUV)
+    Fin->>Fin: Apply deposit rule: SUV category = $1,000 security deposit
+    Fin-->>Book: Subtotal: $600 | Security Deposit: $1,000 | Total: $1,600
+
+    Book->>Pay: Pre-authorize credit card hold ($1,600)
+    Pay-->>Book: Hold authorized — reference token: hold_8821
+
+    Book->>DB: INSERT INTO bookings (status='pending', deposit_status='held', total=1600)
+    DB-->>Book: Booking created — ID: rent_9481
+    Book->>DB: UPDATE vehicles SET status='reserved' WHERE id=vehicleId
+    DB-->>Book: Vehicle status updated
+    Book->>DB: COMMIT TRANSACTION
+    DB-->>Book: Transaction committed (ACID)
+
+    Book-->>GW-->>UI: 201 Created — Booking confirmed: rent_9481
+    UI-->>Renter: Show "Booking Placed — Awaiting Owner Approval"
+    Book-)Owner: Push notification: "New booking request for your BMW X5 — May 1-5"
+      </div>
+    </div>
+    <div class="mt-3 grid grid-cols-1 md:grid-cols-3 gap-2 text-xs">
+      <div class="p-2 rounded bg-blue-950/30 border border-blue-900/40 text-blue-200"><strong>ACID Transaction:</strong> Steps 11–19 execute inside a database transaction. If payment fails, the entire booking is rolled back — no partial state.</div>
+      <div class="p-2 rounded bg-green-950/30 border border-green-900/40 text-green-200"><strong>Race Condition Guard:</strong> Step 13 uses SELECT FOR UPDATE to prevent two renters booking the same vehicle simultaneously.</div>
+      <div class="p-2 rounded bg-amber-950/30 border border-amber-900/40 text-amber-200"><strong>Rate Limiting:</strong> Step 3 blocks excessive booking attempts per user via Upstash Redis rate limiter in the middleware.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<!-- VIEW 7 · SEQUENCE: AI DAMAGE SCAN                     -->
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<section id="view-seq-ai" class="space-y-4 hidden">
+  <div class="card p-5">
+    <div class="flex justify-between items-start mb-3 pb-3 border-b border-slate-800">
+      <div>
+        <span class="badge bg-amber-500/20 text-amber-400 border border-amber-500/30">Required Output #5 — Flow 3 of 5</span>
+        <h2 class="text-lg font-bold text-white mt-1">Sequence: AI Vehicle Damage Inspection &amp; Assessment</h2>
+        <p class="text-xs text-slate-400 mt-0.5">Satisfies: ASR-03 (P-2 full inspection ≤15s), ASR-04 (S-1 encrypted photos), FR-18 to FR-22</p>
+      </div>
+      <button onclick="copyDiagram('d-seq-ai')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded border border-slate-700 text-slate-300 ml-4 shrink-0">📋 Copy Mermaid</button>
+    </div>
+    <div class="mermaid-wrap">
+      <div class="mermaid" id="d-seq-ai">
+sequenceDiagram
+    autonumber
+    actor User as 👤 Renter / Owner
+    participant UI as 🖥️ Damage Scanner Page
+    participant GW as 🛡️ API Gateway + Rate Limiter
+    participant API as ⚙️ AI Damage API Route
+    participant Groq as 🧠 Groq AI — LLaMA 3.2 Vision
+    participant Vault as 📁 Object Storage Vault
+    participant DB as 🗄️ Database
+
+    User->>UI: Upload car photo (drag and drop or file input)
+    UI->>UI: Preview image and validate file type (JPG/PNG/WEBP)
+
+    UI->>GW: POST /api/ai/damage (FormData: image file)
+    GW->>GW: Check rate limit by IP (5 requests per minute — Upstash Redis)
+
+    alt Rate limit exceeded
+        GW-->>UI: 429 Too Many Requests
+        UI-->>User: Show "Too many scans — please wait 60 seconds"
+    else Within rate limit
+        GW->>API: Forward request with image file
+
+        API->>API: Extract image from FormData to ArrayBuffer
+        API->>API: Convert to base64 string — get MIME type
+        API->>Vault: Store uploaded photo (encrypted, AES-256) for audit trail
+        Vault-->>API: Return permanent storage URL
+
+        API->>Groq: POST {model: llama-3.2-11b-vision, messages: [{role: user, content: [image, prompt]}]}
+        Note over Groq: LLaMA analyzes image pixels:<br/>Detect damage zones (bumpers, doors, hood, fenders, windshield)<br/>Classify severity: none / minor / moderate / severe<br/>Estimate repair cost in EGP adjusted for vehicle make/model
+        Groq-->>API: JSON response {damage_detected, severity, zones[], total_repair_cost_egp, confidence}
+
+        API->>API: Parse JSON — validate structure
+        alt AI returns invalid JSON
+            API->>API: Use safe fallback default response
+        end
+
+        API->>DB: INSERT INTO damage_reports (booking_id, severity, zones, cost_egp, photo_url)
+        DB-->>API: Report saved — ID: dmg_4421
+
+        API-->>GW-->>UI: 200 OK — Full damage report JSON
+        UI-->>User: Display damage card with severity badge (color coded)
+        UI-->>User: Show zone-by-zone breakdown with EGP repair costs
+        UI-->>User: Show deposit recommendation (Full Refund / Partial / Confiscate)
+    end
+      </div>
+    </div>
+    <div class="mt-3 grid grid-cols-1 md:grid-cols-3 gap-2 text-xs">
+      <div class="p-2 rounded bg-purple-950/30 border border-purple-900/40 text-purple-200"><strong>AI Model:</strong> Groq LLaMA 3.2 Vision (11B parameters) analyzes the image. Response time target: ≤ 15 seconds including upload and processing (ASR-03 P-2).</div>
+      <div class="p-2 rounded bg-red-950/30 border border-red-900/40 text-red-200"><strong>Rate Limiting:</strong> 5 AI scans per minute per IP. Prevents API abuse and controls Groq API costs. Returns 429 with retry-after header.</div>
+      <div class="p-2 rounded bg-green-950/30 border border-green-900/40 text-green-200"><strong>Fallback Safety:</strong> If Groq returns malformed JSON (rare), the API returns a safe default response so the UI never crashes.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<!-- VIEW 8 · SEQUENCE: FLEET ENROLLMENT                   -->
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<section id="view-seq-enr" class="space-y-4 hidden">
+  <div class="card p-5">
+    <div class="flex justify-between items-start mb-3 pb-3 border-b border-slate-800">
+      <div>
+        <span class="badge bg-amber-500/20 text-amber-400 border border-amber-500/30">Required Output #5 — Flow 4 of 5</span>
+        <h2 class="text-lg font-bold text-white mt-1">Sequence: Vehicle Owner Fleet Enrollment</h2>
+        <p class="text-xs text-slate-400 mt-0.5">Satisfies: FR-07 (Vehicle listing creation), FR-08 (Baseline photo ingestion), FR-15 (Deposit calculation)</p>
+      </div>
+      <button onclick="copyDiagram('d-seq-enr')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded border border-slate-700 text-slate-300 ml-4 shrink-0">📋 Copy Mermaid</button>
+    </div>
+    <div class="mermaid-wrap">
+      <div class="mermaid" id="d-seq-enr">
+sequenceDiagram
+    autonumber
+    actor Owner as 👤 Vehicle Owner
+    participant UI as 🖥️ Client UI
+    participant GW as 🛡️ API Gateway
+    participant Cat as 🚗 Fleet Catalog Service
+    participant Vault as 📁 Object Storage Vault
+    participant InsAPI as 🛡️ Insurance and Valuation API
+    participant DB as 🗄️ Database
+
+    Owner->>UI: Fill vehicle form (Make, Model, Year, VIN, Plate, Daily Rate, Category)
+    Owner->>UI: Upload 6 baseline exterior and interior reference photos
+    UI->>GW: POST /api/fleet/enroll (vehicle data + photo stream multipart)
+    GW->>GW: Verify JWT + confirm role is VehicleOwner
+
+    GW->>Cat: Forward fleet enrollment request
+    Cat->>InsAPI: Verify VIN authenticity + retrieve market valuation
+    InsAPI-->>Cat: VIN valid — Market Value: $28,000 — Insurance: Active
+
+    Cat->>Vault: Store 6 baseline reference photos (encrypted AES-256)
+    Vault-->>Cat: Return 6 secure baseline image storage URLs
+
+    Cat->>Cat: Compute recommended security deposit based on market value and category
+    Cat->>DB: INSERT INTO vehicles (owner_id, make, model, year, vin, plate, daily_rate, status='available', baseline_photos=[...])
+    DB-->>Cat: Vehicle record created — ID: veh_512
+
+    Cat-->>GW-->>UI: HTTP 201 Created — Vehicle enrolled successfully
+    UI-->>Owner: Show vehicle in Active Fleet Dashboard with veh_512 listing
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<!-- VIEW 9 · SEQUENCE: RETURN & SETTLEMENT                -->
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<section id="view-seq-ret" class="space-y-4 hidden">
+  <div class="card p-5">
+    <div class="flex justify-between items-start mb-3 pb-3 border-b border-slate-800">
+      <div>
+        <span class="badge bg-amber-500/20 text-amber-400 border border-amber-500/30">Required Output #5 — Flow 5 of 5</span>
+        <h2 class="text-lg font-bold text-white mt-1">Sequence: Rental Return, Deposit Calculation &amp; Financial Settlement</h2>
+        <p class="text-xs text-slate-400 mt-0.5">Satisfies: ASR-05 (M-1 Strategy Pattern), ASR-06 (ACID settlement commit), FR-23 to FR-26</p>
+      </div>
+      <button onclick="copyDiagram('d-seq-ret')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded border border-slate-700 text-slate-300 ml-4 shrink-0">📋 Copy Mermaid</button>
+    </div>
+    <div class="mermaid-wrap">
+      <div class="mermaid" id="d-seq-ret">
+sequenceDiagram
+    autonumber
+    actor Owner as 👤 Vehicle Owner
+    participant UI as 🖥️ Client UI
+    participant GW as 🛡️ API Gateway
+    participant Book as 📅 Booking Service
+    participant Fin as 💰 Finance Service
+    participant Strat as ⚖️ Deposit Strategy Engine
+    participant Pay as 💳 Payment Gateway
+    participant DB as 🗄️ Database
+    actor Renter as 👤 Renter
+
+    Owner->>UI: Confirm return mileage and acknowledge damage assessment
+    UI->>GW: POST /api/rentals/rent_9481/complete
+
+    GW->>Book: Complete rental workflow request
+    Book->>DB: SELECT damage_report, security_deposit FROM bookings WHERE id='rent_9481'
+    DB-->>Book: Deposit held: $1,000 — Damage severity: minor — Repair cost: $120
+
+    Book->>Fin: Calculate final deposit settlement (deposit=$1000, repair=$120, severity=minor)
+
+    Note over Fin,Strat: Strategy Pattern: Select PartialDeductionStrategy based on severity=minor
+    Fin->>Strat: PartialDeductionStrategy.calculate(depositAmount=1000, repairCost=120, severity=minor)
+    Strat-->>Fin: DepositOutcome — Deduction: $120 | Refund: $880 | Status: partial_deduction
+
+    Fin->>Pay: Capture $120 from held deposit (compensation to owner)
+    Pay-->>Fin: Capture authorized — Transaction ID: cap_7731
+
+    Fin->>Pay: Release remaining $880 to renter payment method
+    Pay-->>Fin: Refund confirmed — Transaction ID: ref_9921
+
+    Fin->>DB: BEGIN TRANSACTION
+    Fin->>DB: UPDATE bookings SET status='completed', deposit_status='partial_refund', deduction=120
+    Fin->>DB: INSERT INTO payment_transactions (cap_7731, ref_9921, amounts, timestamps)
+    DB-->>Fin: COMMIT — Transaction committed (ACID)
+
+    Fin-->>Book-->>GW-->>UI: Display final settlement invoice
+    UI-->>Owner: Show settlement: $120 credited to your account
+    Book-)Renter: SMS and email: "$880 deposit refunded — $120 deducted for front bumper damage"
+    Book-)Owner: SMS and email: "$120 damage compensation credited — Vehicle available again"
+      </div>
+    </div>
+    <div class="mt-3 p-3 rounded-lg bg-orange-950/30 border border-orange-900/40 text-xs text-orange-200">
+      <strong>Strategy Pattern in Action (Step 7):</strong> The <code>FinancialService</code> does NOT contain deposit calculation logic itself. It delegates to the selected <code>DepositStrategy</code> implementation at runtime. If a new rule is needed (e.g., "luxury vehicles: 150% penalty"), only a new strategy class is written — zero changes to Booking or Finance service code. This satisfies <strong>ASR-05 Modifiability (Scenario M-1)</strong>.
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="bg-slate-900 border-t border-slate-800 py-3 text-center text-xs text-slate-500">
+  AASTMT · Software Architecture Course · Smart Car Rental Platform · Phase 1 &amp; 2 · ADD v3.0 (SEI)
+</footer>
+
+<script>
+  // ── MERMAID INIT ──
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: 'dark',
+    themeVariables: {
+      primaryColor: '#1e3a5f',
+      primaryTextColor: '#f1f5f9',
+      primaryBorderColor: '#3b82f6',
+      lineColor: '#64748b',
+      secondaryColor: '#0f172a',
+      tertiaryColor: '#1e293b'
+    },
+    flowchart: { useMaxWidth: true, htmlLabels: true },
+    sequence: { useMaxWidth: true, mirrorActors: false, bottomMarginAdj: 10 }
+  });
+
+  // ── TAB SYSTEM ──
+  const VIEWS = ['context','uses','class','cc','seq-kyc','seq-book','seq-ai','seq-enr','seq-ret'];
+  const rendered = new Set();
+
+  function show(id) {
+    VIEWS.forEach(v => {
+      document.getElementById('view-' + v).classList.toggle('hidden', v !== id);
+      const btn = document.getElementById('btn-' + v);
+      if (btn) btn.classList.toggle('active', v === id);
+    });
+    renderVisible();
+  }
+
+  function renderVisible() {
+    document.querySelectorAll('.mermaid[id]').forEach(el => {
+      if (!rendered.has(el.id)) {
+        const section = el.closest('section');
+        if (section && !section.classList.contains('hidden')) {
+          mermaid.run({ nodes: [el] });
+          rendered.add(el.id);
+        }
+      }
+    });
+  }
+
+  // ── COPY FUNCTION ──
+  function copyDiagram(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    // Get original source from the pre-rendered SVG parent or the original text
+    const src = el.getAttribute('data-src') || el.textContent || '';
+    navigator.clipboard.writeText(src.trim()).then(() => {
+      alert('Mermaid code copied!\n\nTo use in Draw.io:\n1. Go to Extras > Edit Diagram\n2. Paste the code\n\nOr paste at mermaid.live to preview.');
+    }).catch(() => {
+      prompt('Copy this Mermaid code:', el.textContent);
+    });
+  }
+
+  // Store original source before Mermaid replaces innerHTML
+  document.querySelectorAll('.mermaid[id]').forEach(el => {
+    el.setAttribute('data-src', el.textContent.trim());
+  });
+
+  // ── INIT: render first visible tab ──
+  window.addEventListener('load', () => {
+    renderVisible();
+  });
+</script>
+</body>
+</html>
